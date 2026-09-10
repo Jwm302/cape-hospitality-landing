@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { UspSection } from './components/UspSection';
@@ -7,39 +7,54 @@ import { PricingSection } from './components/PricingSection';
 import { LeadCaptureFooter } from './components/LeadCaptureFooter';
 import { BriefingModal } from './components/BriefingModal';
 
-// Set your secret access passkey here:
 const SECRET_ACCESS_KEY = 'cape2026';
 
+// Synchronous check: Runs BEFORE the page ever renders to prevent any delay/flash
+const checkInitialAuth = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const accessParam = params.get('access')?.trim().toLowerCase();
+    const storedAuth = localStorage.getItem('cha_authenticated') === 'true';
+
+    if (accessParam === SECRET_ACCESS_KEY.toLowerCase() || storedAuth) {
+      try {
+        localStorage.setItem('cha_authenticated', 'true');
+      } catch {
+        // Fallback if browser blocks localStorage in private mode
+      }
+      return true;
+    }
+  } catch (err) {
+    console.error('Auth verification error:', err);
+  }
+  return false;
+};
+
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  // Initialize state directly from the check (instant unlock, 0 millisecond delay)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(checkInitialAuth);
   const [passkeyInput, setPasskeyInput] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [isBriefingModalOpen, setIsBriefingModalOpen] = useState(false);
   const [selectedTier, setSelectedTier] = useState<string>('GOLD');
 
-  // Check URL parameters for ?access=cape2026 or saved login in localStorage
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const accessKey = params.get('access');
-
-    if (accessKey === SECRET_ACCESS_KEY || localStorage.getItem('cha_authenticated') === 'true') {
-      setIsAuthenticated(true);
-      localStorage.setItem('cha_authenticated', 'true');
-    }
-  }, []);
-
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (passkeyInput.trim().toLowerCase() === SECRET_ACCESS_KEY.toLowerCase()) {
       setIsAuthenticated(true);
-      localStorage.setItem('cha_authenticated', 'true');
+      try {
+        localStorage.setItem('cha_authenticated', 'true');
+      } catch {
+        // Safe fallback for strict privacy modes
+      }
       setErrorMsg('');
     } else {
       setErrorMsg('Invalid passkey. Please check with your advisory contact.');
     }
   };
 
-  // 1. GATEWAY SCREEN: Displayed if not authenticated
+  // 1. GATEWAY SCREEN
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#10213a] text-white flex flex-col items-center justify-center px-6 selection:bg-white selection:text-[#10213a]">
@@ -85,7 +100,7 @@ export default function App() {
     );
   }
 
-  // 2. UNLOCKED SITE: Shown once access is verified
+  // 2. UNLOCKED SITE
   const handleScrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -100,13 +115,11 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#fbfbfa] text-zinc-900 selection:bg-[#10213a] selection:text-white">
-      {/* 1. Navigation */}
       <Navbar
         onScheduleBriefing={() => setIsBriefingModalOpen(true)}
         onContactClick={() => handleScrollToSection('contact')}
       />
 
-      {/* 2. Main Page Sections */}
       <main>
         <Hero
           onScheduleBriefing={() => setIsBriefingModalOpen(true)}
@@ -125,7 +138,6 @@ export default function App() {
         />
       </main>
 
-      {/* 3. Briefing Modal */}
       <BriefingModal
         isOpen={isBriefingModalOpen}
         onClose={() => setIsBriefingModalOpen(false)}
