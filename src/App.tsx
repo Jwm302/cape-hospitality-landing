@@ -63,7 +63,7 @@ export default function App() {
             CAPE HOSPITALITY
           </div>
           <p className="text-[10px] tracking-[0.3em] uppercase text-zinc-400 font-montserrat mb-8">
-            Advisers • Private Client Portal
+            Advisors • Private Client Portal
           </p>
 
           <p className="text-sm text-zinc-300 font-light leading-relaxed mb-8">
