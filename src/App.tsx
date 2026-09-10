@@ -6,6 +6,7 @@ import { DataScienceSection } from './components/DataScienceSection';
 import { PricingSection } from './components/PricingSection';
 import { LeadCaptureFooter } from './components/LeadCaptureFooter';
 import { BriefingModal } from './components/BriefingModal';
+import logoImg from './assets/images/logo.png';
 
 const SECRET_ACCESS_KEY = 'cape2026';
 
@@ -59,6 +60,9 @@ export default function App() {
     return (
       <div className="min-h-screen bg-[#10213a] text-white flex flex-col items-center justify-center px-6 selection:bg-white selection:text-[#10213a]">
         <div className="max-w-md w-full text-center border border-white/15 bg-white/5 p-8 sm:p-12 rounded-sm backdrop-blur-md shadow-2xl">
+          <div className="w-20 h-20 mx-auto mb-5 rounded-2xl bg-[#fbfbfa] p-2.5 shadow-xl flex items-center justify-center border border-white/20">
+            <img src={logoImg} alt="Cape Hospitality Advisors" className="w-full h-full object-contain mix-blend-multiply" />
+          </div>
           <div className="font-cinzel tracking-[0.25em] font-bold text-xl mb-2 text-[#fbfbfa]">
             CAPE HOSPITALITY
           </div>

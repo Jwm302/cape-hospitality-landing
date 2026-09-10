@@ -1,6 +1,8 @@
 {
-  "name": "Cape Hospitality Advisers",
+  "name": "Cape Hospitality Advisors",
   "description": "Independent, anonymous hotel quality inspections tailored for premier European tour operators across the Cape, from Cape Town to the Garden Route.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

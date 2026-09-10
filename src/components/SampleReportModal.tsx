@@ -87,7 +87,7 @@ This document is distributed under strict bilateral NDA. The audited hotel has n
                 </span>
               </div>
               <p className="text-[11px] text-zinc-500">
-                Cape Hospitality Advisers &bull; 48-Hour Turnaround Deliverable
+                Cape Hospitality Advisors &bull; 48-Hour Turnaround Deliverable
               </p>
             </div>
           </div>

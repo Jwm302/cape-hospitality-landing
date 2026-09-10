@@ -44,7 +44,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             href="#"
             className="flex items-center group focus:outline-none"
             id="nav-logo"
-            aria-label="Cape Hospitality Advisers"
+            aria-label="Cape Hospitality Advisors"
           >
             <CapeLogo variant="navbar" />
           </a>
