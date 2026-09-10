@@ -12,10 +12,31 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- 1. LOAD TAILWIND CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. CONFIGURE FONTS & COLORS FOR TAILWIND -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['Cinzel', 'Georgia', 'serif'],
+              sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+              cinzel: ['Cinzel', 'serif'],
+              montserrat: ['Montserrat', 'sans-serif'],
+            },
+            colors: {
+              navy: '#10213a',
+            }
+          }
+        }
+      }
+    </script>
   </head>
-  <body class="bg-[#fbfbfa] text-zinc-900 antialiased selection:bg-[#10213a] selection:text-white font-sans">
+  <body class="bg-[#fbfbfa] text-zinc-900 antialiased selection:bg-[#10213a] selection:text-white font-sans m-0 p-0">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-
