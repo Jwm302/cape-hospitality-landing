@@ -213,13 +213,13 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
         {/* Clean Footer Info */}
         <div className="pt-8 border-t border-zinc-200 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 gap-4 text-center sm:text-left">
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
-            <span className="font-semibold text-zinc-800">Cape Hospitality Advisers</span>
+            <span className="font-semibold text-zinc-800">Cape Hospitality Advisors</span>
             <span className="hidden sm:inline text-zinc-300">|</span>
             <span>Cape Town, South Africa</span>
             <span className="hidden sm:inline text-zinc-300">|</span>
-            <span className="font-mono text-[#b38a54]">contact@capehospitalityadvisers.com</span>
+            <span className="font-mono text-[#b38a54]">contact@capehospitalityadvisors.com</span>
           </div>
-          <p>© {new Date().getFullYear()} Cape Hospitality Advisers. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Cape Hospitality Advisors. All rights reserved.</p>
         </div>
       </div>
     </footer>
