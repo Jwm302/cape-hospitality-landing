@@ -1,0 +1,375 @@
+import { PillarItem, InspectionDeliverableData } from '../types';
+
+export const HERO_CONTENT = {
+  headline: "Protecting Your Brand Standards Across the Cape, from Cape Town to the Garden Route.",
+  subheadline: "Independent, anonymous hotel quality inspections tailored for premier European tour operators. We ensure your portfolio delivers on its promises across the Western Cape.",
+  primaryCta: "Schedule a Briefing",
+  secondaryCta: "View Our Inspection Pillars",
+  keyStats: [
+    { label: "Post-Audit SLA", value: "48h", caption: "Full dossier in your inbox" },
+    { label: "Inspection Checkpoints", value: "420+", caption: "Rigorous luxury benchmarks" },
+    { label: "Inspector Discretion", value: "100%", caption: "Unannounced mystery guest" },
+    { label: "Regional Coverage", value: "Western Cape", caption: "Cape Town to Garden Route" },
+  ],
+  coveredDestinations: [
+    "Cape Town (Atlantic Seaboard & City Bowl)",
+    "Cape Peninsula & False Bay",
+    "Constantia & Cape Winelands",
+    "Overberg & Hermanus Coast",
+    "Knysna & Plettenberg Bay",
+    "Garden Route Coastal Corridor",
+  ],
+};
+
+export const VALUE_PROPOSITION_CONTENT = {
+  sectionTitle: "Risk Mitigation for Global Tour Operators",
+  bodyText: "German holidaymakers expect precision. A single drop in service or safety standard at a partner hotel risks your brand reputation and operator liability. We act as your on-the-ground eyes and ears, auditing properties against strict international luxury benchmarks.",
+  keyRisksAddressed: [
+    {
+      title: "EU Package Travel & Liability Defense",
+      description: "Under strict European consumer protection laws (e.g. Frankfurter Tabelle), service deviations and hygiene shortcomings expose operators to mandatory post-trip compensations.",
+      tag: "Financial Defense",
+    },
+    {
+      title: "Reputational & Brand Shielding",
+      description: "Word-of-mouth among high-net-worth European travelers spreads rapidly. One compromised stay compromises your entire seasonal client renewal rate.",
+      tag: "Brand Equity",
+    },
+    {
+      title: "Objective SLA Contract Enforcement",
+      description: "Hotels often market 5-star claims while quietly trimming staff ratios. Our audits provide contractual leverage to enforce agreed service standards or renegotiate allocations.",
+      tag: "Contract Integrity",
+    },
+  ],
+};
+
+export const FOUR_PILLARS_CONTENT: PillarItem[] = [
+  {
+    id: 'guest-journey',
+    columnNumber: 1,
+    title: "Guest Journey & Service Flow",
+    description: "Evaluation of check-in, concierge responsiveness, and staff hospitality compliance.",
+    iconName: "Compass",
+    focusAreas: [
+      "Arrival protocol & luggage handling speed",
+      "Check-in warmth & bespoke personalization",
+      "Concierge local mastery & responsiveness",
+      "Staff greeting cadence & emotional intelligence",
+      "Express check-out accuracy & farewell warmth",
+    ],
+    metricsSample: "94.2% Service Flow Index",
+  },
+  {
+    id: 'housekeeping',
+    columnNumber: 2,
+    title: "Housekeeping & Room Readiness",
+    description: "Deep-dive technical audits of room hygiene, maintenance, and setup standards.",
+    iconName: "BedDouble",
+    focusAreas: [
+      "UV & luminescence hygiene verification",
+      "Linen thread count & pillow integrity",
+      "HVAC, water pressure & acoustic isolation",
+      "Turndown execution & amenities staging",
+      "Wear-and-tear & preventive maintenance log",
+    ],
+    metricsSample: "98.1% Hygiene Standard",
+  },
+  {
+    id: 'food-and-beverage',
+    columnNumber: 3,
+    title: "Food & Beverage Excellence",
+    description: "Anonymous testing of culinary quality, service pacing, and hygiene protocols.",
+    iconName: "UtensilsCrossed",
+    focusAreas: [
+      "Breakfast mise-en-place & dietary attentiveness",
+      "Wine cellar service & sommelier pairing",
+      "Course pacing & serving temperature precision",
+      "Back-of-house hygiene & HACCP adherence",
+      "Room service delivery timing & presentation",
+    ],
+    metricsSample: "89.7% Culinary Benchmark",
+  },
+  {
+    id: 'safety-compliance',
+    columnNumber: 4,
+    title: "Safety & Compliance",
+    description: "Verification of asset protection, guest safety measures, and facility upkeep.",
+    iconName: "ShieldCheck",
+    focusAreas: [
+      "Fire egress routes & smoke detection tests",
+      "Pool, spa & recreational area safety",
+      "Generator backup & critical power resilience",
+      "Secure perimeter & night patrol integrity",
+      "Health emergency kits & staff first-responder drill",
+    ],
+    metricsSample: "100% Life-Safety Compliance",
+  },
+];
+
+export const DELIVERABLE_CONTENT = {
+  sectionTitle: "Data-Driven, Actionable Intelligence",
+  bodyText: "We don't just provide opinions; we deliver comprehensive, checklist-based metrics. Within 48 hours of an inspection, you receive a full compliance report mapping out exact service gaps, photographic evidence, and immediate training recommendations for the hotel management.",
+  sampleInspection: {
+    title: "Executive Audit Dossier: Sample Cape Coastal Boutique Hotel",
+    propertyCategory: "Luxury Coastal Retreat (Cape Peninsula / Garden Route)",
+    inspectionDate: "Recent Mystery Stay",
+    overallScore: 91.4,
+    slaHours: 48,
+    pillarsScores: [
+      { name: "Guest Journey & Service Flow", score: 94, benchmark: 90 },
+      { name: "Housekeeping & Room Readiness", score: 96, benchmark: 92 },
+      { name: "Food & Beverage Excellence", score: 84, benchmark: 90 },
+      { name: "Safety & Compliance", score: 92, benchmark: 95 },
+    ],
+    sampleGaps: [
+      {
+        category: "Food & Beverage",
+        severity: "Medium" as const,
+        finding: "Dinner main course delay of 38 minutes between entrée and venison loin; wine pairing poured 15 minutes prior to food arrival.",
+        remedy: "Expediter training required on tasting menu sequencing; pass-timing protocol reinforcement.",
+      },
+      {
+        category: "Housekeeping",
+        severity: "Low" as const,
+        finding: "Private plunge pool heater thermostat fluctuating 4°C below standard night temperature.",
+        remedy: "Immediate thermostatic calibration assigned to resort engineering team.",
+      },
+      {
+        category: "Safety & Compliance",
+        severity: "High" as const,
+        finding: "Secondary fire egress door near eastern pavilion suite slightly obstructed by service linen trolley at 22:30.",
+        remedy: "Unobstructed night corridor mandate issued to night duty manager with daily photographic check-in.",
+      },
+    ],
+  },
+};
+
+export const CONFIDENTIALITY_CONTENT = {
+  sectionTitle: "100% Discrete Operations",
+  bodyText: "Anonymity is our core asset. Our inspectors blend in perfectly as high-end leisure or business travelers. Hotel management and on-site staff remain entirely unaware of the audit until your team decides to share the results.",
+  protocols: [
+    {
+      title: "Natural European Traveler Profiles",
+      description: "Inspectors check in using genuine, individual private identities matching standard affluent European holidaymaker demographics. No corporate telltales.",
+    },
+    {
+      title: "Direct Independent Payment Channels",
+      description: "All incidental and lodging expenditures are settled through neutral private consumer accounts, leaving zero trace in hotel accounting systems.",
+    },
+    {
+      title: "Zero In-Stay Confrontation",
+      description: "Service slips are meticulously recorded with timestamped, high-resolution evidence without triggering staff suspicion or altered behavior.",
+    },
+    {
+      title: "Embargoed Partner Release",
+      description: "You hold sole ownership of the findings. The audited property only ever learns of the results if, when, and how your executive team chooses to present them.",
+    },
+  ],
+};
+
+export const FOOTER_CONTENT = {
+  headline: "Secure Your Portfolio's Quality.",
+  submitButtonText: "Request a Sample Audit Report",
+  subtext: "Join leading tour operators from Frankfurt, Munich, Zurich, and London who rely on Cape Hospitality Advisors to safeguard their reputation across the Cape, from Cape Town to the Garden Route.",
+};
+
+export const PRICING_PACKAGES = [
+  {
+    tier: "BRONZE" as const,
+    priceEur: 590,
+    title: "Essential Quality Check",
+    subtitle: "Rapid Regional Dispatch",
+    delivery: "Rapid Regional Dispatch",
+    turnaround: "Rapid Regional Dispatch",
+    minimumContract: "Single-property rate",
+    ctaText: "Request Portfolio Triage Audit",
+    features: [
+      "Half-Day Site Visit: Unannounced daytime mystery inspection.",
+      "Arrival & Greeting: Standardized evaluation of entry protocols.",
+      "Public Area Snapshot: Rapid check of visible guest areas and F&B.",
+      "Core Safety Scan: Baseline check for clear hygiene or structural flags.",
+      "1-Page Scorecard: Executive compliance overview delivered instantly.",
+    ],
+    idealFor: "Routine seasonal spot-checks & high-volume partner hotels",
+  },
+  {
+    tier: "SILVER" as const,
+    priceEur: 750,
+    title: "Expanded Operational Audit",
+    subtitle: "Standard 3-Day Data Turnaround",
+    delivery: "Standard 3-Day Data Turnaround",
+    turnaround: "Standard 3-Day Data Turnaround",
+    minimumContract: "Volume discount available for 3+ assets",
+    ctaText: "Inquire for SILVER",
+    features: [
+      "Includes all Bronze features plus:",
+      "Day & Evening Window: Extended audit covering night service shifts.",
+      "In-Depth Room Check: Full technical and cleaning inspection of guest rooms.",
+      "Full Meal Evaluation: Complete dining pacing, quality, and service check.",
+      "Shortfall Photo Log: High-resolution visual dossier of all found defects.",
+      "Actionable Remedial Report: Detailed list of required property fixes.",
+    ],
+    idealFor: "Boutique hotels & coastal properties with recurring guest feedback",
+  },
+  {
+    tier: "GOLD" as const,
+    priceEur: 990,
+    title: "Full Hospitality Audit",
+    subtitle: "Full 4 Pillar Review • 5-Day Delivery",
+    recommended: true,
+    delivery: "Full 4 Pillar Review • 5-Day Delivery",
+    turnaround: "Full 4 Pillar Review • 5-Day Delivery",
+    minimumContract: "Single-property rate",
+    ctaText: "Inquire for GOLD",
+    features: [
+      "Includes all Silver features plus:",
+      "4-Pillar Mastery: Full-spectrum 360-degree operational benchmark.",
+      "420+ LQA Checkpoints: Mapped strictly to European Sorgfaltspflicht safety laws.",
+      "Technical UV Screen: Deep sanitation verification via specialized blacklight tech.",
+      "Infrastructure Audit: Advanced check of fire egress, electrical, and water potability.",
+      "GM Turnaround Blueprint: Root-cause analysis and an executive management action plan.",
+    ],
+    idealFor: "Flagship luxury portfolio properties & 5-star partner hotels",
+  },
+  {
+    tier: "PLATINUM" as const,
+    priceEur: 1850,
+    title: "Comprehensive Overnight Matrix",
+    subtitle: "Executive Turnaround • Overnight Matrix",
+    delivery: "Executive Turnaround • Overnight Matrix",
+    turnaround: "Executive Turnaround • Overnight Matrix",
+    minimumContract: "Single-property rate",
+    ctaText: "Inquire for PLATINUM",
+    features: [
+      "Includes all Gold features plus:",
+      "24h Overnight Stay: Full anonymous immersion from check-in to check-out.",
+      "Turn-Down & Pacing Tests: Stress-testing room service, night staff, and breakfast rushes.",
+      "On-Site Management Debrief: Immediate virtual or physical presentation to leadership.",
+      "5-Year Data Correlation: Mappings of your deep local R-intelligence/OpenAI sentiment arrays.",
+      "Remediation Roadmap: A formal framework for corporate compliance and mandatory re-testing.",
+    ],
+    idealFor: "High-stakes luxury contracts, exclusive partnerships & resolving VIP guest complaints",
+  },
+];
+
+export const OUR_USPS = [
+  {
+    key: "LOCAL",
+    title: "LOCAL",
+    tagline: "On the ground across the Western Cape, including the famous Garden Route.",
+    description: "No international flight delays or remote guesswork. Our teams are permanently based on the ground across the whole of the Western Cape—including the famous Garden Route and Winelands—with rapid deployment to luxury boutique hotels, coastal estates, and premier safari lodges.",
+    icon: "MapPin",
+  },
+  {
+    key: "HOSPITALITY EXPERTISE",
+    title: "HOSPITALITY EXPERTISE",
+    tagline: "Executive traveler standards & operations expertise.",
+    description: "Our inspectors aren't theoretical reviewers. We are former general managers and luxury lodge operators who evaluate properties with the exacting eye of a seasoned corporate traveler who has lived out of premium hotels worldwide. We know exactly what your executive clients expect because we have walked a million miles in their shoes.",
+    icon: "Award",
+  },
+  {
+    key: "GERMAN PERSPECTIVE",
+    title: "GERMAN PERSPECTIVE",
+    tagline: "We understand what German travelers expect.",
+    description: "German-speaking, European-trained inspection team that understands the exacting nuances German travelers expect — from uncompromising punctuality, precision logistics, and acoustic noise isolation to spotless hygiene and impeccable culinary execution.",
+    icon: "Compass",
+  },
+  {
+    key: "INDEPENDENT",
+    title: "INDEPENDENT",
+    tagline: "We work for the travel company's quality interests.",
+    description: "We hold zero commercial ties to audited properties. Our sole fiduciary obligation is safeguarding your brand equity, traveler satisfaction, and legal liability.",
+    icon: "ShieldCheck",
+  },
+  {
+    key: "FAST",
+    title: "FAST",
+    tagline: "Problems can be checked before they become complaints.",
+    description: "Rapid deployment within 48 hours of your request. Pinpoint emerging service degradation or management slippage before it ever manifests in negative European reviews or legal compensation claims.",
+    icon: "Zap",
+  },
+  {
+    key: "DATA",
+    title: "DATA",
+    tagline: "Physical audits cross-referenced with sentiment analytics.",
+    description: "We don't just rely on single-stay snapshots. We cross-reference our 420-point on-site physical inspection metrics with multi-year review sentiment data across major platforms, exposing whether service issues are isolated incidents or systemic operational leaks.",
+    icon: "BarChart3",
+  },
+];
+
+export const DATA_SCIENCE_CONTENT = {
+  headline: "Data-Science & Sentiment Alignment",
+  quote: "We combine deep physical mystery guest audits with all-time historical review sentiment data to pinpoint exactly where your revenue is leaking.",
+  heroMetricTitle: "The Hero Metric (10% Risk Discrepancy)",
+  heroStatisticalBlurb: "Standard booking platform filters blindside operators to critical contract hazards, leaving a 10% compliance data blind spot hidden directly inside the text reviews of your premium assets—exposing your organization to severe liability (Veranstalterhaftung) under German travel law.",
+  analystVerdict: {
+    badge: "ANALYST VERDICT • CORPORATE LIABILITY ANALYSIS",
+    paragraph1: "Traditional Booking.com scoring structures create a dangerous corporate blind spot. Relying on aggregate metrics (like an 8.2/10 rating) masks critical operational decay.",
+    paragraph2: "Our pilot study demonstrates that a collective 10% of text reviews nested inside these highly rated profiles contain hidden, unmanaged safety and hygiene hazards. Standard filters blindside procurement teams to these contract defects—leaving a collective 10% compliance data blind spot hidden in your premium assets that directly exposes your organization to severe liability under German travel law (Veranstalterhaftung).",
+  },
+  description: "Traditional mystery shopping provides only a single snapshot in time. We cross-reference our 420-point on-site physical inspection metrics with multi-year NLP sentiment data scraped from TripAdvisor, Google Reviews, and Booking.com across your partner hotels. This statistical triangulation exposes whether a service failure is an isolated slip or an ingrained systemic leak driving booking cancellations.",
+  benchmarkTable: [
+    {
+      assetCode: "Premium Maritime Waterfront Asset",
+      descriptor: "Cape Town V&A Waterfront Corridor • Booking.com 8.0/10",
+      platformRating: "⭐ 4.0 / 5",
+      hygieneIndex: "88% (Suboptimal)",
+      hygieneStatus: "suboptimal",
+      safetyIndex: "95% (Optimal)",
+      safetyStatus: "optimal",
+    },
+    {
+      assetCode: "Urban Convention & Business Hub",
+      descriptor: "Cape Town City Bowl & Convention Center • Booking.com 8.2/10",
+      platformRating: "⭐ 4.1 / 5",
+      hygieneIndex: "100% (Exzellent)",
+      hygieneStatus: "exzellent",
+      safetyIndex: "100% (Exzellent)",
+      safetyStatus: "exzellent",
+    },
+    {
+      assetCode: "Coastal Eco-Resort & Spa Property",
+      descriptor: "Garden Route Coastal Eco-Resort & Spa • Booking.com 8.2/10",
+      platformRating: "⭐ 4.1 / 5",
+      hygieneIndex: "82% (Risiko)",
+      hygieneStatus: "critical",
+      safetyIndex: "82% (Risiko)",
+      safetyStatus: "critical",
+    },
+  ],
+  enginePerformanceInsights: {
+    sectionTitle: "ENGINE PERFORMANCE & OPERATIONS INSIGHTS",
+    columns: [
+      {
+        id: "risk-severity-triage",
+        columnLabel: "RISK SEVERITY TRIAGE",
+        subLabel: "Die Triage-Matrix",
+        title: "Automated Risk Level Classification",
+        metric: "20.0% Level 3 Liability",
+        metricValue: "20.0%",
+        metricUnit: "Level 3 Liability",
+        copy: "Our algorithm reads text profiles and triages anomalies into operational lenses. Across our active portfolio data, 20% of flagged text blocks represent critical Level 3 Legal Liabilities (Haftungsrisiko), while 60% expose Level 2 Contractual Defects (Mängel)—allowing compliance teams to triage risks instantly.",
+      },
+      {
+        id: "workload-optimization",
+        columnLabel: "WORKLOAD OPTIMIZATION",
+        subLabel: "The Hybrid Trigger",
+        title: "Efficiency-Driven Resource Allocation",
+        metric: "95.5% Noise Reduction",
+        metricValue: "95.5%",
+        metricUnit: "Noise Reduction",
+        copy: "Our deterministic filtering layer automatically reduces manual quality management audit overhead by 95.5%.\n\nBy evaluating incoming text arrays locally, the system completely filters out conversational noise and generic praise. Only 2.0% of portfolio reviews contain critical anomalies that trigger our advanced AI semantic processing, automatically routing targeted, high-priority deployment orders to our physical on-site field inspectors. This transforms human auditing from a blind corporate expense into a precision risk-mitigation tool.",
+      },
+      {
+        id: "temporal-compliance-drift",
+        columnLabel: "TEMPORAL COMPLIANCE DRIFT",
+        subLabel: "Frühwarnsystem",
+        title: "Predictive Performance Drift Vector",
+        metric: "+12.0 Performance Drift",
+        metricValue: "+12.0",
+        metricUnit: "Performance Drift",
+        copy: "Our temporal engine separates long-term data baselines from ultra-recent feedback windows. While our comparative benchmarking table captures the macro-historical average of 88% for the Premium Maritime Waterfront Asset, this module isolates a +12.0 performance correction vector based strictly on the latest rolling window of recent reviews—capturing a real-time shift to 100% compliance well before traditional platform ratings register a change.",
+      },
+    ],
+  },
+};
