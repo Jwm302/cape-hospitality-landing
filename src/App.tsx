@@ -38,7 +38,7 @@ export default function App() {
   const [passkeyInput, setPasskeyInput] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [isBriefingModalOpen, setIsBriefingModalOpen] = useState(false);
-  const [selectedTier, setSelectedTier] = useState<string>('GOLD');
+  const [selectedTier, setSelectedTier] = useState<string>('PROFESSIONAL');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();

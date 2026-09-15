@@ -29,18 +29,21 @@ export interface InspectionDeliverableData {
 }
 
 export interface PricingPackage {
-  tier: 'BRONZE' | 'SILVER' | 'GOLD' | 'PLATINUM';
-  priceEur: number;
+  id: string;
+  tierNumber: string;
+  tier: string;
   title: string;
-  subtitle: string;
-  recommended?: boolean;
+  tagline: string;
+  description: string;
+  isPopular?: boolean;
+  additiveNote?: string;
   features: string[];
   idealFor: string;
-  turnaround: string;
-  delivery?: string;
-  minimumContract?: string;
-  ctaText?: string;
-  footnote?: string;
+  questionAnswered: string;
+  ctaText: string;
+  priceEur?: number;
+  priceDisplay?: string;
+  highlights?: string[];
 }
 
 export interface UspItem {

@@ -18,7 +18,7 @@ interface LeadCaptureFooterProps {
 
 export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
   onScheduleBriefing,
-  selectedTier = 'GOLD',
+  selectedTier = 'PROFESSIONAL',
 }) => {
   const [formData, setFormData] = useState<LeadFormData>({
     name: '',
@@ -27,6 +27,13 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
     location: '',
     selectedTier: selectedTier,
   });
+
+  // Keep selectedTier synced when user selects a tier from the Pricing section
+  React.useEffect(() => {
+    if (selectedTier) {
+      setFormData((prev) => ({ ...prev, selectedTier }));
+    }
+  }, [selectedTier]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -160,21 +167,40 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
                 </div>
               </div>
 
-              {/* Field 4: Target Property Location */}
-              <div className="space-y-1">
-                <label htmlFor="field-target-location" className="block text-[11px] font-bold uppercase tracking-wider text-zinc-700">
-                  Target Property Location
-                </label>
-                <div className="relative">
-                  <MapPin className="w-3.5 h-3.5 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <input
-                    id="field-target-location"
-                    type="text"
-                    placeholder="Target Property Location (e.g., Cape Town, Stellenbosch, Knysna, Plettenberg Bay, or Garden Route Region)"
-                    value={formData.location || ''}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs text-zinc-900 focus:outline-none focus:border-[#10213a] focus:bg-white transition-all placeholder:text-zinc-400"
-                  />
+              {/* Field 4: Target Property Location & Service Tier */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div className="space-y-1">
+                  <label htmlFor="field-service-tier" className="block text-[11px] font-bold uppercase tracking-wider text-zinc-700">
+                    Interested Service Tier
+                  </label>
+                  <select
+                    id="field-service-tier"
+                    value={formData.selectedTier}
+                    onChange={(e) => setFormData({ ...formData, selectedTier: e.target.value })}
+                    className="w-full px-3 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs text-zinc-900 focus:outline-none focus:border-[#10213a] focus:bg-white transition-all font-medium"
+                  >
+                    <option value="ESSENTIAL">01 — Essential Hotel Check</option>
+                    <option value="PROFESSIONAL">02 — Professional Hotel Audit (⭐ Most Popular)</option>
+                    <option value="PREMIUM">03 — Premium Deep-Dive Audit</option>
+                    <option value="PARTNERSHIP">04 — Quality Monitoring Partnership</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label htmlFor="field-target-location" className="block text-[11px] font-bold uppercase tracking-wider text-zinc-700">
+                    Target Property Location
+                  </label>
+                  <div className="relative">
+                    <MapPin className="w-3.5 h-3.5 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      id="field-target-location"
+                      type="text"
+                      placeholder="e.g. Cape Town, Franschhoek, Knysna"
+                      value={formData.location || ''}
+                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                      className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs text-zinc-900 focus:outline-none focus:border-[#10213a] focus:bg-white transition-all placeholder:text-zinc-400"
+                    />
+                  </div>
                 </div>
               </div>
 
