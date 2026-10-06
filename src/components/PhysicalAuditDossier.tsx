@@ -34,10 +34,11 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
   const handleCopyTemplate = () => {
     const templateText = `CAPE HOSPITALITY ADVISORS — PHYSICAL AUDIT REPORT (CHA FORM-101)
 CONFIDENTIAL EXECUTIVE DOSSIER • PREPARED EXCLUSIVELY FOR TOUR OPERATOR PROCUREMENT
-[Actual Hotel Name Protected under POPIA & Replaced by Best-Fitting Regional Archetype]
+[Property Trade Name Masked by Pseudonym pursuant to POPIA & Non-Disclosure Agreement]
 
 SECTION 1: AUDIT METADATA & FIELD DEPLOYMENT
-- Target Property Archetype: [Hotel Archetype / Regional Identifier]
+- Target Property: [Property Pseudonym / Trade Name under NDA]
+- Archetype Classification: [e.g. 5-Star Historic Prestige Archetype]
 - Location: [Western Cape / Cape Town / Garden Route Corridor]
 - Inspection Type: 24-Hour Anonymous Mystery Guest Stay (Single-Blind Deployment)
 - Lead Inspector: Senior European Hospitality Inspector (DACH Hospitality Background)
@@ -63,8 +64,8 @@ SECTION 3: THE 3-STEP EXECUTIVE CONCLUSION
 1. WE OBSERVE (The Ground Facts):
    [Chronological field observations with photographic evidence log]
 
-2. WE ASSESS RISK (The Impact on Your Guests & Catalog Guarantees):
-   [Mapping deviations to German travel liability, Frankfurter Tabelle, and guest complaint risk]
+2. WE ASSESS RISK (The Guest Experience & Complaint Risk):
+   [Evaluating guest friction, brochure credibility, and complaint risk through the eyes of a paying traveler]
 
 3. WE RECOMMEND (Actionable Solutions):
    [Contract clauses, specific room wing allocations, and hotel management discussion points]`;
@@ -84,23 +85,23 @@ SECTION 3: THE 3-STEP EXECUTIVE CONCLUSION
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 shadow-xs mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-[#b38a54]" />
             <span className="tracking-widest uppercase font-mono text-[11px]">
-              VIRTUAL RADAR → PHYSICAL TRUTH
+              STAGE 02 • ON-SITE MYSTERY AUDIT CASE STUDY
             </span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#10213a] tracking-tight font-serif leading-tight">
-            How a Virtual Flag Becomes an On-Site Verification
+            Actual On-Site Physical Audit: The Gardens Heritage Manor
           </h2>
 
           <p className="mt-4 text-base sm:text-lg text-zinc-600 font-normal leading-relaxed">
-            The Agent Virtual Audit flags emerging blind spots; our local mystery inspector verifies the physical truth on the ground. Below is an actual on-site inspection dossier showing the exact workflow and repeatable reporting structure.
+            While the regional archetypes in Stage 1 above demonstrate our desk-based Virtual Audits, below is an actual on-site mystery inspection performed by Cape Hospitality Advisors. This case study details an unannounced overnight stay conducted at an actual 5-star hotel in Cape Town (masked under the property pseudonym <em>“The Gardens Heritage Manor”</em>, classified under our Historic Prestige archetype).
           </p>
 
           {/* POPIA / Discretion Banner */}
-          <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white border border-zinc-200 text-xs text-zinc-600 shadow-xs text-left">
-            <Lock className="w-3.5 h-3.5 text-[#b38a54] shrink-0" />
-            <span>
-              <strong>POPIA & Discretion Notice:</strong> The actual property name has been replaced by its best-fitting regional luxury archetype — <em>Colonial Heritage Grand Estate & Spa</em> — in compliance with the South African Protection of Personal Information Act (POPIA) and mutual non-disclosure obligations.
+          <div className="mt-5 inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white border border-zinc-300 text-xs text-zinc-700 shadow-xs text-left max-w-2xl">
+            <Lock className="w-4 h-4 text-[#b38a54] shrink-0" />
+            <span className="leading-relaxed">
+              <strong>POPIA & Confidentiality Notice:</strong> This is an actual physical audit performed on site by our team. In compliance with the South African Protection of Personal Information Act (POPIA) and bilateral non-disclosure agreements, the real establishment trade name is masked under the property pseudonym <em>“The Gardens Heritage Manor”</em> (classified under our Historic Prestige archetype).
             </span>
           </div>
         </div>
@@ -116,7 +117,7 @@ SECTION 3: THE 3-STEP EXECUTIVE CONCLUSION
                   : 'text-zinc-600 hover:text-zinc-900'
               }`}
             >
-              Actual On-Site Audit Dossier (Cape Town)
+              Actual Field Audit: The Gardens Heritage Manor
             </button>
             <button
               onClick={() => setActiveTab('workflow')}
@@ -151,18 +152,22 @@ SECTION 3: THE 3-STEP EXECUTIVE CONCLUSION
             {/* Dossier Header Bar */}
             <div className="bg-[#10213a] text-white p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10">
               <div>
-                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                   <span className="font-mono text-[11px] text-[#d9bd8b] tracking-wider uppercase font-semibold">
                     PHYSICAL INSPECTION DOSSIER • REF: CHA-CPT-2026-084
                   </span>
-                  <span className="bg-white/10 text-zinc-300 text-[10px] font-mono px-2 py-0.5 rounded">
-                    ACTUAL AUDIT • ANONYMIZED
+                  <span className="bg-emerald-500/20 text-emerald-300 text-[10px] font-mono px-2.5 py-0.5 rounded border border-emerald-500/30 font-bold uppercase">
+                    ACTUAL COMPLETED AUDIT • PROPERTY PSEUDONYM
                   </span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-serif font-bold text-white">
-                  Colonial Heritage Grand Estate & Spa
+                  The Gardens Heritage Manor
                 </h3>
-                <p className="text-xs text-zinc-300 mt-1 flex items-center gap-3 flex-wrap">
+                <p className="text-xs text-zinc-300 mt-1.5 flex items-center gap-3 flex-wrap font-light">
+                  <span className="text-[#d9bd8b] font-mono text-[11px] font-medium">
+                    (Actual 5-Star Hotel • Classified under Historic Prestige Archetype)
+                  </span>
+                  <span>•</span>
                   <span className="flex items-center gap-1">
                     <MapPin className="w-3.5 h-3.5 text-[#d9bd8b]" /> Gardens District, Cape Town
                   </span>
@@ -179,7 +184,7 @@ SECTION 3: THE 3-STEP EXECUTIVE CONCLUSION
 
               <div className="flex items-center gap-3">
                 <div className="text-right pr-4 border-r border-white/15">
-                  <div className="text-[10px] font-mono uppercase text-zinc-400">Overall Rating</div>
+                  <div className="text-[10px] font-mono uppercase text-zinc-400">Experience Reality</div>
                   <div className="text-2xl font-black font-mono text-amber-400">81<span className="text-xs text-zinc-400">/100</span></div>
                   <div className="text-[10px] text-amber-300 font-medium">Advisory Action Required</div>
                 </div>
@@ -203,10 +208,10 @@ SECTION 3: THE 3-STEP EXECUTIVE CONCLUSION
                   </div>
                   <div>
                     <div className="text-xs font-mono font-bold text-amber-900 uppercase">
-                      Origin: Virtual Pre-Audit Flagged Risk (HolidayCheck & Booking.com)
+                      Case Origin: Triggered by Stage 1 Virtual Pre-Audit Signals
                     </div>
                     <p className="text-xs text-amber-900/90 mt-0.5 leading-relaxed">
-                      Our desk audit identified recurring German guest feedback citing "cold water during morning showers" and "noisy bedroom air conditioning." The tour operator commissioned this unannounced physical mystery stay to act as their eyes and ears on the ground before committing their 2026/2027 catalog allotments.
+                      Prior to deploying an inspector, our Stage 1 Virtual Audit of this property detected recurring guest feedback citing "cold water during morning showers" and "noisy bedroom air conditioning." The tour operator commissioned our team to physically stay at this hotel to verify the facts before committing client bookings.
                     </p>
                   </div>
                 </div>
@@ -222,7 +227,7 @@ SECTION 3: THE 3-STEP EXECUTIVE CONCLUSION
                     Physical Field Checkpoints (Eyes & Ears on the Ground)
                   </h4>
                   <span className="text-xs font-mono text-zinc-400">
-                    Real Guest Touchpoint Testing
+                    Targeted Testing of Flags from Stage 1
                   </span>
                 </div>
 
@@ -318,7 +323,7 @@ SECTION 3: THE 3-STEP EXECUTIVE CONCLUSION
                       <span>2. We Assess Risk</span>
                     </div>
                     <p className="text-xs text-zinc-600 leading-relaxed">
-                      Under German travel law (Frankfurter Tabelle), cold shower fluctuations and interrupted night sleep represent standard defect claims (15% to 20% catalog refund risk). There is a very high probability of post-holiday complaints and compensation demands if your clients are allocated these rooms.
+                      From the perspective of a discerning guest paying luxury rates, interrupted night sleep and lukewarm showers represent acute experience failures. There is a very high probability of client frustration, negative post-trip reviews, and catalog refund demands if your clients are allocated to these legacy rooms.
                     </p>
                   </div>
 
@@ -496,13 +501,14 @@ SECTION 3: THE 3-STEP EXECUTIVE CONCLUSION
               <div className="text-emerald-400 font-bold border-b border-zinc-800 pb-2">
                 # CAPE HOSPITALITY ADVISORS — PHYSICAL AUDIT REPORT (CHA FORM-101)
                 <br /># CONFIDENTIAL EXECUTIVE DOSSIER • PREPARED FOR TOUR OPERATOR PROCUREMENT
-                <br /># [Actual Property Name Protected under POPIA & Replaced by Best-Fitting Regional Archetype]
+                <br /># [Property Trade Name Masked by Pseudonym pursuant to POPIA & Non-Disclosure Agreement]
               </div>
 
               <div className="space-y-1">
                 <span className="text-[#d9bd8b] font-bold">1. AUDIT METADATA & FIELD DEPLOYMENT</span>
                 <div className="pl-4 text-zinc-300">
-                  • Target Property Archetype: [Hotel Archetype / Regional Identifier]<br />
+                  • Target Property: [Property Pseudonym / Trade Name under NDA]<br />
+                  • Archetype Classification: [e.g. 5-Star Historic Prestige Archetype]<br />
                   • Location: [Western Cape / Cape Town / Garden Route Corridor]<br />
                   • Inspection Type: 24-Hour Anonymous Mystery Guest Stay (Single-Blind)<br />
                   • Virtual Pre-Audit Flag: [Preliminary virtual data directly custom-shapes the inspector's checklist, making the physical audit unique to this establishment]<br />
@@ -525,7 +531,7 @@ SECTION 3: THE 3-STEP EXECUTIVE CONCLUSION
                 <span className="text-[#d9bd8b] font-bold">3. THE 3-STEP EXECUTIVE CONCLUSION</span>
                 <div className="pl-4 text-zinc-300">
                   • <strong className="text-white">1. WE OBSERVE:</strong> [Chronological field facts, photographic evidence log]<br />
-                  • <strong className="text-white">2. WE ASSESS RISK:</strong> [Mapping deviations to German catalog standards & Frankfurter Tabelle liability]<br />
+                  • <strong className="text-white">2. WE ASSESS RISK:</strong> [Evaluating guest friction & catalog complaint risk purely through the eyes of a paying traveler]<br />
                   • <strong className="text-white">3. WE RECOMMEND:</strong> [Room wing contract stipulations, GM discussion points, or alternative bookings]
                 </div>
               </div>

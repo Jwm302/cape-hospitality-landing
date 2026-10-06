@@ -41,7 +41,7 @@ PILLAR BREAKDOWN:
    - Flawless pre-arrival coordination & champagne greeting.
    - Minor: Luggage arrival delayed by 9 minutes at eastern suite.
 2. Housekeeping & Room Readiness: 96.1% [PASS]
-   - Technical cleanliness pristine; HVAC sound decibels measured at 31dB (excellent).
+   - Technical cleanliness pristine; bedroom air conditioning whisper-quiet and responsive (excellent).
    - Minor: Plunge pool thermostat calibrated 4°C below standard night setpoint.
 3. Food & Beverage Excellence: 84.0% [ACTION REQUIRED]
    - Breakfast presentation exceptional.

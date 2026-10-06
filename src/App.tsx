@@ -9,11 +9,11 @@ import { PricingSection } from './components/PricingSection';
 import { LeadCaptureFooter } from './components/LeadCaptureFooter';
 import { BriefingModal } from './components/BriefingModal';
 import logoImg from './assets/images/logo.png';
-import { ArrowRight, Sparkles, Shield, Info } from 'lucide-react';
+import { ArrowRight, Sparkles, Shield, Lock } from 'lucide-react';
 
 const SECRET_ACCESS_KEY = 'cape2026';
 
-// Synchronous check: Runs BEFORE the page ever renders
+// Synchronous check: Runs BEFORE the page renders
 const checkInitialAuth = (): boolean => {
   if (typeof window === 'undefined') return false;
   try {
@@ -54,16 +54,7 @@ export default function App() {
       }
       setErrorMsg('');
     } else {
-      setErrorMsg('Invalid passkey. You can also use Instant Preview below.');
-    }
-  };
-
-  const handleInstantUnlock = () => {
-    setIsAuthenticated(true);
-    try {
-      localStorage.setItem('cha_authenticated', 'true');
-    } catch {
-      // Safe fallback
+      setErrorMsg('Invalid passkey. Please enter cape2026 or use the link with ?access=cape2026');
     }
   };
 
@@ -90,7 +81,7 @@ export default function App() {
     handleScrollToSection('contact');
   };
 
-  // 1. GATEWAY SCREEN
+  // 1. GATEWAY SCREEN (Shown if ?access=cape2026 is missing and user has not authenticated yet)
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#10213a] text-white flex flex-col items-center justify-center px-4 sm:px-6 selection:bg-white selection:text-[#10213a] py-12">
@@ -105,30 +96,27 @@ export default function App() {
             Advisors • European Tour Operator Portal
           </p>
 
-          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 mb-6 text-left space-y-1.5">
-            <div className="text-xs font-serif italic text-white font-semibold">
-              “A five-star hotel does not automatically guarantee a five-star guest experience.”
+          <div className="p-4 rounded-2xl bg-white/5 border border-white/10 mb-6 text-left space-y-2">
+            <div className="text-xs font-serif italic text-white font-semibold flex items-center gap-2">
+              <Lock className="w-3.5 h-3.5 text-[#d9bd8b]" />
+              <span>Restricted Client Preview</span>
             </div>
             <p className="text-[11px] text-zinc-300 font-light leading-relaxed">
-              We provide independent and current quality perspectives for European travel companies. In simple terms: we observe, we assess and we recommend — we do not certify or legally determine compliance.
+              This portal is currently private. To access, enter the passkey below or visit via your invitation link containing <code className="text-[#d9bd8b] font-mono bg-white/10 px-1 py-0.5 rounded">?access=cape2026</code>.
             </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-3.5">
             <div>
-              <div className="mb-2.5 flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-mono font-semibold tracking-wider text-[#d9bd8b]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#d9bd8b] animate-pulse" />
-                <span>Get your free data package now</span>
-              </div>
               <input
                 type="password"
                 value={passkeyInput}
                 onChange={(e) => setPasskeyInput(e.target.value)}
-                placeholder="Enter client passkey (cape2026)"
+                placeholder="Enter passkey (cape2026)"
                 className="w-full bg-white/10 border border-white/20 px-4 py-3 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[#d9bd8b] text-center rounded-xl tracking-wider"
               />
               {errorMsg && (
-                <p className="text-rose-400 text-xs mt-2 text-left">{errorMsg}</p>
+                <p className="text-rose-400 text-xs mt-2 text-center">{errorMsg}</p>
               )}
             </div>
 
@@ -139,34 +127,28 @@ export default function App() {
               <span>Unlock Client Portal</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
-
-            <button
-              type="button"
-              onClick={handleInstantUnlock}
-              className="w-full bg-white/10 text-zinc-200 hover:text-white hover:bg-white/15 py-2.5 text-xs font-semibold transition-all rounded-xl flex items-center justify-center gap-1.5 cursor-pointer border border-white/15"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-[#d9bd8b]" />
-              <span>Explore Interactive Demo / Get Free Package</span>
-            </button>
           </form>
 
-          <div className="mt-6 pt-5 border-t border-white/10 text-xs text-zinc-400">
-            Authorized contact: <span className="text-zinc-200">advisory@capehospitalityadvisors.com</span>
+          <div className="mt-6 pt-5 border-t border-white/10 text-center">
+            <p className="text-[10px] text-zinc-400 font-mono">
+              In simple terms: we observe, we assess and we recommend.
+            </p>
           </div>
         </div>
       </div>
     );
   }
 
-  // 2. UNLOCKED SITE
+  // 2. MAIN EXPERIENCE (When authenticated)
   return (
-    <div className="min-h-screen bg-[#fbfbfa] text-zinc-900 selection:bg-[#10213a] selection:text-white">
+    <div className="min-h-screen bg-[#fbfbfa] text-zinc-900 selection:bg-[#10213a] selection:text-white font-sans antialiased">
+      {/* Global Navigation */}
       <Navbar
         onScheduleBriefing={() => setIsBriefingModalOpen(true)}
-        onContactClick={() => handleScrollToSection('contact')}
         onRequestFreeDataPackage={handleRequestFreeDataPackage}
       />
 
+      {/* Main Flow: Executive, Cohesive Journey */}
       <main>
         {/* 1. Hero Section: Core Statement & Problem Solving */}
         <Hero
@@ -176,7 +158,7 @@ export default function App() {
           onRequestFreeDataPackage={handleRequestFreeDataPackage}
         />
 
-        {/* 2. The Reality Gap: Observe, Assess, Recommend */}
+        {/* 2. The Reality Gap: We Observe, We Assess Risk, We Recommend */}
         <RealityGapSection
           onExploreVirtualAudit={() => handleScrollToSection('virtual-audit')}
           onRequestFreeDataPackage={handleRequestFreeDataPackage}
@@ -188,7 +170,7 @@ export default function App() {
           onRequestFreeDataPackage={handleRequestFreeDataPackage}
         />
 
-        {/* 4. The Workflow & Simulated Real Physical Audit Case Study */}
+        {/* 4. The Workflow & Actual On-Site Physical Audit Case Study */}
         <PhysicalAuditDossier
           onCommissionAudit={() => {
             setSelectedTier('PHYSICAL_AUDIT');
@@ -197,16 +179,16 @@ export default function App() {
           onRequestFreeDataPackage={handleRequestFreeDataPackage}
         />
 
-        {/* 5. Why Partner With Us: Our 6 USPs */}
+        {/* 5. Why Partner With Us: The Institutional Edge & Comparison Matrix */}
         <UspSection />
 
-        {/* 5. Clear, Simplified Services & Pricing */}
+        {/* 6. Clear, Simplified Services & Pricing */}
         <PricingSection
           onSelectTier={handleSelectPricingTier}
           onRequestFreeDataPackage={handleRequestFreeDataPackage}
         />
 
-        {/* 6. Lead Capture & Free Data Package Form */}
+        {/* 7. Lead Capture & Free Data Package Form */}
         <LeadCaptureFooter
           onScheduleBriefing={() => setIsBriefingModalOpen(true)}
           selectedTier={selectedTier}
@@ -214,14 +196,11 @@ export default function App() {
         />
       </main>
 
+      {/* Direct Scheduling Briefing Modal */}
       <BriefingModal
         isOpen={isBriefingModalOpen}
         onClose={() => setIsBriefingModalOpen(false)}
         selectedTier={selectedTier}
-        onRequestSampleReport={() => {
-          setIsBriefingModalOpen(false);
-          handleScrollToSection('contact');
-        }}
       />
     </div>
   );

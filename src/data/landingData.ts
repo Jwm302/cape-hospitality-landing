@@ -68,7 +68,7 @@ export const FOUR_PILLARS_CONTENT: PillarItem[] = [
     focusAreas: [
       "UV & luminescence hygiene verification",
       "Linen thread count & pillow integrity",
-      "HVAC, water pressure & acoustic isolation",
+      "Air conditioning, water pressure & acoustic isolation",
       "Turndown execution & amenities staging",
       "Wear-and-tear & preventive maintenance log",
     ],
@@ -361,9 +361,9 @@ export const OUR_USPS = [
   },
   {
     key: "GERMAN PERSPECTIVE",
-    title: "GERMAN CATALOG & DRV STANDARDS",
-    tagline: "Evaluated specifically against European travel liability.",
-    description: "Trained on the exacting standards German tour operators face under European travel law (Frankfurter Tabelle): acoustic sleep disruption, bathroom water consistency, and brochure accuracy to preempt costly catalog refund claims before travelers return home.",
+    title: "DISCERNING EUROPEAN GUEST LENS",
+    tagline: "Evaluating what German & European travelers actually experience.",
+    description: "Trained on the specific sensitivities German and European guests care about most: night sleep quietness, bathroom water temperature, prompt check-in, and brochure honesty. We report on friction points through the eyes of a paying guest before they turn into disappointed reviews or catalog complaints.",
     icon: "Compass",
   },
   {

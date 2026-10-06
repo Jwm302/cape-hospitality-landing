@@ -45,10 +45,10 @@ export const UspSection: React.FC = () => {
       highlight: true,
     },
     {
-      metric: 'European Catalog & Legal Lens',
+      metric: 'European Guest Lens & Complaint Risk',
       starCouncil: 'None (Local structural criteria only)',
       hotelBureaus: 'None (Generic luxury hospitality benchmarks)',
-      cha: 'German Travel Standards & Frankfurter Tabelle liability',
+      cha: 'Discerning traveler expectations & brochure complaint prevention',
       highlight: false,
     },
     {
