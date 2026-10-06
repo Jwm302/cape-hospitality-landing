@@ -340,6 +340,20 @@ SECTION 3: THE 3-STEP EXECUTIVE CONCLUSION
                 </div>
               </div>
 
+              {/* The Two-Way Shield: Defending Tour Operators Against False & Exaggerated Guest Reviews */}
+              <div className="p-6 rounded-2xl bg-[#0c182a] text-white border border-white/10 text-left">
+                <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#d9bd8b] mb-1.5">
+                  <Shield className="w-4 h-4 text-[#d9bd8b]" />
+                  <span>The Two-Way Protection Shield</span>
+                </div>
+                <h4 className="text-base font-bold font-serif text-white mb-2">
+                  Protecting Tour Operators from Bad Actors & Unfounded Compensation Claims
+                </h4>
+                <p className="text-xs text-zinc-300 leading-relaxed font-light">
+                  Our audits protect you on both fronts. When a hotel genuinely underperforms, we alert you so you can mandate room adjustments before your guests arrive. But our audits also provide an indispensable defense against <strong>opportunistic travelers and bad actors</strong> who return home making fabricated or exaggerated complaints to extract 20%–50% post-trip refunds or threaten damaging reviews. With our unannounced, timestamped photographic logs, recorded room decibels, and verified water temperature measurements, your customer care and legal teams possess undeniable ground proof to reject unjustified claims.
+                </p>
+              </div>
+
               {/* Download / Action Row */}
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-zinc-200">
                 <div className="text-xs font-mono text-zinc-500">
@@ -446,6 +460,20 @@ SECTION 3: THE 3-STEP EXECUTIVE CONCLUSION
                   </p>
                 </div>
               </div>
+            </div>
+
+            {/* The Two-Way Shield: Defending Operators Against Bad-Faith Guest Claims */}
+            <div className="mt-6 p-6 rounded-2xl bg-[#0c182a] text-white border border-white/10 text-left">
+              <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#d9bd8b] mb-1.5">
+                <Shield className="w-4 h-4 text-[#d9bd8b]" />
+                <span>The Two-Way Protection Shield</span>
+              </div>
+              <h4 className="text-base font-bold font-serif text-white mb-2">
+                Defending Tour Operators Against False & Exaggerated Guest Reviews
+              </h4>
+              <p className="text-xs text-zinc-300 leading-relaxed font-light">
+                Our audits protect you on both fronts. While they alert you when a hotel is genuinely underperforming, they also provide an indispensable defense against <strong>opportunistic travelers and bad actors</strong> who return home making fabricated complaints to extract 20%–50% post-trip refunds. With our unannounced, timestamped photographic logs, recorded water temperatures, and verified service pacing, your customer service and legal teams possess undeniable ground proof to reject unjustified compensation claims.
+              </p>
             </div>
 
             <div className="mt-8 pt-8 border-t border-zinc-200 flex flex-col sm:flex-row items-center justify-between gap-4">

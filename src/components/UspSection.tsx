@@ -52,6 +52,13 @@ export const UspSection: React.FC = () => {
       highlight: false,
     },
     {
+      metric: 'Bad-Actor & False Review Defense',
+      starCouncil: 'Zero support (No evidence logs for customer disputes)',
+      hotelBureaus: 'None (Generic marketing scores cannot resolve legal disputes)',
+      cha: 'Timestamped ground evidence (decibels, water temps, photos) to refute false claims',
+      highlight: true,
+    },
+    {
       metric: 'Actionable Executive SLA',
       starCouncil: 'Formal bureaucratic certificate',
       hotelBureaus: '3–4 weeks for 50-page internal deck',

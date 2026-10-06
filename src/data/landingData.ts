@@ -354,9 +354,9 @@ export const OUR_USPS = [
   },
   {
     key: "OBJECTIVE TIMINGS",
-    title: "OBJECTIVE OPERATIONAL TIMINGS",
-    tagline: "Real guest journey timings rather than vague opinions.",
-    description: "We record concrete operational touchpoints: check-in queue duration, luggage delivery speed, breakfast order-to-table delivery, and morning shower temperature stability. Objective, timestamped data gives you indisputable leverage when discussing service quality with hotel management.",
+    title: "OBJECTIVE EVIDENCE & TIMINGS",
+    tagline: "Indisputable data to improve hotels — and refute false guest claims.",
+    description: "We record concrete operational touchpoints: check-in queue duration, luggage delivery speed, breakfast pacing, room decibels, and morning shower temperature stability. This timestamped ground data serves a vital two-way purpose: it gives you leverage to improve hotel quality, and provides bulletproof factual evidence to refute bad actors making fabricated post-trip complaints or false reviews.",
     icon: "Zap",
   },
   {

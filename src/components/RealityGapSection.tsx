@@ -68,11 +68,11 @@ export const RealityGapSection: React.FC<RealityGapSectionProps> = ({
                 We Assess Risk
               </h3>
               <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed font-normal">
-                We assess risk purely through the eyes of a paying guest. We evaluate where the on-site reality contradicts your brochure promise, flagging friction points that cause guest frustration, negative reviews, and compensation requests before your clients arrive.
+                We assess risk purely through the eyes of a paying guest. We evaluate where on-site reality contradicts your brochure promise, flagging chronic complaint triggers before clients arrive. Crucially, our objective ground data also protects you against bad actors and opportunistic guests who falsely claim defects to demand post-trip refunds.
               </p>
             </div>
             <div className="pt-6 mt-6 border-t border-zinc-100 text-xs font-mono text-zinc-400">
-              ✓ Discerning guest lens & complaint prevention
+              ✓ Discerning guest lens & defense against false claims
             </div>
           </div>
 
