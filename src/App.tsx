@@ -3,6 +3,7 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { RealityGapSection } from './components/RealityGapSection';
 import { AgentVirtualAudit } from './components/AgentVirtualAudit';
+import { PhysicalAuditDossier } from './components/PhysicalAuditDossier';
 import { UspSection } from './components/UspSection';
 import { PricingSection } from './components/PricingSection';
 import { LeadCaptureFooter } from './components/LeadCaptureFooter';
@@ -109,7 +110,7 @@ export default function App() {
               “A five-star hotel does not automatically guarantee a five-star guest experience.”
             </div>
             <p className="text-[11px] text-zinc-300 font-light leading-relaxed">
-              We provide independent and current quality perspectives for European travel companies. We observe, assess and recommend — we do not certify or legally determine compliance.
+              We provide independent and current quality perspectives for European travel companies. In simple terms: we observe, we assess and we recommend — we do not certify or legally determine compliance.
             </p>
           </div>
 
@@ -187,7 +188,16 @@ export default function App() {
           onRequestFreeDataPackage={handleRequestFreeDataPackage}
         />
 
-        {/* 4. Why Partner With Us: Our 6 USPs */}
+        {/* 4. The Workflow & Simulated Real Physical Audit Case Study */}
+        <PhysicalAuditDossier
+          onCommissionAudit={() => {
+            setSelectedTier('PHYSICAL_AUDIT');
+            handleScrollToSection('contact');
+          }}
+          onRequestFreeDataPackage={handleRequestFreeDataPackage}
+        />
+
+        {/* 5. Why Partner With Us: Our 6 USPs */}
         <UspSection />
 
         {/* 5. Clear, Simplified Services & Pricing */}

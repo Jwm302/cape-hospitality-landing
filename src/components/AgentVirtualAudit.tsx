@@ -377,11 +377,11 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-serif leading-tight">
-            Simulate an Independent Quality Audit in Seconds
+            Preview How We Audit Quality — Or Request Yours (24h Delivery)
           </h2>
 
           <p className="mt-4 text-base sm:text-lg text-zinc-300 font-light leading-relaxed max-w-2xl mx-auto">
-            Before committing client bookings or deploying an on-site mystery inspector, run an instant virtual audit. We evaluate properties against strict German tour operator requirements to reveal current operational reality.
+            Before committing client bookings or deploying an on-site mystery inspector, request an independent Virtual Audit for any hotel on your books — compiled by our Cape Town desk and delivered to your corporate inbox within 24 hours. Explore our interactive framework below:
           </p>
 
           {/* Anonymity & Boundary Clarity Banner */}
@@ -392,41 +392,58 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
             </span>
             <button
               onClick={() => setShowDataOriginModal(!showDataOriginModal)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-[#d9bd8b]/40 text-[#d9bd8b] cursor-pointer transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-[#d9bd8b]/50 text-[#d9bd8b] hover:text-white cursor-pointer transition-all shadow-xs"
             >
-              <Database className="w-3.5 h-3.5" />
-              <span>Data Origin & Methodology</span>
+              <Database className="w-3.5 h-3.5 text-[#d9bd8b]" />
+              <span className="font-semibold">Data Origin & How It Works</span>
             </button>
           </div>
 
           {/* Expandable Data Origin Drawer */}
           {showDataOriginModal && (
-            <div className="mt-4 p-5 rounded-2xl bg-white/10 border border-white/20 text-left max-w-2xl mx-auto animate-in fade-in slide-in-from-top-2 duration-200">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-mono text-xs font-bold text-[#d9bd8b] uppercase tracking-wider flex items-center gap-2">
-                  <Database className="w-3.5 h-3.5" />
-                  Where the Data Comes From
-                </span>
+            <div className="mt-5 p-6 rounded-3xl bg-[#0c182a] border border-[#d9bd8b]/30 text-left max-w-2xl mx-auto shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+                <div className="flex items-center gap-2">
+                  <Database className="w-4 h-4 text-[#d9bd8b]" />
+                  <span className="font-mono text-xs font-bold text-[#d9bd8b] uppercase tracking-wider">
+                    How We Conduct an Agent Virtual Audit
+                  </span>
+                </div>
                 <button
                   onClick={() => setShowDataOriginModal(false)}
-                  className="text-xs text-zinc-400 hover:text-white cursor-pointer"
+                  className="text-xs text-zinc-400 hover:text-white cursor-pointer px-2 py-1 rounded-md hover:bg-white/5"
                 >
                   ✕ Close
                 </button>
               </div>
-              <div className="space-y-2 text-xs text-zinc-200 leading-relaxed font-light">
-                <p>
-                  <strong className="text-white font-medium">1. Multi-Platform Review Signals:</strong> Verified guest sentiment from Booking.com, Google Reviews, and TripAdvisor, specifically filtered for German and European travelers over a rolling 12–24 month window.
-                </p>
-                <p>
-                  <strong className="text-white font-medium">2. German Tour Operator Criteria:</strong> Synthesized against European catalog standards (such as DRV benchmarks) focusing on acoustics, bathroom hygiene, breakfast pacing, and check-in efficiency.
-                </p>
-                <p>
-                  <strong className="text-white font-medium">3. Regional Western Cape Context:</strong> Operational parameters including backup power (load shedding / generator noise), coastal wind wear, and seasonal staffing fluctuations.
-                </p>
-                <p className="text-[11px] text-zinc-400 pt-1 border-t border-white/10 font-mono">
-                  * Note: In private commissioned audits, your specific contracted hotels are evaluated by full legal trade name under confidential NDA.
-                </p>
+
+              <div className="space-y-3.5 text-xs text-zinc-200 leading-relaxed font-light">
+                <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+                  <div className="font-bold text-white text-xs font-mono uppercase mb-1 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#d9bd8b]" />
+                    <span>Desk-Based Quality Analysis (No Big-Data Mystery)</span>
+                  </div>
+                  <p className="text-zinc-300">
+                    When you submit a hotel on your books, you do not receive generic AI-generated fluff. Our Cape Town desk conducts a structured, on-demand quality check using real-world public signals and local intelligence.
+                  </p>
+                </div>
+
+                <div className="space-y-2 pl-1">
+                  <p>
+                    <strong className="text-white font-medium">1. European & German Guest Review Filtering:</strong> We analyze the hotel's latest 30–50 verified public reviews (Google, Booking.com, TripAdvisor), specifically isolating feedback from German and European holidaymakers searching for chronic friction points: noise, bathroom mold, water pressure, and breakfast delays.
+                  </p>
+                  <p>
+                    <strong className="text-white font-medium">2. German Tour Operator Standards:</strong> We map the findings against European catalog expectations (such as DRV standards and Frankfurt Table defect classifications) to determine whether the hotel delivers on its brochure promises.
+                  </p>
+                  <p>
+                    <strong className="text-white font-medium">3. Regional Western Cape Reality:</strong> We factor in local ground realities—generator noise during load shedding, coastal wind wear, and seasonal staffing bottlenecks.
+                  </p>
+                </div>
+
+                <div className="p-3 rounded-xl bg-[#b38a54]/10 border border-[#b38a54]/20 text-[11px] text-zinc-300 font-mono">
+                  <strong className="text-[#d9bd8b] block mb-0.5">The Bridge to the Physical Audit:</strong>
+                  The Virtual Audit serves as an instant radar. If our desk check identifies emerging operational decay, we dispatch our local inspector for an anonymous, physical on-site mystery stay to verify the facts before your guests arrive.
+                </div>
               </div>
             </div>
           )}
@@ -484,7 +501,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
             })}
           </div>
 
-          {/* Quick Custom Search Input */}
+          {/* Quick Custom Search / Request Input */}
           <form onSubmit={handleCustomSearch} className="mt-4 flex items-center gap-2 max-w-xl mx-auto sm:mx-0">
             <div className="relative flex-1">
               <Search className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -492,7 +509,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
                 type="text"
                 value={customInput}
                 onChange={(e) => setCustomInput(e.target.value)}
-                placeholder="Or test a specific Cape Town / Garden Route hotel partner..."
+                placeholder="Enter any Cape Town, Winelands, or Garden Route partner hotel..."
                 className="w-full pl-9 pr-3 py-2.5 text-xs bg-white/5 border border-white/15 rounded-xl text-white placeholder-zinc-400 focus:outline-none focus:border-[#d9bd8b]"
               />
             </div>
@@ -500,7 +517,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
               type="submit"
               className="px-5 py-2.5 bg-[#b38a54] hover:bg-[#c59b63] text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shrink-0 shadow-sm"
             >
-              <span>Test Partner Hotel</span>
+              <span>Request 24h Virtual Audit</span>
               <ArrowRight className="w-3 h-3" />
             </button>
           </form>
@@ -639,24 +656,24 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
             </div>
           </div>
 
-          {/* The 3 Core Mandates: Observe, Assess, Recommend */}
+          {/* The 3 Core Mandates: We Observe, We Assess Risk, We Recommend */}
           <div className="pt-6 border-t border-white/10 grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {/* 1. We Observe */}
             <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
               <div className="flex items-center gap-2 text-xs font-mono font-bold text-zinc-300 uppercase tracking-wider mb-2">
                 <span className="w-2 h-2 rounded-full bg-[#d9bd8b]" />
-                <span>1. What We Observe</span>
+                <span>1. We Observe</span>
               </div>
               <p className="text-xs text-zinc-300 leading-relaxed">
                 {currentPreset.observe}
               </p>
             </div>
 
-            {/* 2. We Assess */}
-            <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
-              <div className="flex items-center gap-2 text-xs font-mono font-bold text-zinc-300 uppercase tracking-wider mb-2">
+            {/* 2. We Assess Risk */}
+            <div className="p-4 rounded-2xl bg-white/5 border border-amber-500/30 bg-amber-500/[0.04]">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold text-amber-300 uppercase tracking-wider mb-2">
                 <span className="w-2 h-2 rounded-full bg-amber-400" />
-                <span>2. What We Assess</span>
+                <span>2. We Assess Risk</span>
               </div>
               <p className="text-xs text-zinc-300 leading-relaxed">
                 {currentPreset.assess}
@@ -664,10 +681,10 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
             </div>
 
             {/* 3. We Recommend */}
-            <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
-              <div className="flex items-center gap-2 text-xs font-mono font-bold text-zinc-300 uppercase tracking-wider mb-2">
+            <div className="p-4 rounded-2xl bg-white/5 border border-emerald-500/30 bg-emerald-500/[0.04]">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold text-emerald-300 uppercase tracking-wider mb-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                <span>3. What We Recommend</span>
+                <span>3. We Recommend</span>
               </div>
               <p className="text-xs text-zinc-300 leading-relaxed">
                 {currentPreset.recommend}

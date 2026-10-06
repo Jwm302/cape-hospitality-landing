@@ -53,42 +53,32 @@ export const Hero: React.FC<HeroProps> = ({
           <div className="pt-2">
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200 text-xs font-mono font-medium">
               <span>In simple terms:</span>
-              <strong className="text-[#10213a]">we observe, assess and recommend</strong>
+              <strong className="text-[#10213a]">we observe, we assess and we recommend</strong>
               <span>— we do not certify or legally determine compliance.</span>
             </span>
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Action Buttons: 2 Clear, Focused Choices (Action vs Exploration) */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto">
-          {/* Virtual Audit Callout */}
+          {/* Primary Action: Request 24h Audit */}
           <button
-            onClick={onExploreVirtualAudit}
+            onClick={onRequestFreeDataPackage}
             id="hero-primary-cta"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 text-xs sm:text-sm font-bold rounded-full bg-[#10213a] text-white hover:bg-[#1a335a] active:scale-[0.98] transition-all shadow-md shadow-zinc-300/80 cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 text-xs sm:text-sm font-bold rounded-full bg-[#10213a] text-white hover:bg-[#1a335a] active:scale-[0.98] transition-all shadow-md shadow-zinc-300/80 cursor-pointer"
           >
             <Sparkles className="w-4 h-4 text-[#d9bd8b]" />
-            <span>Try Agent Virtual Audit</span>
+            <span>Request Free 24h Virtual Audit</span>
             <ArrowRight className="w-4 h-4" />
           </button>
 
-          {/* Free Data Package CTA */}
+          {/* Secondary Exploration: Explore Demo & Case Study */}
           <button
-            onClick={onRequestFreeDataPackage}
-            id="hero-free-data-cta"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 text-xs sm:text-sm font-semibold rounded-full border border-[#b38a54] bg-[#b38a54]/10 text-[#9c753e] hover:bg-[#b38a54] hover:text-white active:scale-[0.98] transition-all shadow-xs cursor-pointer"
-          >
-            <FileSpreadsheet className="w-4 h-4" />
-            <span>Get Your Free Data Package Now</span>
-          </button>
-
-          {/* Inspection Packages */}
-          <button
-            onClick={onViewPricing}
+            onClick={onExploreVirtualAudit}
             id="hero-secondary-cta"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-xs sm:text-sm font-medium rounded-full border border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-50 active:scale-[0.98] transition-all shadow-xs cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 text-xs sm:text-sm font-semibold rounded-full border border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-50 active:scale-[0.98] transition-all shadow-xs cursor-pointer"
           >
-            <span>View Services</span>
+            <span>Explore Live Demo & Case Study</span>
             <ChevronRight className="w-4 h-4 text-zinc-400" />
           </button>
         </div>
@@ -120,7 +110,7 @@ export const Hero: React.FC<HeroProps> = ({
               <CheckCircle2 className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold text-[#10213a]">Observe, Assess, Recommend</div>
+              <div className="text-xs font-bold text-[#10213a]">We Observe, We Assess Risk, We Recommend</div>
               <div className="text-[11px] text-zinc-500 leading-snug mt-0.5">Actionable advisory to protect your brand before client complaints occur.</div>
             </div>
           </div>

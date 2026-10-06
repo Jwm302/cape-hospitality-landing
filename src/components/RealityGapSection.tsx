@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Eye, Scale, Compass, CheckCircle2, AlertCircle, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Eye, AlertTriangle, Compass, CheckCircle2, AlertCircle, ArrowRight } from 'lucide-react';
 
 interface RealityGapSectionProps {
   onExploreVirtualAudit: () => void;
@@ -32,7 +32,7 @@ export const RealityGapSection: React.FC<RealityGapSectionProps> = ({
           </p>
         </div>
 
-        {/* 3 Core Operational Pillars: Observe, Assess, Recommend */}
+        {/* 3 Core Operational Pillars: We Observe, We Assess Risk, We Recommend */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           {/* Card 1: We Observe */}
           <div className="bg-white rounded-2xl p-7 sm:p-8 border border-zinc-200/90 shadow-sm flex flex-col justify-between hover:border-zinc-300 transition-all text-left">
@@ -47,7 +47,7 @@ export const RealityGapSection: React.FC<RealityGapSectionProps> = ({
                 We Observe
               </h3>
               <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed font-normal">
-                We look at what is genuinely happening on the ground. Check-in flow, bathroom cleanliness, acoustic isolation, breakfast quality, and room maintenance. No polite corporate filters—just unvarnished facts.
+                We look at what is genuinely happening on the ground. Check-in pacing, bathroom cleanliness, acoustic isolation, breakfast execution, and room upkeep. No polite corporate filters—just unvarnished facts.
               </p>
             </div>
             <div className="pt-6 mt-6 border-t border-zinc-100 text-xs font-mono text-zinc-400">
@@ -55,24 +55,24 @@ export const RealityGapSection: React.FC<RealityGapSectionProps> = ({
             </div>
           </div>
 
-          {/* Card 2: We Assess */}
+          {/* Card 2: We Assess Risk */}
           <div className="bg-white rounded-2xl p-7 sm:p-8 border border-zinc-200/90 shadow-sm flex flex-col justify-between hover:border-zinc-300 transition-all text-left">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-zinc-100 flex items-center justify-center text-[#10213a] mb-5">
-                <Scale className="w-6 h-6 stroke-[2]" />
+              <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-700 mb-5 border border-amber-500/20">
+                <AlertTriangle className="w-6 h-6 stroke-[2]" />
               </div>
               <span className="text-[11px] font-mono font-bold text-[#b38a54] tracking-widest uppercase">
                 Step 02
               </span>
               <h3 className="text-xl font-bold text-[#10213a] mt-1 mb-3">
-                We Assess
+                We Assess Risk
               </h3>
               <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed font-normal">
-                We benchmark real findings against the exacting standards of German and European tour operators. We pinpoint where reality deviates from your brochure promise before guests write a complaint or request compensation.
+                We evaluate how ground findings impact your European guests and catalog promises. We pinpoint where reality deviates from your brochure, flagging chronic complaint triggers and refund risks before travelers check in.
               </p>
             </div>
             <div className="pt-6 mt-6 border-t border-zinc-100 text-xs font-mono text-zinc-400">
-              ✓ German tour operator criteria
+              ✓ German catalog & liability standards
             </div>
           </div>
 
@@ -98,19 +98,19 @@ export const RealityGapSection: React.FC<RealityGapSectionProps> = ({
           </div>
         </div>
 
-        {/* Clear Boundary Card */}
+        {/* Executive 2-Stage Architecture Bridge */}
         <div className="rounded-3xl bg-[#10213a] text-white p-8 sm:p-10 shadow-lg text-left relative overflow-hidden">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
             <div className="max-w-2xl space-y-2">
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#d9bd8b]">
                 <ShieldCheck className="w-4 h-4 text-[#d9bd8b]" />
-                <span>Our Clear Role & Independent Positioning</span>
+                <span>The Dual-Engine Model • 24h Radar to 48h Ground Truth</span>
               </div>
               <h4 className="text-xl sm:text-2xl font-bold font-serif text-white">
-                In simple terms: we observe, assess and recommend — we do not certify or legally determine compliance.
+                From Digital Pre-Audit Radar to Physical Verification on the Ground
               </h4>
               <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed pt-1">
-                Official star grading committees award ratings every few years based on structural criteria (room size, number of elevators, presence of a pool). We answer the question that matters right now: <em>What will your client experience tomorrow morning?</em>
+                Official star grading committees award ratings every few years based on structural checklists (room size, elevator counts). We answer the question that protects your brand: <em>What will your client actually experience tomorrow morning?</em>
               </p>
             </div>
 
@@ -119,14 +119,14 @@ export const RealityGapSection: React.FC<RealityGapSectionProps> = ({
                 onClick={onExploreVirtualAudit}
                 className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#b38a54] hover:bg-[#c59b63] text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
               >
-                <span>Run Agent Virtual Audit</span>
+                <span>Explore Live Demo Archetypes</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={onRequestFreeDataPackage}
                 className="w-full sm:w-auto px-5 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-semibold border border-white/15 transition-all text-center cursor-pointer"
               >
-                Get Free Data Package
+                Request 24h Partner Audit
               </button>
             </div>
           </div>

@@ -255,7 +255,7 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
               <div className="pt-2 text-center space-y-1.5">
                 <div className="flex items-center justify-center gap-2 text-[11px] text-zinc-500">
                   <Lock className="w-3 h-3 text-[#b38a54]" />
-                  <span>Strict confidentiality: We observe, assess & recommend — zero data shared with audited hotels.</span>
+                  <span>Strict confidentiality: In simple terms: we observe, we assess and we recommend — zero data shared with audited hotels.</span>
                 </div>
                 <p className="text-[10px] text-zinc-400 font-mono">
                   “A five-star hotel does not automatically guarantee a five-star guest experience.”
