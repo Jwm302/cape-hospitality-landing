@@ -35,18 +35,13 @@ export const Hero: React.FC<HeroProps> = ({
         </div>
 
         {/* Primary Headline: The Big Reality */}
-        <div className="max-w-4xl mx-auto space-y-4">
+        <div className="max-w-4xl mx-auto space-y-3">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#10213a] tracking-tight leading-tight font-serif">
             “A five-star hotel does not automatically guarantee a five-star guest experience.”
           </h1>
 
-          {/* Problem-Solving Subheadline */}
-          <p className="text-base sm:text-lg lg:text-xl text-zinc-700 font-normal leading-relaxed max-w-3xl mx-auto pt-2">
-            How do you ensure that your customers receive the customer experience you are selling them?
-          </p>
-
-          <p className="text-sm sm:text-base text-zinc-600 font-light leading-relaxed max-w-2xl mx-auto">
-            This is not about replacing the official grading system. It is about providing an additional, independent and current quality perspective for travel companies that need to know what their customers will actually experience today.
+          <p className="text-base sm:text-lg text-zinc-600 font-normal leading-relaxed max-w-2xl mx-auto pt-1">
+            We provide European tour operators with an independent, current quality perspective on luxury hotels across Cape Town and the Western Cape.
           </p>
 
           {/* Simple Mission Pill */}

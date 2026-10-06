@@ -22,60 +22,15 @@ export const UspSection: React.FC = () => {
     }
   };
 
-  const COMPARISON_ROWS = [
-    {
-      metric: 'Commercial Client Alignment',
-      starCouncil: 'Hotel pays inspection fee',
-      hotelBureaus: 'Hotel pays for plaques/awards',
-      cha: '100% Conflict-Free: Paid exclusively by the Tour Operator',
-      highlight: true,
-    },
-    {
-      metric: 'Primary Evaluation Focus',
-      starCouncil: 'Static hardware (room size, elevator count)',
-      hotelBureaus: '900+ rigid operational checkboxes',
-      cha: 'Living Service Flow & Acoustics (Where 75% of complaints occur)',
-      highlight: false,
-    },
-    {
-      metric: 'Testing Methodology',
-      starCouncil: 'Scheduled, announced visit every 3–5 yrs',
-      hotelBureaus: 'Generic, one-size-fits-all sheets',
-      cha: 'Hypothesis-Driven: Calibrated by Virtual Pre-Audit data',
-      highlight: true,
-    },
-    {
-      metric: 'European Guest Lens & Complaint Risk',
-      starCouncil: 'None (Local structural criteria only)',
-      hotelBureaus: 'None (Generic luxury hospitality benchmarks)',
-      cha: 'Discerning traveler expectations & brochure complaint prevention',
-      highlight: false,
-    },
-    {
-      metric: 'Bad-Actor & False Review Defense',
-      starCouncil: 'Zero support (No evidence logs for customer disputes)',
-      hotelBureaus: 'None (Generic marketing scores cannot resolve legal disputes)',
-      cha: 'Timestamped ground evidence (decibels, water temps, photos) to refute false claims',
-      highlight: true,
-    },
-    {
-      metric: 'Actionable Executive SLA',
-      starCouncil: 'Formal bureaucratic certificate',
-      hotelBureaus: '3–4 weeks for 50-page internal deck',
-      cha: '24h Virtual Pre-Audit • 48h Physical Mystery Dossier',
-      highlight: true,
-    },
-  ];
-
   return (
-    <section id="usp" className="py-20 sm:py-28 bg-white border-t border-zinc-200/80 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="usp" className="py-16 sm:py-24 bg-white border-t border-zinc-200/80 relative">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14">
+        <div className="text-center max-w-2xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-200 bg-zinc-50 text-xs font-semibold text-zinc-700 shadow-xs mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-[#b38a54]" />
-            <span className="tracking-widest uppercase font-mono text-[11px]">The Institutional Edge</span>
+            <span className="tracking-widest uppercase font-mono text-[11px]">THE INSTITUTIONAL EDGE</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#10213a] tracking-tight font-serif">
             Why European Tour Operators Partner With Us
@@ -86,15 +41,15 @@ export const UspSection: React.FC = () => {
         </div>
 
         {/* 6-Item Grid: 2 rows of 3 columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mb-14">
           {OUR_USPS.map((usp, index) => (
             <div
               key={usp.key}
-              className="flex flex-col justify-between p-6 rounded-2xl bg-[#fafafa] border border-zinc-200/90 hover:border-zinc-300 hover:bg-white transition-all duration-200 shadow-xs text-left"
+              className="flex flex-col justify-between p-5 sm:p-6 rounded-2xl bg-[#fafafa] border border-zinc-200/90 hover:border-zinc-300 hover:bg-white transition-all shadow-xs text-left"
             >
               <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-white border border-zinc-200 flex items-center justify-center shadow-xs">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-9 h-9 rounded-xl bg-white border border-zinc-200 flex items-center justify-center shadow-xs">
                     {getIcon(usp.icon)}
                   </div>
                   <span className="font-mono text-xs font-bold text-zinc-400">
@@ -102,15 +57,15 @@ export const UspSection: React.FC = () => {
                   </span>
                 </div>
 
-                <div className="font-bold text-sm tracking-wider uppercase text-[#10213a]">
+                <div className="font-bold text-xs sm:text-sm tracking-wider uppercase text-[#10213a]">
                   {usp.title}
                 </div>
 
-                <div className="text-xs font-semibold text-[#b38a54] mt-1.5 leading-snug">
+                <div className="text-xs font-semibold text-[#b38a54] mt-1 leading-snug">
                   {usp.tagline}
                 </div>
 
-                <p className="text-xs text-zinc-600 font-normal mt-3 leading-relaxed">
+                <p className="text-xs text-zinc-600 font-normal mt-2.5 leading-relaxed">
                   {usp.description}
                 </p>
               </div>
@@ -118,16 +73,16 @@ export const UspSection: React.FC = () => {
           ))}
         </div>
 
-        {/* Competitor Positioning Matrix: How CHA Differs from Traditional Bureaus */}
-        <div className="rounded-3xl bg-[#0c182a] text-white p-6 sm:p-10 border border-white/15 shadow-xl text-left overflow-hidden">
-          <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        {/* Strategic Comparison: Clean 3-Way Responsive Cards */}
+        <div className="rounded-2xl bg-[#0c182a] text-white p-6 sm:p-8 border border-white/15 shadow-xl text-left">
+          <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-4">
             <div>
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#d9bd8b] mb-1">
                 <Shield className="w-4 h-4" />
-                <span>Strategic Comparison Matrix</span>
+                <span>Strategic Comparison</span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold font-serif text-white">
-                How Cape Hospitality Differs from Legacy Bureaus
+              <h3 className="text-lg sm:text-xl font-bold font-serif text-white">
+                How We Differ from Traditional Bureaus
               </h3>
             </div>
             <div className="text-xs font-mono text-zinc-400">
@@ -135,41 +90,69 @@ export const UspSection: React.FC = () => {
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="border-b border-white/10 text-zinc-400 font-mono text-[11px] uppercase tracking-wider">
-                  <th className="py-3 pr-4 font-normal">Core Operational Dimension</th>
-                  <th className="py-3 px-4 font-normal text-zinc-400">Official Star Councils</th>
-                  <th className="py-3 px-4 font-normal text-zinc-400">Hotel-Funded Bureaus</th>
-                  <th className="py-3 pl-4 font-bold text-[#d9bd8b] bg-white/5 rounded-t-xl">Cape Hospitality Advisors</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5 font-light">
-                {COMPARISON_ROWS.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-white/[0.02] transition-colors">
-                    <td className="py-3.5 pr-4 font-medium text-white font-sans">
-                      {row.metric}
-                    </td>
-                    <td className="py-3.5 px-4 text-zinc-400">
-                      {row.starCouncil}
-                    </td>
-                    <td className="py-3.5 px-4 text-zinc-400">
-                      {row.hotelBureaus}
-                    </td>
-                    <td className="py-3.5 pl-4 font-medium text-emerald-300 bg-white/5">
-                      <span className="flex items-center gap-1.5">
-                        <Check className="w-3.5 h-3.5 text-[#d9bd8b] shrink-0" />
-                        <span>{row.cha}</span>
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Model 1: Star Councils */}
+            <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+              <div className="text-[10px] font-mono text-zinc-400 uppercase mb-1">Official Star Councils</div>
+              <div className="text-sm font-bold text-zinc-300 mb-2">Static Hardware Checklists</div>
+              <ul className="text-xs text-zinc-400 space-y-1.5 font-light">
+                <li className="flex items-start gap-1.5">
+                  <X className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+                  <span>Hotel pays inspection fee (conflict of interest)</span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <X className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+                  <span>Announced visits every 3–5 years</span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <X className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+                  <span>No data to defend against bad-actor refund claims</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Model 2: Hotel Marketing Bureaus */}
+            <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+              <div className="text-[10px] font-mono text-zinc-400 uppercase mb-1">Hotel-Funded Bureaus</div>
+              <div className="text-sm font-bold text-zinc-300 mb-2">Plaques & Marketing Awards</div>
+              <ul className="text-xs text-zinc-400 space-y-1.5 font-light">
+                <li className="flex items-start gap-1.5">
+                  <X className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+                  <span>Hotels pay for awards and promotional plaque placement</span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <X className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+                  <span>Generic 900-question sheets without regional context</span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <X className="w-3.5 h-3.5 text-rose-400 shrink-0 mt-0.5" />
+                  <span>Takes 3–4 weeks for bloated 50-page internal decks</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Model 3: Cape Hospitality Advisors */}
+            <div className="p-4 rounded-xl bg-[#b38a54]/10 border border-[#d9bd8b]/40 ring-1 ring-[#d9bd8b]/30">
+              <div className="text-[10px] font-mono text-[#d9bd8b] uppercase font-bold mb-1">Cape Hospitality Advisors</div>
+              <div className="text-sm font-bold text-white mb-2">Conflict-Free Buyer's Agent</div>
+              <ul className="text-xs text-zinc-200 space-y-1.5 font-light">
+                <li className="flex items-start gap-1.5">
+                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                  <span className="font-medium text-white">Paid 100% exclusively by the tour operator</span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                  <span>Hypothesis-driven: focuses on live guest flow & acoustics</span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                  <span>Timestamped sensor evidence to refute false guest reviews</span>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div className="mt-6 pt-5 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+          <div className="mt-5 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
             <span className="text-zinc-400 font-mono text-[11px]">
               We answer the buyer's question: <em>What will your client experience tomorrow morning?</em>
             </span>
@@ -177,7 +160,7 @@ export const UspSection: React.FC = () => {
               href="#virtual-audit"
               className="inline-flex items-center gap-1.5 text-[#d9bd8b] font-bold hover:text-white transition-colors cursor-pointer"
             >
-              <span>Test the Agent Virtual Audit</span>
+              <span>Test the Virtual Audit Radar</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </a>
           </div>
