@@ -75,6 +75,12 @@ export default function App() {
     handleScrollToSection('contact');
   };
 
+  const handleRequestVirtualAuditForProperty = (propertyName: string) => {
+    setTargetProperty(propertyName);
+    setSelectedTier('VIRTUAL_AUDIT');
+    handleScrollToSection('contact');
+  };
+
   const handleSelectPropertyForInquiry = (propertyName: string) => {
     setTargetProperty(propertyName);
     setSelectedTier('PHYSICAL_AUDIT');
@@ -93,7 +99,7 @@ export default function App() {
             CAPE HOSPITALITY
           </div>
           <p className="text-[10px] tracking-[0.3em] uppercase text-[#d9bd8b] font-mono mb-6">
-            Advisors • European Tour Operator Portal
+            Advisors • European Travel Company Portal
           </p>
 
           <div className="p-4 rounded-2xl bg-white/5 border border-white/10 mb-6 text-left space-y-2">
@@ -167,6 +173,7 @@ export default function App() {
         {/* 3. The Centerpiece: Agent Virtual Audit Tool */}
         <AgentVirtualAudit
           onSelectPropertyForInquiry={handleSelectPropertyForInquiry}
+          onRequestVirtualAuditForProperty={handleRequestVirtualAuditForProperty}
           onRequestFreeDataPackage={handleRequestFreeDataPackage}
         />
 

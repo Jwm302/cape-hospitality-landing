@@ -28,7 +28,7 @@ export const SampleReportModal: React.FC<SampleReportModalProps> = ({
     const currentPrice = tierPrices[currentTier] || 990;
     const reportText = `CAPE HOSPITALITY ADVISERS
 CONFIDENTIAL HOTEL QUALITY INSPECTION AUDIT REPORT (SAMPLE EXCERPT)
-Prepared for: ${leadData?.company || 'Premier European Tour Operator'}
+Prepared for: ${leadData?.company || 'Premier European Travel Company'}
 Recipient: ${leadData?.name || 'Executive Director'}
 Package Tier: ${currentTier} (€${currentPrice})
 Property Inspected: [REDACTED 5-STAR LUXURY BOUTIQUE RETREAT, CAPE PENINSULA / GARDEN ROUTE]
@@ -102,14 +102,14 @@ This document is distributed under strict bilateral NDA. The audited hotel has n
 
         {/* Modal Body */}
         <div className="p-6 sm:p-8 overflow-y-auto space-y-6 flex-1 text-xs">
-          {/* Operator recipient strip */}
+          {/* Recipient strip */}
           <div className="p-4 rounded-xl bg-zinc-50 border border-zinc-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
             <div>
               <span className="text-[11px] uppercase tracking-wider text-zinc-500 font-mono font-semibold">
                 Recipient Dossier:
               </span>
               <span className="text-[#162544] font-bold ml-2">
-                {leadData?.name || 'Authorized Operator'} ({leadData?.company || 'European Tour Operator Partner'})
+                {leadData?.name || 'Authorized Travel Company'} ({leadData?.company || 'European Travel Company Partner'})
               </span>
             </div>
             <div className="text-[11px] text-[#a07c48] font-mono font-bold">

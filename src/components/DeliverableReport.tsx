@@ -201,7 +201,7 @@ export const DeliverableReport: React.FC<DeliverableReportProps> = ({
                     <div className="absolute top-4 left-4 sm:top-6 sm:left-6 flex flex-col gap-1 pointer-events-none">
                       <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-600 text-white text-xs font-mono font-bold tracking-widest uppercase shadow-lg">
                         <Lock className="w-3.5 h-3.5 text-white" />
-                        <span>CONFIDENTIAL • TOUR OPERATOR EMBARGO</span>
+                        <span>CONFIDENTIAL • TRAVEL COMPANY EMBARGO</span>
                       </div>
                       <span className="text-[10px] text-white font-mono bg-black/60 px-2.5 py-0.5 rounded-full w-fit">
                         PROPERTY: [REDACTED 5-STAR CAPE COASTAL RETREAT]
@@ -242,7 +242,7 @@ export const DeliverableReport: React.FC<DeliverableReportProps> = ({
                         Sample Benchmark Index vs Industry Target
                       </h4>
                       <p className="text-xs text-zinc-500">
-                        Weighted scoring based on high-net-worth European tour operator expectations
+                        Weighted scoring based on high-net-worth European travel company expectations
                       </p>
                     </div>
                     <div className="text-right">

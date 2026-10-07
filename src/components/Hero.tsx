@@ -28,30 +28,36 @@ export const Hero: React.FC<HeroProps> = ({
 
         {/* Primary Headline: The Big Reality */}
         <div className="max-w-4xl mx-auto space-y-3">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#10213a] tracking-tight leading-snug font-serif">
-            “A five-star hotel does not automatically guarantee a five-star guest experience.”
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-serif text-[#10213a] leading-relaxed tracking-tight">
+            <span className="italic font-medium">“A five-star hotel does not automatically guarantee a five-star guest experience.”</span>
+            <span className="inline-block text-[11px] sm:text-xs font-serif font-normal text-zinc-400 not-italic ml-2 sm:ml-2.5">
+              A. Gutman Milne, Library Hotel Collection, New York
+            </span>
           </h1>
 
           {/* Badge: Independent Hotel Quality Auditing • Western Cape */}
           <div className="pt-1">
             <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 shadow-xs">
               <span className="w-1.5 h-1.5 rounded-full bg-[#b38a54]" />
-              <span className="tracking-widest uppercase font-mono text-[11px]">
+              <span className="tracking-widest uppercase font-serif text-[11px] font-semibold text-zinc-700">
                 Independent Hotel Quality Auditing • Western Cape
               </span>
             </span>
           </div>
 
-          <p className="text-base sm:text-lg text-zinc-600 font-normal leading-relaxed max-w-2xl mx-auto pt-1">
+          <p className="text-base sm:text-lg text-zinc-600 font-serif leading-relaxed max-w-2xl mx-auto pt-1">
             We provide European travel companies and agencies with an independent, current quality perspective on hotels and guest houses across Cape Town and the Western Cape.
           </p>
 
           {/* Simple Mission Pill */}
           <div className="pt-2">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200 text-xs font-mono font-medium">
-              <span>In simple terms:</span>
-              <strong className="text-[#10213a]">we observe, we assess and we recommend</strong>
-              <span>— we do not certify or legally determine compliance.</span>
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-200 bg-white text-xs text-zinc-700 shadow-xs font-serif">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#b38a54] shrink-0" />
+              <span>
+                <span>In simple terms: </span>
+                <strong className="text-[#10213a] font-semibold">we observe, we assess and we recommend</strong>
+                <span> — we do not certify or legally determine compliance.</span>
+              </span>
             </span>
           </div>
         </div>
@@ -97,7 +103,7 @@ export const Hero: React.FC<HeroProps> = ({
               <MapPin className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold text-[#10213a]">German Operator Lens</div>
+              <div className="text-xs font-bold text-[#10213a]">German Travel Company Lens</div>
               <div className="text-[11px] text-zinc-500 leading-snug mt-0.5">Evaluated against European standards: acoustics, hygiene, punctuality & service.</div>
             </div>
           </div>

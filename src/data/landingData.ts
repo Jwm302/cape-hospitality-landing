@@ -2,7 +2,7 @@ import { PillarItem, InspectionDeliverableData } from '../types';
 
 export const HERO_CONTENT = {
   headline: "Protecting Your Brand Standards Across the Cape, from Cape Town to the Garden Route.",
-  subheadline: "Independent, anonymous hotel quality inspections tailored for premier European tour operators. We ensure your portfolio delivers on its promises across the Western Cape.",
+  subheadline: "Independent, anonymous hotel quality inspections tailored for premier European travel companies. We ensure your portfolio delivers on its promises across the Western Cape.",
   primaryCta: "Schedule a Briefing",
   secondaryCta: "View Our Inspection Pillars",
   keyStats: [
@@ -22,12 +22,12 @@ export const HERO_CONTENT = {
 };
 
 export const VALUE_PROPOSITION_CONTENT = {
-  sectionTitle: "Risk Mitigation for Global Tour Operators",
-  bodyText: "German holidaymakers expect precision. A single drop in service or safety standard at a partner hotel risks your brand reputation and operator liability. We act as your on-the-ground eyes and ears, auditing properties against strict international luxury benchmarks.",
+  sectionTitle: "Risk Mitigation for Global Travel Companies",
+  bodyText: "German holidaymakers expect precision. A single drop in service or safety standard at a partner hotel risks your brand reputation and travel company liability. We act as your on-the-ground eyes and ears, auditing properties against strict international luxury benchmarks.",
   keyRisksAddressed: [
     {
       title: "EU Package Travel & Liability Defense",
-      description: "Under strict European consumer protection laws (e.g. Frankfurter Tabelle), service deviations and hygiene shortcomings expose operators to mandatory post-trip compensations.",
+      description: "Under strict European consumer protection laws (e.g. Frankfurter Tabelle), service deviations and hygiene shortcomings expose travel companies to mandatory post-trip compensations.",
       tag: "Financial Defense",
     },
     {
@@ -170,14 +170,14 @@ export const CONFIDENTIALITY_CONTENT = {
 export const FOOTER_CONTENT = {
   headline: "Secure Your Portfolio's Quality.",
   submitButtonText: "Request a Sample Audit Report",
-  subtext: "Join leading tour operators from Frankfurt, Munich, Zurich, and London who rely on Cape Hospitality Advisors to safeguard their reputation across the Cape, from Cape Town to the Garden Route.",
+  subtext: "Join leading travel companies from Frankfurt, Munich, Zurich, and London who rely on Cape Hospitality Advisors to safeguard their reputation across the Cape, from Cape Town to the Garden Route.",
 };
 
 export const SERVICES_HEADER_CONTENT = {
   eyebrow: "HOTEL QUALITY ASSURANCE FOR TRAVEL COMPANIES",
   headline: "Independent. Anonymous. On the Ground.",
   subheadline: "Your customers experience the hotel. We experience it as your customer.",
-  mission: "Cape Hospitality Advisors provides independent, anonymous hotel inspections for tour operators, travel agencies and travel companies. Our mission is simple: to make sure the hotel you sell today still delivers the quality your customers expect.",
+  mission: "Cape Hospitality Advisors provides independent, anonymous hotel inspections for travel companies and travel agencies. Our mission is simple: to make sure the hotel you sell today still delivers the quality your customers expect.",
 };
 
 export const PRICING_PACKAGES = [
@@ -282,7 +282,7 @@ export const PRICING_PACKAGES = [
       "Portfolio-level reporting",
       "Priority alerts for significant quality issues",
     ],
-    idealFor: "Tour operators and travel companies with multiple contracted hotels who want continuous control of their destination portfolio.",
+    idealFor: "Travel companies and agencies with multiple contracted hotels who want continuous control of their destination portfolio.",
     questionAnswered: "“Is our hotel portfolio maintaining the quality we promise our customers?”",
   },
 ];
@@ -379,7 +379,7 @@ export const DATA_SCIENCE_CONTENT = {
   headline: "Data-Science & Sentiment Alignment",
   quote: "We combine deep physical mystery guest audits with all-time historical review sentiment data to pinpoint exactly where your revenue is leaking.",
   heroMetricTitle: "The Hero Metric (10% Risk Discrepancy)",
-  heroStatisticalBlurb: "Standard booking platform filters blindside operators to critical contract hazards, leaving a 10% compliance data blind spot hidden directly inside the text reviews of your premium assets—exposing your organization to severe liability (Veranstalterhaftung) under German travel law.",
+  heroStatisticalBlurb: "Standard booking platform filters blindside travel companies to critical contract hazards, leaving a 10% compliance data blind spot hidden directly inside the text reviews of your premium assets—exposing your organization to severe liability (Veranstalterhaftung) under German travel law.",
   analystVerdict: {
     badge: "ANALYST VERDICT • CORPORATE LIABILITY ANALYSIS",
     paragraph1: "Traditional Booking.com scoring structures create a dangerous corporate blind spot. Relying on aggregate metrics (like an 8.2/10 rating) masks critical operational decay.",

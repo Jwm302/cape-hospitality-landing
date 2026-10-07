@@ -32,7 +32,7 @@ export const ValueProposition: React.FC = () => {
             <span className="tracking-widest uppercase font-mono text-[11px]">The Value Proposition</span>
           </div>
 
-          {/* Section Title: Risk Mitigation for Global Tour Operators */}
+          {/* Section Title: Risk Mitigation for Global Travel Companies */}
           <h2
             id="value-prop-title"
             className="font-sans text-3xl sm:text-5xl font-extrabold text-[#162544] tracking-tight leading-[1.15] max-w-3xl"
@@ -85,7 +85,7 @@ export const ValueProposition: React.FC = () => {
               <div className="flex items-center justify-between pb-5 border-b border-zinc-200">
                 <div>
                   <span className="text-[11px] font-mono tracking-widest text-[#a07c48] uppercase font-bold">
-                    EUROPEAN OPERATOR COMPLIANCE MODEL
+                    EUROPEAN TRAVEL COMPANY COMPLIANCE MODEL
                   </span>
                   <h3 className="font-sans text-base sm:text-lg font-bold text-[#162544] mt-0.5">
                     Frankfurter Tabelle Liability & Shield
@@ -121,7 +121,7 @@ export const ValueProposition: React.FC = () => {
                 </div>
               </div>
 
-              {/* Interactive Tour Operator Liability Calculator */}
+              {/* Interactive Travel Company Liability Calculator */}
               <div className="mt-6 pt-5 border-t border-zinc-200 space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-[#162544] flex items-center gap-1.5">

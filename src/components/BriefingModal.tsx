@@ -90,7 +90,7 @@ export const BriefingModal: React.FC<BriefingModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5 text-left">
                   <label className="block font-bold uppercase tracking-wider text-zinc-700 text-[11px] font-mono">
-                    Company (Operator) <span className="text-[#a07c48]">*</span>
+                    Company (Travel Company) <span className="text-[#a07c48]">*</span>
                   </label>
                   <div className="relative">
                     <Building className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />

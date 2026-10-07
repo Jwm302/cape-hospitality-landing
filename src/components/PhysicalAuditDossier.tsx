@@ -108,7 +108,7 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
             <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200/80 flex items-start gap-3">
               <Activity className="w-4 h-4 text-amber-800 shrink-0 mt-0.5" />
               <p className="text-xs text-amber-900 leading-relaxed">
-                <strong>Why This Audit Was Commissioned:</strong> Our Stage 1 Virtual Audit of this hotel flagged recurring German guest feedback regarding lukewarm morning showers and rattling bedroom air conditioning. The tour operator commissioned our Cape Town team to physically verify the ground reality before contracting.
+                <strong>Why This Audit Was Commissioned:</strong> Our Stage 1 Virtual Audit of this hotel flagged recurring German guest feedback regarding lukewarm morning showers and rattling bedroom air conditioning. The travel company commissioned our Cape Town team to physically verify the ground reality before contracting.
               </p>
             </div>
 
@@ -222,7 +222,7 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
                 <span>The Two-Way Protection Shield</span>
               </div>
               <h4 className="text-sm font-bold font-serif text-white mb-1.5">
-                Protecting Tour Operators from Bad Actors & False Guest Refund Claims
+                Protecting Travel Companies from Bad Actors & False Guest Refund Claims
               </h4>
               <p className="text-xs text-zinc-300 leading-relaxed font-light">
                 Our audits protect you in both directions. When a hotel genuinely underperforms, we alert you so you can fix allocations. But our unannounced, timestamped photos, recorded decibels, and water temperature logs also provide bulletproof evidence for your customer care team to <strong>refute opportunistic bad actors</strong> who submit fabricated complaints to extract 20%–50% post-trip refunds.

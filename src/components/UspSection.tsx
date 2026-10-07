@@ -33,7 +33,7 @@ export const UspSection: React.FC = () => {
             <span className="tracking-widest uppercase font-mono text-[11px]">THE INSTITUTIONAL EDGE</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#10213a] tracking-tight font-serif">
-            Why European Tour Operators Partner With Us
+            Why European Travel Companies Partner With Us
           </h2>
           <p className="mt-3 text-sm sm:text-base text-zinc-600 font-normal leading-relaxed">
             Six operational principles engineered for travel procurement: conflict-free, hypothesis-driven, and aligned with European catalog liability.
@@ -138,7 +138,7 @@ export const UspSection: React.FC = () => {
               <ul className="text-xs text-zinc-200 space-y-1.5 font-light">
                 <li className="flex items-start gap-1.5">
                   <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                  <span className="font-medium text-white">Paid 100% exclusively by the tour operator</span>
+                  <span className="font-medium text-white">Paid 100% exclusively by the travel company</span>
                 </li>
                 <li className="flex items-start gap-1.5">
                   <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />

@@ -80,7 +80,7 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-200 bg-zinc-50 text-xs font-semibold text-zinc-700 shadow-xs mb-3">
               <span className="w-1.5 h-1.5 rounded-full bg-[#b38a54]" />
               <span className="tracking-wider uppercase font-mono text-[11px]">
-                Travel Operator Inquiries
+                Travel Company Inquiries
               </span>
             </div>
             
@@ -160,7 +160,7 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
                 {/* Field 2: Company */}
                 <div className="space-y-1">
                   <label htmlFor="field-company" className="block text-[11px] font-bold uppercase tracking-wider text-zinc-700 font-mono">
-                    Tour Operator / Agency *
+                    Travel Company / Agency *
                   </label>
                   <div className="relative">
                     <Building className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
