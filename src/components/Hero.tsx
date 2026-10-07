@@ -22,26 +22,28 @@ export const Hero: React.FC<HeroProps> = ({
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
         {/* Prominent Brand Logo */}
-        <div className="w-full max-w-2xl mx-auto mb-8 sm:mb-10">
+        <div className="w-full max-w-md sm:max-w-lg mx-auto mb-6 sm:mb-8">
           <CapeLogo variant="prominent" showTagline={true} />
-        </div>
-
-        {/* Eyebrow Badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 shadow-xs mb-5">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#b38a54]" />
-          <span className="tracking-widest uppercase font-mono text-[11px]">
-            Independent Hotel Quality Auditing • Western Cape
-          </span>
         </div>
 
         {/* Primary Headline: The Big Reality */}
         <div className="max-w-4xl mx-auto space-y-3">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#10213a] tracking-tight leading-tight font-serif">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#10213a] tracking-tight leading-snug font-serif">
             “A five-star hotel does not automatically guarantee a five-star guest experience.”
           </h1>
 
+          {/* Badge: Independent Hotel Quality Auditing • Western Cape */}
+          <div className="pt-1">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 shadow-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#b38a54]" />
+              <span className="tracking-widest uppercase font-mono text-[11px]">
+                Independent Hotel Quality Auditing • Western Cape
+              </span>
+            </span>
+          </div>
+
           <p className="text-base sm:text-lg text-zinc-600 font-normal leading-relaxed max-w-2xl mx-auto pt-1">
-            We provide European tour operators with an independent, current quality perspective on luxury hotels across Cape Town and the Western Cape.
+            We provide European travel companies and agencies with an independent, current quality perspective on hotels and guest houses across Cape Town and the Western Cape.
           </p>
 
           {/* Simple Mission Pill */}
