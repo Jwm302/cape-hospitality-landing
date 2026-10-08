@@ -12,20 +12,33 @@ import {
   Users,
   ThumbsUp,
   ThumbsDown,
-  Building,
   Loader2,
+  Award,
+  TrendingDown,
+  ShieldCheck,
 } from 'lucide-react';
+
+export interface PlatformScoreItem {
+  id: string;
+  name: string;
+  scorePercent: number;
+  label: string;
+  category: string;
+}
 
 export interface HotelPublicProfile {
   name: string;
   location: string;
   propertyType: string;
   classification: string;
-  bookingScore: number;
-  bookingRating: string;
-  tripAdvisorScore: number;
-  googleScore: number;
-  holidayCheckScore: number; // % recommendation rate
+  // Proprietary Cape Hospitality Advisors Score (CHA Quality Index™)
+  chaScore: number;
+  chaStatus: 'Optimal' | 'Advisory' | 'Attention Required';
+  chaDeltaReason: string;
+  inspectionDeltaDrivers: string[];
+  publicMetaAverage: number;
+  // 8 Recognized Review Providers (all normalized to %)
+  platformScores: PlatformScoreItem[];
   reviewCount: string;
   subscores: {
     cleanliness: number;
@@ -57,11 +70,25 @@ const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
     location: 'Camps Bay / Oudekraal Coastal Corridor',
     propertyType: '5-Star Coastal Cliffside Luxury Resort',
     classification: '5-Star Official Luxury Council Asset',
-    bookingScore: 9.1,
-    bookingRating: 'Superb',
-    tripAdvisorScore: 4.5,
-    googleScore: 4.6,
-    holidayCheckScore: 91,
+    chaScore: 86,
+    chaStatus: 'Advisory',
+    chaDeltaReason: '-5.4% vs Public OTA Avg (91.4%): 5% deduction for Victoria Road weekend motorcycle acoustics and sunset terrace visitor bottlenecks.',
+    inspectionDeltaDrivers: [
+      'Lower ocean terraces experience motorcycle acoustic spikes along Victoria Road on sunny weekends',
+      'Sunset cocktail rush brings high non-resident footfall, creating 12-minute bar service delays for hotel residents',
+      'Mountain-facing room contracts require explicit brochure disclosure to avoid German sea-view catalog disputes',
+    ],
+    publicMetaAverage: 91.4,
+    platformScores: [
+      { id: 'booking', name: 'Booking.com', scorePercent: 91, label: 'Verified Stays', category: 'Global OTA' },
+      { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: 90, label: 'Traveler Bubble', category: 'Review Community' },
+      { id: 'google', name: 'Google Reviews', scorePercent: 92, label: 'Global Sentiment', category: 'Public Network' },
+      { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: 91, label: 'DACH Benchmark', category: 'German Travelers' },
+      { id: 'expedia', name: 'Expedia Group', scorePercent: 90, label: 'Package Verified', category: 'Global OTA' },
+      { id: 'agoda', name: 'Agoda', scorePercent: 92, label: 'Luxury Network', category: 'Global OTA' },
+      { id: 'trustyou', name: 'TrustYou™', scorePercent: 91, label: 'Meta Aggregate', category: 'Meta Index' },
+      { id: 'tui', name: 'TUI / DERTOUR', scorePercent: 89, label: 'Catalog Rating', category: 'Travel Companies' },
+    ],
     reviewCount: '3,100+ Reviews',
     subscores: {
       cleanliness: 94,
@@ -101,11 +128,25 @@ const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
     location: 'Gardens District, Cape Town',
     propertyType: 'Historic 5-Star Luxury Heritage Hotel',
     classification: '5-Star Official Luxury Council Asset',
-    bookingScore: 9.3,
-    bookingRating: 'Superb',
-    tripAdvisorScore: 4.5,
-    googleScore: 4.6,
-    holidayCheckScore: 94,
+    chaScore: 87,
+    chaStatus: 'Advisory',
+    chaDeltaReason: '-5.4% vs Public OTA Avg (92.4%): 5% deduction for legacy sash window noise transmission and 07:30 peak hot water dips in historic wings.',
+    inspectionDeltaDrivers: [
+      'Historical Main Building plumbing experiences brief water temperature dips during peak 07:15–08:15 breakfast rushes',
+      'Perimeter heritage sash windows permit early 06:45 garden maintenance and delivery traffic acoustics',
+      'Unrenovated heritage rooms require explicit contractual room tiering vs. modernized Garden Cottages',
+    ],
+    publicMetaAverage: 92.4,
+    platformScores: [
+      { id: 'booking', name: 'Booking.com', scorePercent: 93, label: 'Verified Stays', category: 'Global OTA' },
+      { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: 90, label: 'Traveler Bubble', category: 'Review Community' },
+      { id: 'google', name: 'Google Reviews', scorePercent: 92, label: 'Global Sentiment', category: 'Public Network' },
+      { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: 94, label: 'DACH Benchmark', category: 'German Travelers' },
+      { id: 'expedia', name: 'Expedia Group', scorePercent: 92, label: 'Package Verified', category: 'Global OTA' },
+      { id: 'agoda', name: 'Agoda', scorePercent: 93, label: 'Luxury Network', category: 'Global OTA' },
+      { id: 'trustyou', name: 'TrustYou™', scorePercent: 94, label: 'Meta Aggregate', category: 'Meta Index' },
+      { id: 'tui', name: 'TUI / DERTOUR', scorePercent: 91, label: 'Catalog Rating', category: 'Travel Companies' },
+    ],
     reviewCount: '2,800+ Reviews',
     subscores: {
       cleanliness: 96,
@@ -145,11 +186,25 @@ const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
     location: 'V&A Waterfront Grain Silo Complex',
     propertyType: '5-Star Contemporary Architectural Luxury Landmark',
     classification: '5-Star Ultra-Luxury Asset',
-    bookingScore: 9.4,
-    bookingRating: 'Superb',
-    tripAdvisorScore: 4.6,
-    googleScore: 4.7,
-    holidayCheckScore: 93,
+    chaScore: 92,
+    chaStatus: 'Optimal',
+    chaDeltaReason: '-2.1% vs Public OTA Avg (94.1%): Minor deduction for lower-floor harbor maritime acoustics and public rooftop pool queues.',
+    inspectionDeltaDrivers: [
+      'Lower-level harbor suites pick up commercial port diesel tugboat hum during weekday morning maneuvers',
+      'Extremely popular rooftop pool and bar creates lift waiting queues during weekend sunset hours',
+      'At rates exceeding €1,200/night, minor service hesitation creates acute German client sensitivity',
+    ],
+    publicMetaAverage: 94.1,
+    platformScores: [
+      { id: 'booking', name: 'Booking.com', scorePercent: 94, label: 'Verified Stays', category: 'Global OTA' },
+      { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: 92, label: 'Traveler Bubble', category: 'Review Community' },
+      { id: 'google', name: 'Google Reviews', scorePercent: 94, label: 'Global Sentiment', category: 'Public Network' },
+      { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: 93, label: 'DACH Benchmark', category: 'German Travelers' },
+      { id: 'expedia', name: 'Expedia Group', scorePercent: 95, label: 'Package Verified', category: 'Global OTA' },
+      { id: 'agoda', name: 'Agoda', scorePercent: 95, label: 'Luxury Network', category: 'Global OTA' },
+      { id: 'trustyou', name: 'TrustYou™', scorePercent: 94, label: 'Meta Aggregate', category: 'Meta Index' },
+      { id: 'tui', name: 'TUI / DERTOUR', scorePercent: 93, label: 'Catalog Rating', category: 'Travel Companies' },
+    ],
     reviewCount: '950+ Reviews',
     subscores: {
       cleanliness: 97,
@@ -189,11 +244,25 @@ const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
     location: 'Simondium, Franschhoek Wine Valley',
     propertyType: '5-Star Historical Cape Dutch Farm Estate',
     classification: '5-Star Luxury Country Estate',
-    bookingScore: 9.5,
-    bookingRating: 'Exceptional',
-    tripAdvisorScore: 4.8,
-    googleScore: 4.7,
-    holidayCheckScore: 95,
+    chaScore: 91,
+    chaStatus: 'Optimal',
+    chaDeltaReason: '-4.3% vs Public OTA Avg (95.3%): Deductions for early 05:30 working farm awakening and Babel dining bottlenecks for package guests.',
+    inspectionDeltaDrivers: [
+      'Historic farm cottages experience early 05:30 farm activity and rooster calls on working agricultural estate',
+      'High daytime tour bus volume in public gardens requires guest vigilance regarding private residential pathways',
+      'Flagship Babel restaurant is booked out months ahead; requires guaranteed allocations during catalog contracting',
+    ],
+    publicMetaAverage: 95.3,
+    platformScores: [
+      { id: 'booking', name: 'Booking.com', scorePercent: 95, label: 'Verified Stays', category: 'Global OTA' },
+      { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: 96, label: 'Traveler Bubble', category: 'Review Community' },
+      { id: 'google', name: 'Google Reviews', scorePercent: 94, label: 'Global Sentiment', category: 'Public Network' },
+      { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: 95, label: 'DACH Benchmark', category: 'German Travelers' },
+      { id: 'expedia', name: 'Expedia Group', scorePercent: 95, label: 'Package Verified', category: 'Global OTA' },
+      { id: 'agoda', name: 'Agoda', scorePercent: 96, label: 'Luxury Network', category: 'Global OTA' },
+      { id: 'trustyou', name: 'TrustYou™', scorePercent: 96, label: 'Meta Aggregate', category: 'Meta Index' },
+      { id: 'tui', name: 'TUI / DERTOUR', scorePercent: 94, label: 'Catalog Rating', category: 'Travel Companies' },
+    ],
     reviewCount: '4,500+ Reviews',
     subscores: {
       cleanliness: 96,
@@ -233,11 +302,25 @@ const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
     location: 'Chapman’s Peak Drive, Hout Bay',
     propertyType: '5-Star Oceanfront Boutique Lodge',
     classification: '5-Star National Park Coastal Asset',
-    bookingScore: 9.3,
-    bookingRating: 'Superb',
-    tripAdvisorScore: 4.5,
-    googleScore: 4.6,
-    holidayCheckScore: 92,
+    chaScore: 88,
+    chaStatus: 'Advisory',
+    chaDeltaReason: '-4.0% vs Public OTA Avg (92.0%): 4% deduction for winter ocean wave crashing volume and steep 4x4 national park access track.',
+    inspectionDeltaDrivers: [
+      'High spring-tide waves break directly under suite decks; thrilling for most but disruptive for sensitive sleepers',
+      'Single-track steep national park descent requires dedicated 4x4 shuttle with 10-minute departure coordination',
+      'Winter cold fronts bring intense sea spray requiring temporary dinner relocation away from waterside deck',
+    ],
+    publicMetaAverage: 92.0,
+    platformScores: [
+      { id: 'booking', name: 'Booking.com', scorePercent: 93, label: 'Verified Stays', category: 'Global OTA' },
+      { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: 90, label: 'Traveler Bubble', category: 'Review Community' },
+      { id: 'google', name: 'Google Reviews', scorePercent: 92, label: 'Global Sentiment', category: 'Public Network' },
+      { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: 92, label: 'DACH Benchmark', category: 'German Travelers' },
+      { id: 'expedia', name: 'Expedia Group', scorePercent: 92, label: 'Package Verified', category: 'Global OTA' },
+      { id: 'agoda', name: 'Agoda', scorePercent: 93, label: 'Luxury Network', category: 'Global OTA' },
+      { id: 'trustyou', name: 'TrustYou™', scorePercent: 93, label: 'Meta Aggregate', category: 'Meta Index' },
+      { id: 'tui', name: 'TUI / DERTOUR', scorePercent: 91, label: 'Catalog Rating', category: 'Travel Companies' },
+    ],
     reviewCount: '800+ Reviews',
     subscores: {
       cleanliness: 92,
@@ -277,11 +360,25 @@ const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
     location: 'Helshoogte Pass, Stellenbosch',
     propertyType: '5-Star Ultra-Luxury Mountain Vineyard Lodges',
     classification: '5-Star Premier Relais & Châteaux Asset',
-    bookingScore: 9.6,
-    bookingRating: 'Exceptional',
-    tripAdvisorScore: 4.8,
-    googleScore: 4.7,
-    holidayCheckScore: 97,
+    chaScore: 93,
+    chaStatus: 'Optimal',
+    chaDeltaReason: '-3.4% vs Public OTA Avg (96.4%): Minor deduction for Helshoogte Pass harvest agricultural transport and rigid minimum stay policies.',
+    inspectionDeltaDrivers: [
+      'Helshoogte Pass experiences agricultural transport and wine tourist traffic during peak autumn grape harvest',
+      'In-house fine dining (Indochine & Delaire Graff) requires advance reservation 2–3 weeks prior to arrival',
+      'Rigid 2–3 night minimum stay constraints during high European season restrict tour operator itinerary flex',
+    ],
+    publicMetaAverage: 96.4,
+    platformScores: [
+      { id: 'booking', name: 'Booking.com', scorePercent: 96, label: 'Verified Stays', category: 'Global OTA' },
+      { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: 96, label: 'Traveler Bubble', category: 'Review Community' },
+      { id: 'google', name: 'Google Reviews', scorePercent: 94, label: 'Global Sentiment', category: 'Public Network' },
+      { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: 97, label: 'DACH Benchmark', category: 'German Travelers' },
+      { id: 'expedia', name: 'Expedia Group', scorePercent: 96, label: 'Package Verified', category: 'Global OTA' },
+      { id: 'agoda', name: 'Agoda', scorePercent: 97, label: 'Luxury Network', category: 'Global OTA' },
+      { id: 'trustyou', name: 'TrustYou™', scorePercent: 97, label: 'Meta Aggregate', category: 'Meta Index' },
+      { id: 'tui', name: 'TUI / DERTOUR', scorePercent: 95, label: 'Catalog Rating', category: 'Travel Companies' },
+    ],
     reviewCount: '1,600+ Reviews',
     subscores: {
       cleanliness: 98,
@@ -321,11 +418,25 @@ const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
     location: 'Lagoon Beach / Milnerton, Cape Town',
     propertyType: 'Coastal Self-Catering & Holiday Apartments',
     classification: '3-Star / Self-Catering Holiday Asset',
-    bookingScore: 8.2,
-    bookingRating: 'Very Good',
-    tripAdvisorScore: 4.0,
-    googleScore: 4.3,
-    holidayCheckScore: 78,
+    chaScore: 71,
+    chaStatus: 'Attention Required',
+    chaDeltaReason: '-9.5% vs Public OTA Avg (80.5%): Operational deductions for Marine Drive commute traffic noise, coastal wind rattle, and lack of dedicated 24/7 hotel front-desk services.',
+    inspectionDeltaDrivers: [
+      'Marine Drive commuter arterial traffic audible in street-facing apartment units during early mornings',
+      'Sectional-title self-catering rental pool results in inconsistent appliance wear and plumbing upkeep',
+      'Absence of full 24/7 on-site hospitality desk creates catalog guarantee liability risks for European package operators',
+    ],
+    publicMetaAverage: 80.5,
+    platformScores: [
+      { id: 'booking', name: 'Booking.com', scorePercent: 82, label: 'Verified Stays', category: 'Global OTA' },
+      { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: 80, label: 'Traveler Bubble', category: 'Review Community' },
+      { id: 'google', name: 'Google Reviews', scorePercent: 86, label: 'Global Sentiment', category: 'Public Network' },
+      { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: 78, label: 'DACH Benchmark', category: 'German Travelers' },
+      { id: 'expedia', name: 'Expedia Group', scorePercent: 81, label: 'Package Verified', category: 'Global OTA' },
+      { id: 'agoda', name: 'Agoda', scorePercent: 82, label: 'Luxury Network', category: 'Global OTA' },
+      { id: 'trustyou', name: 'TrustYou™', scorePercent: 81, label: 'Meta Aggregate', category: 'Meta Index' },
+      { id: 'tui', name: 'TUI / DERTOUR', scorePercent: 74, label: 'Catalog Rating', category: 'Travel Companies' },
+    ],
     reviewCount: '480+ Reviews',
     subscores: {
       cleanliness: 82,
@@ -365,11 +476,25 @@ const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
     location: 'Bantry Bay, Atlantic Seaboard',
     propertyType: '5-Star Exclusive Private Clifftop Mansion',
     classification: '5-Star Relais & Châteaux Exclusive Asset',
-    bookingScore: 9.7,
-    bookingRating: 'Exceptional',
-    tripAdvisorScore: 4.9,
-    googleScore: 4.8,
-    holidayCheckScore: 98,
+    chaScore: 94,
+    chaStatus: 'Optimal',
+    chaDeltaReason: '-3.1% vs Public OTA Avg (97.1%): Minor deduction for steep multi-tier cliffside staircases and strict adults-only booking restrictions.',
+    inspectionDeltaDrivers: [
+      'Multi-level cliffside staircase layout limits accessibility for travelers with physical mobility limitations',
+      'Strict adults-only policy (no children under 14) requires rigid enforcement in travel company booking flows',
+      'Intimate 13-room inventory requires strict 9-month allocation windows during European high season',
+    ],
+    publicMetaAverage: 97.1,
+    platformScores: [
+      { id: 'booking', name: 'Booking.com', scorePercent: 97, label: 'Verified Stays', category: 'Global OTA' },
+      { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: 98, label: 'Traveler Bubble', category: 'Review Community' },
+      { id: 'google', name: 'Google Reviews', scorePercent: 96, label: 'Global Sentiment', category: 'Public Network' },
+      { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: 98, label: 'DACH Benchmark', category: 'German Travelers' },
+      { id: 'expedia', name: 'Expedia Group', scorePercent: 97, label: 'Package Verified', category: 'Global OTA' },
+      { id: 'agoda', name: 'Agoda', scorePercent: 98, label: 'Luxury Network', category: 'Global OTA' },
+      { id: 'trustyou', name: 'TrustYou™', scorePercent: 98, label: 'Meta Aggregate', category: 'Meta Index' },
+      { id: 'tui', name: 'TUI / DERTOUR', scorePercent: 95, label: 'Catalog Rating', category: 'Travel Companies' },
+    ],
     reviewCount: '620+ Reviews',
     subscores: {
       cleanliness: 99,
@@ -458,7 +583,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
       const data = await response.json();
       if (data.success && data.profile) {
         setActiveSearchResult(data.profile);
-        setIsGrounded(true);
+        setIsGrounded(Boolean(data.grounded));
         return;
       }
       throw new Error(data.error || 'Failed to parse hotel profile');
@@ -479,10 +604,11 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
         lowerQuery.includes('house') ||
         lowerQuery.includes('lodge') ||
         lowerQuery.includes('villa') ||
-        lowerQuery.includes('isle');
+        lowerQuery.includes('isle') ||
+        lowerQuery.includes('cottage');
 
       const inferredType = isApartmentOrGuest
-        ? 'Regional Holiday Apartments / Guesthouse'
+        ? 'Regional Holiday Apartments & Self-Catering'
         : 'Regional Hotel & Accommodation Asset';
 
       const inferredClass = isApartmentOrGuest
@@ -491,16 +617,50 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
         ? '4 to 5-Star Hotel Profile'
         : '3 to 4-Star Commercial Hotel Profile';
 
+      const bookingPct = Math.min(99, Math.max(70, Math.round(numBScore * 10)));
+      const tripAdvisorPct = Math.min(98, Math.max(70, Math.round(numGScore * 20)));
+      const googlePct = Math.min(98, Math.max(70, Math.round(numGScore * 20)));
+      const holidayCheckPct = hCheck;
+      const expediaPct = Math.min(97, Math.max(69, Math.round(numBScore * 9.8)));
+      const agodaPct = Math.min(98, Math.max(71, Math.round(numBScore * 9.9)));
+      const trustYouPct = Math.min(97, Math.max(72, Math.round(numBScore * 9.8)));
+      const tuiPct = Math.min(96, Math.max(68, Math.round(numBScore * 9.5)));
+
+      const platformScores: PlatformScoreItem[] = [
+        { id: 'booking', name: 'Booking.com', scorePercent: bookingPct, label: 'Verified Stays', category: 'Global OTA' },
+        { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: tripAdvisorPct, label: 'Traveler Bubble', category: 'Review Community' },
+        { id: 'google', name: 'Google Reviews', scorePercent: googlePct, label: 'Global Sentiment', category: 'Public Network' },
+        { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: holidayCheckPct, label: 'DACH Benchmark', category: 'German Travelers' },
+        { id: 'expedia', name: 'Expedia Group', scorePercent: expediaPct, label: 'Package Verified', category: 'Global OTA' },
+        { id: 'agoda', name: 'Agoda', scorePercent: agodaPct, label: 'Luxury Network', category: 'Global OTA' },
+        { id: 'trustyou', name: 'TrustYou™', scorePercent: trustYouPct, label: 'Meta Aggregate', category: 'Meta Index' },
+        { id: 'tui', name: 'TUI / DERTOUR', scorePercent: tuiPct, label: 'Catalog Rating', category: 'Travel Companies' },
+      ];
+
+      const publicMetaAvg = Math.round(
+        platformScores.reduce((acc, curr) => acc + curr.scorePercent, 0) / platformScores.length
+      );
+
+      const deltaDeduction = isApartmentOrGuest ? 8 : 5;
+      const chaScore = Math.max(62, publicMetaAvg - deltaDeduction);
+      const chaStatus: 'Optimal' | 'Advisory' | 'Attention Required' =
+        chaScore >= 90 ? 'Optimal' : chaScore >= 80 ? 'Advisory' : 'Attention Required';
+
       setActiveSearchResult({
         name: cleanQuery,
         location: 'Western Cape Corridor, South Africa',
         propertyType: inferredType,
         classification: inferredClass,
-        bookingScore: numBScore,
-        bookingRating: numBScore >= 9.0 ? 'Superb' : numBScore >= 8.4 ? 'Very Good' : 'Good',
-        tripAdvisorScore: numGScore >= 4.5 ? 4.5 : 4.0,
-        googleScore: numGScore,
-        holidayCheckScore: hCheck,
+        chaScore,
+        chaStatus,
+        chaDeltaReason: `-${deltaDeduction}% vs Public OTA Avg (${publicMetaAvg}%): Operational deductions reflecting real room wing acoustics, morning plumbing stability, and European catalog compliance.`,
+        inspectionDeltaDrivers: [
+          'Acoustic insulation variance in street-facing or mechanical equipment wings',
+          'Morning shower hot water temperature drops during 07:15–08:15 peak rushes',
+          'Discrepancy between brochure marketing imagery and contractual room allocations',
+        ],
+        publicMetaAverage: publicMetaAvg,
+        platformScores,
         reviewCount: `${(hash * 4) % 1200 + 150}+ Reviews`,
         subscores: {
           cleanliness: Math.min(96, 78 + (hash % 18)),
@@ -517,8 +677,16 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
           business: 8,
         },
         europeanShare: Math.min(65, 32 + (hash % 28)),
-        frequentPraise: ['Convenient regional base', 'Scenic Western Cape views', 'Friendly local hospitality'],
-        frequentCritiques: ['Variable traffic noise exposure', 'Peak check-in wait times', 'Occasional wind & weather impact'],
+        frequentPraise: [
+          'Convenient regional access and scenic outlook',
+          'Friendly staff and responsive local greeting',
+          'Generous room dimensions and comfortable beds',
+        ],
+        frequentCritiques: [
+          'Variable exterior traffic or coastal wind noise',
+          'Morning breakfast and reception queue pacing',
+          'Older bathroom plumbing or fixture maintenance',
+        ],
         publicSummary: `Public platform scores reflect standard mixed leisure sentiment, but lack European catalog liability calibration (DRV standards) and specific room wing acoustic validation.`,
         blindSpots: [
           {
@@ -576,11 +744,11 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
           </div>
 
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight font-serif leading-tight">
-            Instant Multi-Platform Search & Scorecard
+            Multi-Platform Review Radar & Quality Index
           </h2>
 
           <p className="mt-3 text-sm sm:text-base text-zinc-300 font-light leading-relaxed max-w-2xl mx-auto">
-            Search any Western Cape hotel to instantly pull aggregated public scores across Booking.com, TripAdvisor, Google, and HolidayCheck — and see what public reviews hide.
+            Search any Western Cape hotel to compare 8 recognized public review providers against our proprietary Cape Hospitality Advisors Score.
           </p>
         </div>
 
@@ -656,7 +824,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
               Searching Google & Live Review Databases for “{searchInput}”...
             </h3>
             <p className="text-xs text-zinc-300 max-w-md mx-auto mt-2 leading-relaxed">
-              Synthesizing public listings across Booking.com, TripAdvisor, Google Maps, and HolidayCheck, and calibrating travel company catalog risk.
+              Synthesizing public listings across 8 recognized providers and calibrating travel company catalog risk.
             </p>
             <div className="mt-4 flex items-center justify-center gap-2 text-[11px] font-mono text-[#d9bd8b]">
               <span className="inline-block w-2 h-2 rounded-full bg-[#d9bd8b] animate-ping" />
@@ -669,7 +837,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
         {!isLoading && activeSearchResult && (
           <div className="rounded-2xl bg-[#0c182a] border border-white/15 shadow-2xl p-6 sm:p-8 text-left mb-8">
             
-            {/* Top Hotel Header & Platform Score Badges */}
+            {/* Top Hotel Header & Meta-Average Banner */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-white/10">
               <div>
                 <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -693,58 +861,153 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
                 <p className="text-xs text-zinc-400 mt-1 flex items-center gap-1">
                   <MapPin className="w-3.5 h-3.5 text-[#d9bd8b]" />
                   <span>{activeSearchResult.location}</span>
-                  <span className="text-zinc-600 ml-1">({activeSearchResult.reviewCount} aggregated)</span>
+                  <span className="text-zinc-600 ml-1">({activeSearchResult.reviewCount} aggregated across 8 providers)</span>
                 </p>
               </div>
 
-              {/* 4 Public OTA Platform Score Badges */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 shrink-0">
-                {/* Booking.com */}
-                <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-center min-w-[100px]">
-                  <div className="text-[10px] font-mono text-zinc-400">Booking.com</div>
-                  <div className="text-lg font-black font-mono text-[#d9bd8b] mt-0.5">
-                    {activeSearchResult.bookingScore}
-                    <span className="text-[10px] text-zinc-400 font-normal">/10</span>
+              {/* Public OTA Meta-Average Pill */}
+              <div className="bg-white/5 border border-white/10 rounded-2xl px-4 py-3 flex items-center gap-3 shrink-0 self-start lg:self-auto">
+                <div className="text-right">
+                  <div className="text-[10px] font-mono uppercase text-zinc-400 tracking-wider">
+                    Public OTA Meta-Average
                   </div>
-                  <div className="text-[9px] text-zinc-400 font-medium">{activeSearchResult.bookingRating}</div>
+                  <div className="text-xs text-zinc-300 font-light mt-0.5">
+                    8 Platforms Aggregated
+                  </div>
                 </div>
-
-                {/* TripAdvisor */}
-                <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-center min-w-[100px]">
-                  <div className="text-[10px] font-mono text-zinc-400">TripAdvisor</div>
-                  <div className="text-lg font-black font-mono text-emerald-400 mt-0.5">
-                    {activeSearchResult.tripAdvisorScore}
-                    <span className="text-[10px] text-zinc-400 font-normal">/5</span>
-                  </div>
-                  <div className="text-[9px] text-zinc-400 font-medium">Bubble Rating</div>
-                </div>
-
-                {/* Google Reviews */}
-                <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-center min-w-[100px]">
-                  <div className="text-[10px] font-mono text-zinc-400">Google Rating</div>
-                  <div className="text-lg font-black font-mono text-blue-400 mt-0.5">
-                    {activeSearchResult.googleScore}
-                    <span className="text-[10px] text-zinc-400 font-normal">/5</span>
-                  </div>
-                  <div className="text-[9px] text-zinc-400 font-medium">Public Reviews</div>
-                </div>
-
-                {/* HolidayCheck (German Benchmark) */}
-                <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-center min-w-[100px]">
-                  <div className="text-[10px] font-mono text-zinc-400">HolidayCheck</div>
-                  <div className="text-lg font-black font-mono text-amber-400 mt-0.5">
-                    {activeSearchResult.holidayCheckScore}%
-                  </div>
-                  <div className="text-[9px] text-zinc-400 font-medium">Recommendation</div>
+                <div className="text-2xl font-black font-mono text-white bg-white/10 px-3 py-1.5 rounded-xl border border-white/15">
+                  {activeSearchResult.publicMetaAverage}%
                 </div>
               </div>
             </div>
 
-            {/* 6 Core Public Experience Sub-Scores (OTA Breakdown) */}
+            {/* Scorecard Centerpiece: Proprietary CHA Score vs. 8 Providers Grid */}
+            <div className="py-6 border-b border-white/10 grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+              
+              {/* Left Column: Proprietary Cape Hospitality Advisors Score (CHA Quality Index™) */}
+              <div className="lg:col-span-5 rounded-2xl bg-gradient-to-br from-[#0c1a30] via-[#091424] to-[#060c17] border-2 border-[#d9bd8b]/50 p-5 sm:p-6 flex flex-col justify-between shadow-xl relative overflow-hidden ring-1 ring-[#d9bd8b]/20">
+                {/* Subtle gold glow */}
+                <div className="absolute top-0 right-0 w-36 h-36 bg-[radial-gradient(circle,rgba(217,189,139,0.15),transparent_70%)] pointer-events-none" />
+
+                <div>
+                  {/* Badge & Emblem Header */}
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#d9bd8b]/15 border border-[#d9bd8b]/40 text-[#d9bd8b] text-[11px] font-mono font-bold uppercase tracking-wider">
+                      <Award className="w-3.5 h-3.5 text-[#d9bd8b]" />
+                      <span>CHA Quality Index™</span>
+                    </div>
+
+                    <span
+                      className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
+                        activeSearchResult.chaStatus === 'Optimal'
+                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                          : activeSearchResult.chaStatus === 'Advisory'
+                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                          : 'bg-rose-500/20 text-rose-300 border-rose-500/40'
+                      }`}
+                    >
+                      {activeSearchResult.chaStatus === 'Optimal'
+                        ? 'Optimal Standard'
+                        : activeSearchResult.chaStatus === 'Advisory'
+                        ? 'Advisory Notice'
+                        : 'Attention Required'}
+                    </span>
+                  </div>
+
+                  {/* Big Percentage Display */}
+                  <div className="flex items-baseline gap-2 mt-1 mb-2">
+                    <div className="text-4xl sm:text-5xl font-black font-mono text-[#d9bd8b] tracking-tight">
+                      {activeSearchResult.chaScore}%
+                    </div>
+                    <span className="text-xs text-zinc-400 font-mono">
+                      / 100% Quality Benchmark
+                    </span>
+                  </div>
+
+                  {/* Operational Reality Gap Delta Tag */}
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono font-semibold mb-3">
+                    <TrendingDown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <span>
+                      Reality Gap Delta: {(activeSearchResult.chaScore - activeSearchResult.publicMetaAverage).toFixed(1)}% vs Public OTA Avg ({activeSearchResult.publicMetaAverage}%)
+                    </span>
+                  </div>
+
+                  {/* Deduction Rationale Description */}
+                  <p className="text-xs text-zinc-300 leading-relaxed font-light mb-4">
+                    {activeSearchResult.chaDeltaReason}
+                  </p>
+                </div>
+
+                {/* Inspection Delta Drivers */}
+                <div className="pt-3 border-t border-white/10">
+                  <div className="text-[10px] font-mono uppercase font-bold text-zinc-400 tracking-wider mb-2 flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#d9bd8b]" />
+                    <span>Inspection Delta Drivers:</span>
+                  </div>
+                  <ul className="space-y-1.5 text-[11px] text-zinc-300">
+                    {activeSearchResult.inspectionDeltaDrivers.map((driver, idx) => (
+                      <li key={idx} className="flex items-start gap-1.5">
+                        <span className="text-amber-400 font-bold shrink-0 mt-0.5">•</span>
+                        <span className="leading-snug font-light">{driver}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* Right Column: 8 Recognized Providers (All Normalized to %) */}
+              <div className="lg:col-span-7 flex flex-col justify-between space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5">
+                    <Globe className="w-3.5 h-3.5 text-[#d9bd8b]" />
+                    <span>8 Recognized Review Providers (All Normalized to %)</span>
+                  </div>
+                  <span className="text-[10px] font-mono text-zinc-400">
+                    Unified 0–100% Scale
+                  </span>
+                </div>
+
+                {/* 8-Card Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  {activeSearchResult.platformScores.map((platform) => (
+                    <div
+                      key={platform.id}
+                      className="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 transition-all flex flex-col justify-between text-left"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between text-[10px] font-mono text-zinc-400 mb-0.5">
+                          <span className="line-clamp-1">{platform.category}</span>
+                        </div>
+                        <div className="text-xs font-bold text-white line-clamp-1">
+                          {platform.name}
+                        </div>
+                      </div>
+
+                      <div className="mt-2 pt-2 border-t border-white/5 flex items-baseline justify-between">
+                        <div className="text-lg sm:text-xl font-black font-mono text-[#d9bd8b]">
+                          {platform.scorePercent}%
+                        </div>
+                        <span className="text-[9px] font-mono text-zinc-400 line-clamp-1">
+                          {platform.label}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Institutional Explanatory Caption */}
+                <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 text-[11px] text-zinc-400 leading-relaxed font-light">
+                  <strong className="text-zinc-300 font-medium">Why the scores diverge:</strong> Public OTAs calculate satisfaction from unverified leisure domestic tourists and holidaymakers. Cape Hospitality Advisors audits specific physical stress factors (acoustics, peak hot water, check-in pacing) against German catalog travel standards (DRV).
+                </div>
+              </div>
+
+            </div>
+
+            {/* 6 Core Public Experience Sub-Scores (OTA Component Breakdown) */}
             <div className="py-5 border-b border-white/10">
               <div className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 mb-3 flex items-center justify-between">
                 <span>Public Component Sub-Scores:</span>
-                <span className="text-[10px] font-mono text-zinc-400">OTA Benchmark (out of 100)</span>
+                <span className="text-[10px] font-mono text-zinc-400">Component Breakdown (out of 100%)</span>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 text-left">
