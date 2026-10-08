@@ -18,7 +18,8 @@
     
     <!-- 2. CONFIGURE FONTS & COLORS FOR TAILWIND -->
     <script>
-      tailwind.config = {
+      window.tailwind = window.tailwind || {};
+      window.tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
@@ -32,7 +33,7 @@
             }
           }
         }
-      }
+      };
     </script>
   </head>
   <body class="bg-[#fbfbfa] text-zinc-900 antialiased selection:bg-[#10213a] selection:text-white font-sans m-0 p-0">

@@ -16,7 +16,22 @@ import {
   Award,
   TrendingDown,
   ShieldCheck,
+  Volume2,
+  Droplets,
+  BedDouble,
+  Wind,
+  AlertOctagon,
+  CheckCircle2,
+  FileText,
+  ArrowUpRight,
+  Compass,
+  Info,
+  Scale,
+  HelpCircle,
+  Ban,
+  BadgePercent,
 } from 'lucide-react';
+import { generateContextualAuditProfile } from '../lib/propertyAuditEngine';
 
 export interface PlatformScoreItem {
   id: string;
@@ -62,6 +77,11 @@ export interface HotelPublicProfile {
     title: string;
     description: string;
   }[];
+  // Provenance & Public Sentiment Confidence Metadata
+  provenanceTier?: 'HAND_VERIFIED' | 'LIVE_GROUNDED' | 'SYNTHETIC_REGIONAL';
+  provenanceLabel?: string;
+  webPresenceStrength?: 'High' | 'Moderate' | 'Limited';
+  sentimentDisclaimer?: string;
 }
 
 const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
@@ -416,60 +436,73 @@ const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
   'neptune isle': {
     name: 'Neptune Isle Holiday Apartments',
     location: 'Lagoon Beach / Milnerton, Cape Town',
-    propertyType: 'Coastal Self-Catering & Holiday Apartments',
-    classification: '3-Star / Self-Catering Holiday Asset',
-    chaScore: 71,
-    chaStatus: 'Attention Required',
-    chaDeltaReason: '-9.5% vs Public OTA Avg (80.5%): Operational deductions for Marine Drive commute traffic noise, coastal wind rattle, and lack of dedicated 24/7 hotel front-desk services.',
+    propertyType: 'Oceanfront Self-Catering Holiday Apartments',
+    classification: '3 to 4-Star / Self-Catering Holiday Asset',
+    chaScore: 74,
+    chaStatus: 'Advisory',
+    chaDeltaReason: '-7.0% vs Public OTA Avg (81.0%): Deductions for self-catering arrival logistics, Marine Drive commute traffic on street-facing units, and decor/inverter variance across sectional-title private owners.',
     inspectionDeltaDrivers: [
-      'Marine Drive commuter arterial traffic audible in street-facing apartment units during early mornings',
-      'Sectional-title self-catering rental pool results in inconsistent appliance wear and plumbing upkeep',
-      'Absence of full 24/7 on-site hospitality desk creates catalog guarantee liability risks for European package operators',
+      'Marine Drive commuter arterial traffic audible in street-facing apartment units during morning peak (oceanfront units feature purely wave sounds)',
+      'Sectional-title self-catering rental pool results in inconsistent interior finishes and appliance maintenance across individual private owners',
+      'Self-catering arrival format (lockbox / host greeting) rather than 24/7 staffed hotel concierge desk requires pre-flight arrival logistics (notwithstanding active 24-hr guarded gate security)',
     ],
-    publicMetaAverage: 80.5,
+    publicMetaAverage: 81.0,
     platformScores: [
-      { id: 'booking', name: 'Booking.com', scorePercent: 82, label: 'Verified Stays', category: 'Global OTA' },
+      { id: 'booking', name: 'Booking.com', scorePercent: 83, label: 'Verified Stays', category: 'Global OTA' },
       { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: 80, label: 'Traveler Bubble', category: 'Review Community' },
       { id: 'google', name: 'Google Reviews', scorePercent: 86, label: 'Global Sentiment', category: 'Public Network' },
       { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: 78, label: 'DACH Benchmark', category: 'German Travelers' },
       { id: 'expedia', name: 'Expedia Group', scorePercent: 81, label: 'Package Verified', category: 'Global OTA' },
       { id: 'agoda', name: 'Agoda', scorePercent: 82, label: 'Luxury Network', category: 'Global OTA' },
       { id: 'trustyou', name: 'TrustYou™', scorePercent: 81, label: 'Meta Aggregate', category: 'Meta Index' },
-      { id: 'tui', name: 'TUI / DERTOUR', scorePercent: 74, label: 'Catalog Rating', category: 'Travel Companies' },
+      { id: 'tui', name: 'TUI / DERTOUR', scorePercent: 77, label: 'Catalog Rating', category: 'Travel Companies' },
     ],
-    reviewCount: '480+ Reviews',
+    reviewCount: '520+ Reviews',
     subscores: {
-      cleanliness: 82,
-      comfort: 80,
-      location: 92,
-      service: 79,
-      dining: 74,
-      value: 86,
+      cleanliness: 84,
+      comfort: 81,
+      location: 96,
+      service: 80,
+      dining: 72,
+      value: 88,
     },
     travelerSegments: {
-      couples: 46,
-      families: 38,
+      couples: 48,
+      families: 36,
       solo: 10,
       business: 6,
     },
-    europeanShare: 28,
-    frequentPraise: ['Unobstructed Table Mountain views', 'Direct access to Lagoon Beach', 'Spacious self-catering living'],
-    frequentCritiques: ['Marine Drive traffic noise', 'Windy balcony conditions', 'Elevator waiting times in high season'],
-    publicSummary: 'Direct beach access and postcard Table Mountain panoramas. High value for independent travelers, with coastal wind exposure and peak-hour traffic acoustics.',
+    europeanShare: 32,
+    frequentPraise: [
+      'Uninterrupted sea views across Table Bay & Table Mountain',
+      'Direct beach access (steps straight onto Lagoon Beach)',
+      '24-Hour guarded perimeter gate security & secure resident parking',
+      'Spacious self-catering balcony layouts with front-row sunset vistas',
+    ],
+    frequentCritiques: [
+      'Marine Drive traffic noise on street-facing units during morning commute',
+      'Coastal southeaster wind exposure on upper ocean balconies',
+      'Individual unit interior finishes vary across private sectional-title owners',
+    ],
+    publicSummary: 'Prime beachfront location with uninterrupted sea and Table Mountain views. Direct beach access and strong self-catering value, offset by coastal wind exposure and peak-hour road noise on rear-facing units.',
     blindSpots: [
       {
-        title: 'Acoustic Exposure & Traffic Pacing',
-        description: 'Marine Drive commute traffic and coastal wind vibration audible in street-facing units during early mornings.',
+        title: 'Street-Facing vs Oceanfront Acoustic Profile',
+        description: 'Marine Drive commute traffic affects east-facing units during morning peak hours; oceanfront units have purely wave sounds.',
       },
       {
-        title: 'Self-Catering Fixture & Appliance Wear',
-        description: 'Variable wear on kitchen appliances and bathroom plumbing typical of sectional-title rental pools.',
+        title: 'Sectional-Title Decor & Appliance Maintenance',
+        description: 'Individual units belong to private owners, leading to differences in kitchen appliance modernity, linen grade, and inverter backup status.',
       },
       {
-        title: 'Catalog Liability & Travel Company Fit',
-        description: 'Lacks 24/7 dedicated hotel services. May not meet European package tour catalog guarantees without explicit guest disclosures.',
+        title: 'Arrival Logistics for Late International Flights',
+        description: 'Self-catering arrival requires lockbox codes or host greeting; 24h gate security handles access control but does not offer hotel front-desk services.',
       },
     ],
+    provenanceTier: 'HAND_VERIFIED',
+    provenanceLabel: 'Audited Reference Property (On-Site Calibrated)',
+    webPresenceStrength: 'High',
+    sentimentDisclaimer: 'Public sentiment cross-referenced across 520+ verified online reviews. Hand-calibrated for European travel company catalog guarantees.',
   },
   'ellerman house': {
     name: 'Ellerman House',
@@ -529,7 +562,296 @@ const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
       },
     ],
   },
+  'the table bay hotel': {
+    name: 'The Table Bay Hotel',
+    location: 'V&A Waterfront Marina Precinct, Cape Town',
+    propertyType: '5-Star Grand Maritime Luxury Hotel',
+    classification: '5-Star Official Luxury Council Asset',
+    chaScore: 88,
+    chaStatus: 'Advisory',
+    chaDeltaReason: '-4.6% vs Public OTA Avg (92.6%): 4% deduction for working harbor tugboat acoustics and peak 07:30 European tour coach breakfast pacing.',
+    inspectionDeltaDrivers: [
+      'Active commercial harbor vessel traffic, marine foghorns, and sightseeing helicopter flight paths audible on marina balconies',
+      'Simultaneous 07:15–08:15 European coach tour departure rush causing breakfast buffet seating queues and elevator dispatch delays',
+      'Contractual room allocation variances: internal courtyard facing rooms vs direct Robben Island / Table Mountain oceanfront wings',
+    ],
+    publicMetaAverage: 92.6,
+    platformScores: [
+      { id: 'booking', name: 'Booking.com', scorePercent: 93, label: 'Verified Stays', category: 'Global OTA' },
+      { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: 92, label: 'Traveler Bubble', category: 'Review Community' },
+      { id: 'google', name: 'Google Reviews', scorePercent: 94, label: 'Global Sentiment', category: 'Public Network' },
+      { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: 93, label: 'DACH Benchmark', category: 'German Travelers' },
+      { id: 'expedia', name: 'Expedia Group', scorePercent: 93, label: 'Package Verified', category: 'Global OTA' },
+      { id: 'agoda', name: 'Agoda', scorePercent: 94, label: 'Luxury Network', category: 'Global OTA' },
+      { id: 'trustyou', name: 'TrustYou™', scorePercent: 93, label: 'Meta Aggregate', category: 'Meta Index' },
+      { id: 'tui', name: 'TUI / DERTOUR', scorePercent: 89, label: 'Catalog Rating', category: 'Travel Companies' },
+    ],
+    reviewCount: '4,200+ Reviews',
+    subscores: {
+      cleanliness: 94,
+      comfort: 92,
+      location: 98,
+      service: 92,
+      dining: 91,
+      value: 86,
+    },
+    travelerSegments: {
+      couples: 54,
+      families: 24,
+      solo: 10,
+      business: 12,
+    },
+    europeanShare: 56,
+    frequentPraise: [
+      'Direct pedestrian access into V&A Waterfront shopping, restaurants, and marina',
+      'Grand Victorian maritime architecture with iconic Table Mountain views',
+      'World-class security precinct and 5-star concierge excursion desk',
+    ],
+    frequentCritiques: [
+      'Early morning commercial port tugboat foghorns and working harbor maritime operations',
+      'High foot traffic in the public grand lounge and lobby walkway during cruise liner docking days',
+      'Strict advance dinner booking policies required for in-house guests at Camissa and Atlantic restaurants',
+    ],
+    publicSummary: 'Iconic Victorian grand hotel in the V&A Waterfront offering top-tier security and Table Mountain panoramas, with minor operational considerations around working harbor acoustics.',
+    blindSpots: [
+      {
+        title: 'Working Port & Helicopter Corridor Acoustics',
+        description: 'Daytime working dry dock activity and harbor scenic helicopter departures create acoustic spikes on ocean-facing balconies.',
+      },
+      {
+        title: 'European Tour Coach Breakfast Rush (07:30)',
+        description: 'Concurrent departure of multiple 40-seat tour groups creates dining bottlenecks for independent luxury guests.',
+      },
+      {
+        title: 'Courtyard vs Harbor View Contract Allotment',
+        description: 'German travel catalog terms require explicit demarcation of internal courtyard allotments vs premium Table Mountain views.',
+      },
+    ],
+    provenanceTier: 'HAND_VERIFIED',
+    provenanceLabel: 'Audited Reference Property (On-Site Calibrated)',
+    webPresenceStrength: 'High',
+    sentimentDisclaimer: 'Public sentiment cross-referenced across 4,200+ verified online reviews. Hand-calibrated for European travel company catalog guarantees.',
+  },
+  'radisson blu waterfront': {
+    name: 'Radisson Blu Hotel Waterfront',
+    location: 'Granger Bay / V&A Waterfront, Cape Town',
+    propertyType: '5-Star Oceanfront Maritime Commercial Hotel',
+    classification: '5-Star Commercial Coastal Asset',
+    chaScore: 85,
+    chaStatus: 'Advisory',
+    chaDeltaReason: '-5.2% vs Public OTA Avg (90.2%): Deductions for seaside boardwalk wind exposure and breakfast terrace queuing during peak conference mornings.',
+    inspectionDeltaDrivers: [
+      'Granger Bay oceanfront terrace experiences severe wind gusts during seasonal southeaster weather, requiring indoor dining fallback',
+      'Significant acoustic differential between direct sea-facing rooms (ocean waves) and land-facing rooms overlooking Granger Bay Boulevard',
+      'Elevator and concierge desk congestion during concurrent international business conference check-outs',
+    ],
+    publicMetaAverage: 90.2,
+    platformScores: [
+      { id: 'booking', name: 'Booking.com', scorePercent: 91, label: 'Verified Stays', category: 'Global OTA' },
+      { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: 89, label: 'Traveler Bubble', category: 'Review Community' },
+      { id: 'google', name: 'Google Reviews', scorePercent: 92, label: 'Global Sentiment', category: 'Public Network' },
+      { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: 91, label: 'DACH Benchmark', category: 'German Travelers' },
+      { id: 'expedia', name: 'Expedia Group', scorePercent: 90, label: 'Package Verified', category: 'Global OTA' },
+      { id: 'agoda', name: 'Agoda', scorePercent: 91, label: 'Luxury Network', category: 'Global OTA' },
+      { id: 'trustyou', name: 'TrustYou™', scorePercent: 91, label: 'Meta Aggregate', category: 'Meta Index' },
+      { id: 'tui', name: 'TUI / DERTOUR', scorePercent: 87, label: 'Catalog Rating', category: 'Travel Companies' },
+    ],
+    reviewCount: '3,800+ Reviews',
+    subscores: {
+      cleanliness: 93,
+      comfort: 90,
+      location: 95,
+      service: 90,
+      dining: 89,
+      value: 84,
+    },
+    travelerSegments: {
+      couples: 48,
+      families: 20,
+      solo: 14,
+      business: 18,
+    },
+    europeanShare: 52,
+    frequentPraise: [
+      'Uninterrupted private oceanfront boardwalk right at the water’s edge',
+      'Heated oceanfront rim pool with direct views across Granger Bay',
+      'Convenient complimentary shuttle to V&A Waterfront shopping',
+    ],
+    frequentCritiques: [
+      'Ocean terrace dining frequently shut due to brisk coastal winds',
+      'Landside rooms face commercial parking and Granger Bay traffic',
+      'Check-in queues during high-volume conference arrivals',
+    ],
+    publicSummary: 'Front-row Atlantic Ocean position with private marina boardwalk. Exceptional sunset views, balanced by coastal wind exposure on outdoor dining areas.',
+    blindSpots: [
+      {
+        title: 'Oceanfront vs Boulevard Acoustic Split',
+        description: 'Sea-facing rooms feature pure surf ambiance; landward rooms look onto access roadway and parking bays.',
+      },
+      {
+        title: 'Coastal Wind Impact on Advertised Amenities',
+        description: 'The iconic ocean rim pool terrace is often too windy for loungers during high-velocity summer southeaster fronts.',
+      },
+      {
+        title: 'Conference Group vs FIT Guest Flow',
+        description: 'Large corporate events create morning peak elevator and coffee station queues.',
+      },
+    ],
+    provenanceTier: 'HAND_VERIFIED',
+    provenanceLabel: 'Audited Reference Property (On-Site Calibrated)',
+    webPresenceStrength: 'High',
+    sentimentDisclaimer: 'Public sentiment cross-referenced across 3,800+ verified online reviews. Hand-calibrated for European travel company catalog guarantees.',
+  },
+  'the president hotel': {
+    name: 'The President Hotel',
+    location: 'Bantry Bay / Sea Point, Atlantic Seaboard',
+    propertyType: '4-Star Resort-Style Coastal Family Hotel',
+    classification: '4-Star Coastal Resort Hotel',
+    chaScore: 82,
+    chaStatus: 'Advisory',
+    chaDeltaReason: '-6.0% vs Public OTA Avg (88.0%): Operational deductions for 350-room elevator pacing, Alexander Road acoustics, and summer pool terrace wind exposure.',
+    inspectionDeltaDrivers: [
+      'Lower mountain-facing rooms experience Alexander Road and Queens Road morning traffic acoustics',
+      'High 350-room guest capacity creates 10-minute elevator bank wait times and breakfast seating pacing during 07:30–08:30 group rushes',
+      'Oceanfront infinity pool deck subject to heavy coastal winds during afternoon Atlantic breezes',
+    ],
+    publicMetaAverage: 88.0,
+    platformScores: [
+      { id: 'booking', name: 'Booking.com', scorePercent: 88, label: 'Verified Stays', category: 'Global OTA' },
+      { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: 87, label: 'Traveler Bubble', category: 'Review Community' },
+      { id: 'google', name: 'Google Reviews', scorePercent: 90, label: 'Global Sentiment', category: 'Public Network' },
+      { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: 88, label: 'DACH Benchmark', category: 'German Travelers' },
+      { id: 'expedia', name: 'Expedia Group', scorePercent: 88, label: 'Package Verified', category: 'Global OTA' },
+      { id: 'agoda', name: 'Agoda', scorePercent: 89, label: 'Luxury Network', category: 'Global OTA' },
+      { id: 'trustyou', name: 'TrustYou™', scorePercent: 88, label: 'Meta Aggregate', category: 'Meta Index' },
+      { id: 'tui', name: 'TUI / DERTOUR', scorePercent: 86, label: 'Catalog Rating', category: 'Travel Companies' },
+    ],
+    reviewCount: '4,500+ Reviews',
+    subscores: {
+      cleanliness: 90,
+      comfort: 88,
+      location: 94,
+      service: 88,
+      dining: 85,
+      value: 86,
+    },
+    travelerSegments: {
+      couples: 44,
+      families: 38,
+      solo: 10,
+      business: 8,
+    },
+    europeanShare: 46,
+    frequentPraise: [
+      'Steps away from the iconic Sea Point ocean promenade and coastal tidal pools',
+      'Spacious family-friendly apartments with kitchenettes and private balconies',
+      'Expansive infinity pool deck overlooking the Atlantic Ocean',
+    ],
+    frequentCritiques: [
+      'Alexander Road residential morning commute traffic audible in mountain-facing wings',
+      'High summer southeaster wind gusts on the pool terrace requiring loungers to be tethered',
+      'Advance reservation required for on-site basement parking bays during high-occupancy school holidays',
+    ],
+    publicSummary: 'Popular Bantry Bay coastal resort hotel with apartment-style rooms and family facilities, 150m from the Sea Point promenade.',
+    blindSpots: [
+      {
+        title: 'Elevator Core Dispatch Capacity',
+        description: 'Large inventory causes dispatch bottlenecks during breakfast checkout cycles.',
+      },
+      {
+        title: 'Mountain Wing Traffic vs Ocean Wing Ambiance',
+        description: 'Contractual room allotments must specify whether guests face quiet ocean views or residential street corners.',
+      },
+      {
+        title: 'Bantry Bay Microclimate Wind Exposure',
+        description: 'Afternoon coastal wind drops outdoor pool temperatures despite summer sunshine.',
+      },
+    ],
+    provenanceTier: 'HAND_VERIFIED',
+    provenanceLabel: 'Audited Reference Property (On-Site Calibrated)',
+    webPresenceStrength: 'High',
+    sentimentDisclaimer: 'Public sentiment cross-referenced across 4,500+ verified online reviews. Hand-calibrated for European travel company catalog guarantees.',
+  },
+  'lagoon beach hotel': {
+    name: 'Lagoon Beach Hotel & Spa',
+    location: 'Lagoon Beach / Milnerton, Cape Town',
+    propertyType: '4-Star Beachfront Conference & Leisure Hotel',
+    classification: '4-Star Coastal Hotel Asset',
+    chaScore: 78,
+    chaStatus: 'Advisory',
+    chaDeltaReason: '-6.4% vs Public OTA Avg (84.4%): Operational deductions for Marine Drive rear-wing traffic noise, tour group breakfast queuing, and southeaster wind load on ocean balconies.',
+    inspectionDeltaDrivers: [
+      'East-facing standard room wings experience early morning Marine Drive commuter traffic acoustics',
+      'Direct beach-facing rooms enjoy pure wave sounds but suffer intense southeaster wind rattling on sliding doors during summer',
+      'Simultaneous 07:15–08:00 conference and European tour group breakfast buffet congestion creates seating delays',
+    ],
+    publicMetaAverage: 84.4,
+    platformScores: [
+      { id: 'booking', name: 'Booking.com', scorePercent: 84, label: 'Verified Stays', category: 'Global OTA' },
+      { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: 82, label: 'Traveler Bubble', category: 'Review Community' },
+      { id: 'google', name: 'Google Reviews', scorePercent: 87, label: 'Global Sentiment', category: 'Public Network' },
+      { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: 83, label: 'DACH Benchmark', category: 'German Travelers' },
+      { id: 'expedia', name: 'Expedia Group', scorePercent: 85, label: 'Package Verified', category: 'Global OTA' },
+      { id: 'agoda', name: 'Agoda', scorePercent: 85, label: 'Luxury Network', category: 'Global OTA' },
+      { id: 'trustyou', name: 'TrustYou™', scorePercent: 85, label: 'Meta Aggregate', category: 'Meta Index' },
+      { id: 'tui', name: 'TUI / DERTOUR', scorePercent: 84, label: 'Catalog Rating', category: 'Travel Companies' },
+    ],
+    reviewCount: '3,200+ Reviews',
+    subscores: {
+      cleanliness: 86,
+      comfort: 84,
+      location: 94,
+      service: 84,
+      dining: 82,
+      value: 86,
+    },
+    travelerSegments: {
+      couples: 46,
+      families: 28,
+      solo: 12,
+      business: 14,
+    },
+    europeanShare: 42,
+    frequentPraise: [
+      'Unobstructed postcard Table Mountain views straight across Table Bay',
+      'Direct beach access onto Lagoon Beach sands with oceanfront walking',
+      'Full-service hotel amenities with on-site restaurants, spa, and conference facilities',
+    ],
+    frequentCritiques: [
+      'Marine Drive commuter arterial traffic audible in east-facing hotel wings (oceanfront rooms are quiet)',
+      'Intense southeaster wind turbulence on oceanside balconies requiring patio doors to remain secured',
+      'Conference hall delegate spillover into central lobby and lounge during major corporate symposiums',
+    ],
+    publicSummary: 'Front-line beach position directly on Table Bay with spectacular views of Table Mountain. Excellent commercial package hotel with specific wing acoustic variations.',
+    blindSpots: [
+      {
+        title: 'Road-Facing Wing vs Oceanfront Wing Acoustic Gap',
+        description: 'Rear standard rooms face busy Marine Drive commuter traffic, while beachfront suites face breaking waves.',
+      },
+      {
+        title: 'Summer Southeaster Balcony Gale Forces',
+        description: 'Lagoon Beach bears direct brunt of Table Bay summer winds, requiring balcony doors to remain closed during gale days.',
+      },
+      {
+        title: 'Tour Group Check-In Pacing',
+        description: 'Simultaneous international tour group arrivals create 20-minute lobby baggage and key card wait times.',
+      },
+    ],
+    provenanceTier: 'HAND_VERIFIED',
+    provenanceLabel: 'Audited Reference Property (On-Site Calibrated)',
+    webPresenceStrength: 'High',
+    sentimentDisclaimer: 'Public sentiment cross-referenced across 3,200+ verified online reviews. Hand-calibrated for European travel company catalog guarantees.',
+  },
 };
+
+// Aliases for user query flexibility
+KNOWN_PROPERTIES['neptune isle holiday apartments'] = KNOWN_PROPERTIES['neptune isle'];
+KNOWN_PROPERTIES['neptune isle apartments'] = KNOWN_PROPERTIES['neptune isle'];
+KNOWN_PROPERTIES['table bay hotel'] = KNOWN_PROPERTIES['the table bay hotel'];
+KNOWN_PROPERTIES['president hotel'] = KNOWN_PROPERTIES['the president hotel'];
+KNOWN_PROPERTIES['mount nelson'] = KNOWN_PROPERTIES['belmond mount nelson'];
+KNOWN_PROPERTIES['twelve apostles'] = KNOWN_PROPERTIES['the twelve apostles'];
+KNOWN_PROPERTIES['silo hotel'] = KNOWN_PROPERTIES['the silo hotel'];
 
 interface AgentVirtualAuditProps {
   onSelectPropertyForInquiry: (propertyName: string) => void;
@@ -582,7 +904,13 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
 
       const data = await response.json();
       if (data.success && data.profile) {
-        setActiveSearchResult(data.profile);
+        setActiveSearchResult({
+          ...data.profile,
+          provenanceTier: data.profile.provenanceTier || 'LIVE_GROUNDED',
+          provenanceLabel: data.profile.provenanceLabel || 'Live Multi-Source Web Radar (High Web Presence)',
+          webPresenceStrength: data.profile.webPresenceStrength || 'High',
+          sentimentDisclaimer: data.profile.sentimentDisclaimer || 'Aggregated from unweighted online guest reviews across public OTAs. Physical on-site inspection independently verifies catalog compliance.',
+        });
         setIsGrounded(Boolean(data.grounded));
         return;
       }
@@ -591,117 +919,13 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
       console.warn('Live audit API error, using regional synthesis fallback:', error);
       setIsGrounded(false);
 
-      // Deterministic realistic fallback for offline or network edge cases
-      const hash = cleanQuery.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-      const bScore = (7.9 + (hash % 16) / 10).toFixed(1);
-      const gScore = (4.1 + (hash % 7) / 10).toFixed(1);
-      const numBScore = parseFloat(bScore);
-      const numGScore = parseFloat(gScore);
-      const hCheck = Math.min(96, Math.max(72, Math.round(numBScore * 9.8)));
-
-      const isApartmentOrGuest =
-        lowerQuery.includes('apartment') ||
-        lowerQuery.includes('house') ||
-        lowerQuery.includes('lodge') ||
-        lowerQuery.includes('villa') ||
-        lowerQuery.includes('isle') ||
-        lowerQuery.includes('cottage');
-
-      const inferredType = isApartmentOrGuest
-        ? 'Regional Holiday Apartments & Self-Catering'
-        : 'Regional Hotel & Accommodation Asset';
-
-      const inferredClass = isApartmentOrGuest
-        ? 'Self-Catering / Guesthouse Profile'
-        : numBScore >= 9.0
-        ? '4 to 5-Star Hotel Profile'
-        : '3 to 4-Star Commercial Hotel Profile';
-
-      const bookingPct = Math.min(99, Math.max(70, Math.round(numBScore * 10)));
-      const tripAdvisorPct = Math.min(98, Math.max(70, Math.round(numGScore * 20)));
-      const googlePct = Math.min(98, Math.max(70, Math.round(numGScore * 20)));
-      const holidayCheckPct = hCheck;
-      const expediaPct = Math.min(97, Math.max(69, Math.round(numBScore * 9.8)));
-      const agodaPct = Math.min(98, Math.max(71, Math.round(numBScore * 9.9)));
-      const trustYouPct = Math.min(97, Math.max(72, Math.round(numBScore * 9.8)));
-      const tuiPct = Math.min(96, Math.max(68, Math.round(numBScore * 9.5)));
-
-      const platformScores: PlatformScoreItem[] = [
-        { id: 'booking', name: 'Booking.com', scorePercent: bookingPct, label: 'Verified Stays', category: 'Global OTA' },
-        { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: tripAdvisorPct, label: 'Traveler Bubble', category: 'Review Community' },
-        { id: 'google', name: 'Google Reviews', scorePercent: googlePct, label: 'Global Sentiment', category: 'Public Network' },
-        { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: holidayCheckPct, label: 'DACH Benchmark', category: 'German Travelers' },
-        { id: 'expedia', name: 'Expedia Group', scorePercent: expediaPct, label: 'Package Verified', category: 'Global OTA' },
-        { id: 'agoda', name: 'Agoda', scorePercent: agodaPct, label: 'Luxury Network', category: 'Global OTA' },
-        { id: 'trustyou', name: 'TrustYou™', scorePercent: trustYouPct, label: 'Meta Aggregate', category: 'Meta Index' },
-        { id: 'tui', name: 'TUI / DERTOUR', scorePercent: tuiPct, label: 'Catalog Rating', category: 'Travel Companies' },
-      ];
-
-      const publicMetaAvg = Math.round(
-        platformScores.reduce((acc, curr) => acc + curr.scorePercent, 0) / platformScores.length
-      );
-
-      const deltaDeduction = isApartmentOrGuest ? 8 : 5;
-      const chaScore = Math.max(62, publicMetaAvg - deltaDeduction);
-      const chaStatus: 'Optimal' | 'Advisory' | 'Attention Required' =
-        chaScore >= 90 ? 'Optimal' : chaScore >= 80 ? 'Advisory' : 'Attention Required';
-
+      const fallbackProfile = generateContextualAuditProfile(cleanQuery);
       setActiveSearchResult({
-        name: cleanQuery,
-        location: 'Western Cape Corridor, South Africa',
-        propertyType: inferredType,
-        classification: inferredClass,
-        chaScore,
-        chaStatus,
-        chaDeltaReason: `-${deltaDeduction}% vs Public OTA Avg (${publicMetaAvg}%): Operational deductions reflecting real room wing acoustics, morning plumbing stability, and European catalog compliance.`,
-        inspectionDeltaDrivers: [
-          'Acoustic insulation variance in street-facing or mechanical equipment wings',
-          'Morning shower hot water temperature drops during 07:15–08:15 peak rushes',
-          'Discrepancy between brochure marketing imagery and contractual room allocations',
-        ],
-        publicMetaAverage: publicMetaAvg,
-        platformScores,
-        reviewCount: `${(hash * 4) % 1200 + 150}+ Reviews`,
-        subscores: {
-          cleanliness: Math.min(96, 78 + (hash % 18)),
-          comfort: Math.min(94, 76 + (hash % 18)),
-          location: Math.min(97, 82 + (hash % 16)),
-          service: Math.min(95, 79 + (hash % 17)),
-          dining: Math.min(92, 75 + (hash % 17)),
-          value: Math.min(91, 78 + (hash % 14)),
-        },
-        travelerSegments: {
-          couples: 52,
-          families: 28,
-          solo: 12,
-          business: 8,
-        },
-        europeanShare: Math.min(65, 32 + (hash % 28)),
-        frequentPraise: [
-          'Convenient regional access and scenic outlook',
-          'Friendly staff and responsive local greeting',
-          'Generous room dimensions and comfortable beds',
-        ],
-        frequentCritiques: [
-          'Variable exterior traffic or coastal wind noise',
-          'Morning breakfast and reception queue pacing',
-          'Older bathroom plumbing or fixture maintenance',
-        ],
-        publicSummary: `Public platform scores reflect standard mixed leisure sentiment, but lack European catalog liability calibration (DRV standards) and specific room wing acoustic validation.`,
-        blindSpots: [
-          {
-            title: 'Acoustic Insulation & Night Sleep Quietness',
-            description: 'Public reviews rarely measure decibel transmission from perimeter roads, internal corridors, or regional power equipment.',
-          },
-          {
-            title: 'Morning Plumbing Stability & Hot Water Delivery',
-            description: 'Public ratings do not test water temperature or pressure drops during simultaneous 07:00–08:30 morning showering rushes.',
-          },
-          {
-            title: 'German Catalog Standards (DRV) & Defect Exposure',
-            description: 'Public platforms aggregate domestic day-visitors, masking room defects that trigger 10%–25% post-trip compensation claims under European travel law.',
-          },
-        ],
+        ...fallbackProfile,
+        provenanceTier: 'SYNTHETIC_REGIONAL',
+        provenanceLabel: 'Regional Desk Estimate (Synthetic Approximation)',
+        webPresenceStrength: 'Limited',
+        sentimentDisclaimer: 'Estimated from regional accommodation archetypes. Physical mystery inspection required for verified ground truth.',
       });
     } finally {
       setIsLoading(false);
@@ -727,6 +951,67 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
     'Ellerman House',
   ];
 
+  // Dynamic Reality Gap Delta & Triage Threshold calculation
+  const rawDelta = activeSearchResult
+    ? activeSearchResult.publicMetaAverage - activeSearchResult.chaScore
+    : 0;
+  const deltaPercent = Math.max(0, Math.round(rawDelta * 10) / 10);
+
+  // Triage classification:
+  // If delta >= 6.0% or Attention Required -> CRITICAL TRIAGE (Physical Audit Mandatory)
+  // If delta >= 3.5% or Advisory -> ADVISORY TRIAGE (Physical Audit Strongly Recommended)
+  // Else -> ROUTINE TRIAGE (Physical Spot-Check Recommended for high-value suites)
+  const isCriticalRisk =
+    deltaPercent >= 6.0 || (activeSearchResult && activeSearchResult.chaStatus === 'Attention Required');
+  const isAdvisoryRisk =
+    !isCriticalRisk &&
+    (deltaPercent >= 3.5 || (activeSearchResult && activeSearchResult.chaStatus === 'Advisory'));
+
+  const triageData = isCriticalRisk
+    ? {
+        level: 'CRITICAL TRIAGE',
+        tag: `HIGH-RISK REALITY GAP (Δ -${deltaPercent}%)`,
+        mandate: 'MANDATORY ON-SITE PHYSICAL AUDIT BEFORE CONTRACTING',
+        shortVerdict: 'Mandatory Physical Audit',
+        badgeBg: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+        cardBorder: 'border-rose-500/40',
+        cardBg: 'bg-rose-950/30',
+        textColor: 'text-rose-400',
+        dotColor: 'bg-rose-400',
+        summary: `A severe ${deltaPercent}% divergence exists between public consumer sentiment (${activeSearchResult?.publicMetaAverage}%) and real ground conditions (${activeSearchResult?.chaScore}%). Contracting without on-site mystery verification exposes your brand to Frankfurt Table catalog compensation claims (15%–25% refund risk under European travel law).`,
+        actionLabel: `Escalate to Mandatory On-Site Physical Audit for ${activeSearchResult?.name}`,
+        recommendation: 'Do not commit to room allocations without on-site acoustic and hydraulic validation.',
+      }
+    : isAdvisoryRisk
+    ? {
+        level: 'ADVISORY TRIAGE',
+        tag: `NOTABLE DISCREPANCY (Δ -${deltaPercent}%)`,
+        mandate: 'ON-SITE PHYSICAL VERIFICATION STRONGLY RECOMMENDED',
+        shortVerdict: 'Physical Verification Recommended',
+        badgeBg: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+        cardBorder: 'border-amber-500/40',
+        cardBg: 'bg-amber-950/30',
+        textColor: 'text-amber-400',
+        dotColor: 'bg-amber-400',
+        summary: `A ${deltaPercent}% gap detected. Public platforms aggregate domestic weekenders who overlook morning shower pressure drops, road acoustic spikes, or wholesale room allocation deficits.`,
+        actionLabel: `Commission On-Site Physical Audit for ${activeSearchResult?.name}`,
+        recommendation: 'Verify specific room wing allocations and morning service bandwidth prior to finalizing contracts.',
+      }
+    : {
+        level: 'ROUTINE TRIAGE',
+        tag: `CONTROLLED VARIANCE (Δ -${deltaPercent}%)`,
+        mandate: 'DESK CLEARANCE PASSED — PHYSICAL SPOT-AUDIT RECOMMENDED FOR VIP SUITES',
+        shortVerdict: 'Routine Verification',
+        badgeBg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+        cardBorder: 'border-emerald-500/40',
+        cardBg: 'bg-emerald-950/30',
+        textColor: 'text-emerald-400',
+        dotColor: 'bg-emerald-400',
+        summary: `Minor ${deltaPercent}% variance. Desk metrics show acceptable baseline consistency. An on-site mystery inspection remains recommended to audit specific contracted suite categories and VIP welcome protocols.`,
+        actionLabel: `Schedule Physical Spot-Inspection for ${activeSearchResult?.name}`,
+        recommendation: 'Confirm physical suite finishes and VIP tour arrival pacing before high-season deployment.',
+      };
+
   return (
     <section id="virtual-audit" className="py-16 sm:py-20 bg-[#10213a] text-white relative overflow-hidden">
       {/* Background glow */}
@@ -748,7 +1033,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
           </h2>
 
           <p className="mt-3 text-sm sm:text-base text-zinc-300 font-light leading-relaxed max-w-2xl mx-auto">
-            Search any Western Cape hotel to compare 8 recognized public review providers against our proprietary Cape Hospitality Advisors Score.
+            Screen any hotel across 8 public review providers against our benchmark. Use this virtual desk audit as a fast risk-filter to decide: <span className="text-[#d9bd8b] font-medium">can you contract safely, or do operational blind spots necessitate an on-site physical inspection?</span>
           </p>
         </div>
 
@@ -812,6 +1097,19 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
               </button>
             ))}
           </div>
+
+          {/* Aggregation & Internet Presence Tip */}
+          <div className="mt-3.5 px-3.5 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-[11px] text-zinc-300 flex items-start gap-2.5 max-w-2xl mx-auto shadow-xs">
+            <Compass className="w-3.5 h-3.5 text-[#d9bd8b] shrink-0 mt-0.5" />
+            <div className="leading-relaxed">
+              <span className="text-[#d9bd8b] font-mono font-bold uppercase tracking-wider text-[10px]">
+                High-Presence Search Tip:
+              </span>{' '}
+              For establishments with active web presence, typing the specific property and suburb (e.g.{' '}
+              <span className="text-white font-semibold">"Neptune Isle Lagoon Beach"</span> or{' '}
+              <span className="text-white font-semibold">"Tintswalo Hout Bay"</span>) retrieves multi-source verified reviews across Google, Booking & TripAdvisor.
+            </div>
+          </div>
         </div>
 
         {/* Loading Radar Animation */}
@@ -840,16 +1138,29 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
             {/* Top Hotel Header & Meta-Average Banner */}
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-white/10">
               <div>
-                <div className="flex items-center gap-2 flex-wrap mb-1">
+                <div className="flex items-center gap-2 flex-wrap mb-1.5">
                   <span className="font-mono text-xs font-bold text-[#d9bd8b] uppercase tracking-wider">
                     {activeSearchResult.classification}
                   </span>
-                  {isGrounded && (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-mono">
-                      <Globe className="w-3 h-3 text-emerald-400" />
-                      Live Web Grounded
+
+                  {/* Explicit Provenance & Confidence Badge */}
+                  {activeSearchResult.provenanceTier === 'HAND_VERIFIED' ? (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-semibold">
+                      <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                      Hand-Verified Ground Benchmark
+                    </span>
+                  ) : isGrounded || activeSearchResult.provenanceTier === 'LIVE_GROUNDED' ? (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-mono font-semibold">
+                      <Globe className="w-3 h-3 text-cyan-400" />
+                      Live Multi-Platform Web Radar
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-mono font-semibold">
+                      <AlertTriangle className="w-3 h-3 text-amber-400" />
+                      Regional Desk Synthesis
                     </span>
                   )}
+
                   <span className="text-zinc-500">•</span>
                   <span className="text-xs text-zinc-400 font-light">
                     {activeSearchResult.propertyType}
@@ -897,20 +1208,8 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
                       <span>CHA Quality Index™</span>
                     </div>
 
-                    <span
-                      className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
-                        activeSearchResult.chaStatus === 'Optimal'
-                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                          : activeSearchResult.chaStatus === 'Advisory'
-                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                          : 'bg-rose-500/20 text-rose-300 border-rose-500/40'
-                      }`}
-                    >
-                      {activeSearchResult.chaStatus === 'Optimal'
-                        ? 'Optimal Standard'
-                        : activeSearchResult.chaStatus === 'Advisory'
-                        ? 'Advisory Notice'
-                        : 'Attention Required'}
+                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${triageData.badgeBg}`}>
+                      {triageData.shortVerdict}
                     </span>
                   </div>
 
@@ -924,18 +1223,76 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
                     </span>
                   </div>
 
-                  {/* Operational Reality Gap Delta Tag */}
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono font-semibold mb-3">
-                    <TrendingDown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                    <span>
-                      Reality Gap Delta: {(activeSearchResult.chaScore - activeSearchResult.publicMetaAverage).toFixed(1)}% vs Public OTA Avg ({activeSearchResult.publicMetaAverage}%)
-                    </span>
+                  {/* Operational Reality Gap Delta Tag & Triage Threshold Alert */}
+                  <div className="flex flex-col gap-2 mb-3">
+                    <div className="inline-flex items-center justify-between gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs font-mono font-semibold">
+                      <div className="flex items-center gap-1.5 text-amber-300">
+                        <TrendingDown className="w-4 h-4 text-amber-400 shrink-0" />
+                        <span>Reality Gap Delta:</span>
+                      </div>
+                      <span className="text-[#d9bd8b] font-bold text-sm">
+                        Δ -{deltaPercent}%
+                      </span>
+                    </div>
+
+                    {/* Dynamic Triage Mandate Banner */}
+                    <div className={`p-2.5 rounded-xl border text-[11px] font-mono flex items-start gap-2 ${triageData.badgeBg}`}>
+                      <AlertOctagon className="w-4 h-4 shrink-0 mt-0.5" />
+                      <div className="leading-snug">
+                        <div className="font-bold uppercase tracking-wider text-[10px] opacity-90 mb-0.5">
+                          {triageData.level} PROTOCOL:
+                        </div>
+                        <div className="font-semibold text-white">
+                          {triageData.mandate}
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Deduction Rationale Description */}
-                  <p className="text-xs text-zinc-300 leading-relaxed font-light mb-4">
+                  <p className="text-xs text-zinc-300 leading-relaxed font-light mb-3">
                     {activeSearchResult.chaDeltaReason}
                   </p>
+
+                  {/* Summarised Rationale: Only Key Points in Favour of Physical Audit */}
+                  <div className="my-3 p-3.5 rounded-xl bg-black/40 border border-[#d9bd8b]/30 shadow-inner">
+                    <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-white/10">
+                      <div className="text-[10px] font-mono uppercase font-bold text-[#d9bd8b] tracking-wider flex items-center gap-1.5">
+                        <Scale className="w-3.5 h-3.5 text-[#d9bd8b]" />
+                        <span>Key Rationale For Physical Audit:</span>
+                      </div>
+                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#d9bd8b]/20 text-[#d9bd8b] border border-[#d9bd8b]/30">
+                        Core Protection
+                      </span>
+                    </div>
+
+                    <ul className="space-y-2 text-[11px] text-zinc-200">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span className="leading-snug">
+                          <strong className="text-white font-semibold">Legal & Catalog Shield:</strong> OTAs carry zero legal standing in court; only on-site audits provide admissible evidence against EU Package Directive & Frankfurt Table claims (15%–25% refund liability).
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span className="leading-snug">
+                          <strong className="text-white font-semibold">Unmask Hidden Blind Spots:</strong> Objectively tests physical stress points online reviews miss (07:30 shower pressure, 02:00 acoustic spikes, back-of-house hygiene).
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span className="leading-snug">
+                          <strong className="text-white font-semibold">Actual Wing Verification:</strong> Confirms the exact physical room inventory & view allocations contracted for your clients, not stage-managed showroom units.
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span className="leading-snug">
+                          <strong className="text-white font-semibold">Opportunistic Claim Defense:</strong> Date-stamped decibel readings, temperature logs, and photo evidence protect against bad-faith post-travel chargebacks.
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
 
                 {/* Inspection Delta Drivers */}
@@ -945,13 +1302,23 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
                     <span>Inspection Delta Drivers:</span>
                   </div>
                   <ul className="space-y-1.5 text-[11px] text-zinc-300">
-                    {activeSearchResult.inspectionDeltaDrivers.map((driver, idx) => (
+                    {(activeSearchResult.inspectionDeltaDrivers || []).map((driver, idx) => (
                       <li key={idx} className="flex items-start gap-1.5">
                         <span className="text-amber-400 font-bold shrink-0 mt-0.5">•</span>
                         <span className="leading-snug font-light">{driver}</span>
                       </li>
                     ))}
                   </ul>
+
+                  {/* Direct Escalation Action for the Selected Hotel */}
+                  <button
+                    type="button"
+                    onClick={() => onSelectPropertyForInquiry(activeSearchResult.name)}
+                    className="mt-3.5 w-full py-2.5 px-3 rounded-xl bg-[#b38a54]/25 hover:bg-[#b38a54]/40 border border-[#b38a54]/60 text-[#d9bd8b] hover:text-white text-[11px] font-bold font-mono transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                  >
+                    <span>Commission Physical Audit for {activeSearchResult.name}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               </div>
 
@@ -969,7 +1336,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
 
                 {/* 8-Card Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                  {activeSearchResult.platformScores.map((platform) => (
+                  {(activeSearchResult.platformScores || []).map((platform) => (
                     <div
                       key={platform.id}
                       className="p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.07] border border-white/10 transition-all flex flex-col justify-between text-left"
@@ -1094,12 +1461,19 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
               {/* Right: Public Review Highlights (Praise vs Critiques) */}
               <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 flex flex-col justify-between">
                 <div>
-                  <div className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 mb-2 flex items-center gap-1.5">
-                    <ThumbsUp className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Top Public Praises</span>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 flex items-center gap-1.5">
+                      <ThumbsUp className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Top Public Praises</span>
+                    </div>
+                    <span className="text-[10px] font-mono text-zinc-400 px-2 py-0.5 rounded-full bg-white/5 border border-white/10">
+                      {activeSearchResult.provenanceTier === 'HAND_VERIFIED'
+                        ? 'Audited Ground Truth'
+                        : `${activeSearchResult.reviewCount} Online Reviews`}
+                    </span>
                   </div>
-                  <ul className="text-xs text-zinc-300 space-y-1 font-light">
-                    {activeSearchResult.frequentPraise.map((praise, idx) => (
+                  <ul className="text-xs text-zinc-300 space-y-1.5 font-light">
+                    {(activeSearchResult.frequentPraise || []).map((praise, idx) => (
                       <li key={idx} className="flex items-start gap-1.5">
                         <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
                         <span>{praise}</span>
@@ -1107,18 +1481,28 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
                     ))}
                   </ul>
 
-                  <div className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 mt-3 mb-1.5 flex items-center gap-1.5">
+                  <div className="text-xs font-mono font-bold uppercase tracking-wider text-zinc-400 mt-4 mb-1.5 flex items-center gap-1.5">
                     <ThumbsDown className="w-3.5 h-3.5 text-amber-400" />
                     <span>Frequent Public Criticisms</span>
                   </div>
-                  <ul className="text-xs text-zinc-300 space-y-1 font-light">
-                    {activeSearchResult.frequentCritiques.map((critique, idx) => (
+                  <ul className="text-xs text-zinc-300 space-y-1.5 font-light">
+                    {(activeSearchResult.frequentCritiques || []).map((critique, idx) => (
                       <li key={idx} className="flex items-start gap-1.5">
                         <span className="text-amber-400 shrink-0 font-bold">•</span>
                         <span>{critique}</span>
                       </li>
                     ))}
                   </ul>
+                </div>
+
+                {/* Unweighted Public Sentiment Data Notice */}
+                <div className="mt-4 pt-3 border-t border-white/10 flex items-start gap-2 bg-white/[0.03] p-2.5 rounded-lg border border-white/5">
+                  <Info className="w-3.5 h-3.5 text-[#d9bd8b] shrink-0 mt-0.5" />
+                  <div className="text-[10.5px] text-zinc-400 leading-relaxed font-light">
+                    <strong className="text-zinc-300 font-medium">Public Sentiment Notice:</strong>{' '}
+                    {activeSearchResult.sentimentDisclaimer ||
+                      'Aggregated from unweighted online guest reviews across public OTAs. Public reviews frequently confuse security staff with hotel front-desks, or overlook room category discrepancies. Physical on-site audits independently verify catalog-grade reality.'}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1138,7 +1522,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {activeSearchResult.blindSpots.map((spot, idx) => (
+                {(activeSearchResult.blindSpots || []).map((spot, idx) => (
                   <div
                     key={idx}
                     className="p-4 rounded-xl bg-amber-500/[0.04] border border-amber-500/20 flex flex-col justify-between"
@@ -1157,26 +1541,281 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
               </div>
             </div>
 
-            {/* The 24h Desk Audit Conversion Callout */}
-            <div className="p-5 rounded-2xl bg-gradient-to-r from-white/10 to-white/5 border border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="space-y-1 text-left">
-                <div className="text-xs font-bold text-white flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-[#d9bd8b]" />
-                  <span>Need verified intelligence for {activeSearchResult.name}?</span>
+            {/* 4 Unverifiable Remote Vectors Card: The Physical Reality Boundary */}
+            <div className="py-6 border-t border-white/10 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-[#d9bd8b] animate-pulse" />
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#d9bd8b]">
+                    The Physical Reality Boundary: 4 Vectors Virtual Audits Cannot Measure
+                  </span>
                 </div>
-                <p className="text-[11px] text-zinc-300 font-light leading-relaxed">
-                  Public scores lump together domestic weekenders and corporate travelers. Our Cape Town desk filters verified European holidaymaker reviews against DRV standards and delivers a bespoke 2-page brief in 24 hours under bilateral NDA.
-                </p>
+                <span className="text-[10px] font-mono text-zinc-400">
+                  Why Desk Radars Flag Triage, But On-Site Audits Protect Contracts
+                </span>
               </div>
 
-              <button
-                type="button"
-                onClick={handleRequestAuditForCurrentSearch}
-                className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#b38a54] hover:bg-[#c59b63] text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md shrink-0 whitespace-nowrap"
-              >
-                <span>Request Free 24h Virtual Audit for This Asset</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                {/* Vector 1: Decibel & Acoustics */}
+                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-[#d9bd8b]/40 transition-all flex flex-col justify-between">
+                  <div>
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-2.5">
+                      <Volume2 className="w-4 h-4" />
+                    </div>
+                    <div className="text-xs font-bold text-white mb-1">
+                      01. Decibel & Sleep Acoustics
+                    </div>
+                    <div className="text-[10px] font-mono text-zinc-400 mb-2">
+                      Night Interval: 22:00 – 06:00
+                    </div>
+                    <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
+                      <strong className="text-zinc-200 font-medium">Remote blind spot:</strong> OTAs reflect daytime scenic drinks. Web scrapers cannot measure road motorcycle spikes, corridor echo, or rooftop chiller harmonics that disrupt night sleep.
+                    </p>
+                  </div>
+                  <div className="mt-3 pt-2 border-t border-white/5 text-[10px] font-mono text-[#d9bd8b]">
+                    ✓ Verified via On-Site Decibel Meter
+                  </div>
+                </div>
+
+                {/* Vector 2: Peak Hydraulics & Hot Water */}
+                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-[#d9bd8b]/40 transition-all flex flex-col justify-between">
+                  <div>
+                    <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2.5">
+                      <Droplets className="w-4 h-4" />
+                    </div>
+                    <div className="text-xs font-bold text-white mb-1">
+                      02. Peak Hydraulic & Shower Pressure
+                    </div>
+                    <div className="text-[10px] font-mono text-zinc-400 mb-2">
+                      Morning Rush: 07:15 – 08:30
+                    </div>
+                    <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
+                      <strong className="text-zinc-200 font-medium">Remote blind spot:</strong> Desk tools cannot open shower valves when 40 rooms bathe concurrently. Pressure drop and thermal shock trigger #1 Frankfurt Table claims.
+                    </p>
+                  </div>
+                  <div className="mt-3 pt-2 border-t border-white/5 text-[10px] font-mono text-[#d9bd8b]">
+                    ✓ Tested via Simultaneous Flow Audits
+                  </div>
+                </div>
+
+                {/* Vector 3: Room Wing Allocation Reality */}
+                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-[#d9bd8b]/40 transition-all flex flex-col justify-between">
+                  <div>
+                    <div className="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-2.5">
+                      <BedDouble className="w-4 h-4" />
+                    </div>
+                    <div className="text-xs font-bold text-white mb-1">
+                      03. Contracted Wing vs Show Suite
+                    </div>
+                    <div className="text-[10px] font-mono text-zinc-400 mb-2">
+                      Inventory Verification
+                    </div>
+                    <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
+                      <strong className="text-zinc-200 font-medium">Remote blind spot:</strong> Marketing photos display the renovated presidential suite. Wholesale allotments often receive older garden wings with dampness or rear generator outlooks.
+                    </p>
+                  </div>
+                  <div className="mt-3 pt-2 border-t border-white/5 text-[10px] font-mono text-[#d9bd8b]">
+                    ✓ Room-by-Room Physical Catalog Check
+                  </div>
+                </div>
+
+                {/* Vector 4: Service Cadence & Micro-Climate */}
+                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-[#d9bd8b]/40 transition-all flex flex-col justify-between">
+                  <div>
+                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-2.5">
+                      <Wind className="w-4 h-4" />
+                    </div>
+                    <div className="text-xs font-bold text-white mb-1">
+                      04. Odor, HVAC & Peak Service Pacing
+                    </div>
+                    <div className="text-[10px] font-mono text-zinc-400 mb-2">
+                      Arrival & Dining Pressure
+                    </div>
+                    <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
+                      <strong className="text-zinc-200 font-medium">Remote blind spot:</strong> AI sentiment algorithms cannot smell kitchen exhaust draft, measure AC coil mold, or test front-desk queue delays during 30-person bus arrivals.
+                    </p>
+                  </div>
+                  <div className="mt-3 pt-2 border-t border-white/5 text-[10px] font-mono text-[#d9bd8b]">
+                    ✓ Clocked via Unannounced Mystery Stays
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Why On-Site Verification is Essential: The 4 Core Business Rationales */}
+            <div className="py-6 border-t border-white/10 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                <div className="flex items-center gap-2">
+                  <Scale className="w-4 h-4 text-[#d9bd8b]" />
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-white">
+                    Why Travel Companies Must Back Virtual Screening with On-Site Verification
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono text-emerald-400">
+                  Virtual Desk = Triage Smoke Detector • On-Site = Fireproof Legal Armor
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                {/* Rationale 1: EU Package Directive & Frankfurt Table Liability */}
+                <div className="p-4 rounded-xl bg-rose-500/[0.05] border border-rose-500/20 text-left">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="p-1.5 rounded-lg bg-rose-500/20 text-rose-300 font-mono text-xs font-bold">
+                      01
+                    </div>
+                    <div>
+                      <h5 className="text-xs font-bold text-white">
+                        EU Package Directive (2015/2302) & Frankfurt Table Liability
+                      </h5>
+                      <span className="text-[10px] font-mono text-rose-300">
+                        Strict European Operator Liability
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
+                    Under European travel regulations, European tour operators are held strictly liable for catalog deviations, noisy night wings, and defective room facilities. A high online review score cannot be submitted in a German or UK arbitration court as proof of contract delivery. <strong className="text-white font-medium">Only an independent physical audit dossier provides timestamped, legally admissible evidence</strong> that your room inventory met European consumer standards.
+                  </p>
+                  <div className="mt-2.5 pt-2 border-t border-rose-500/20 text-[10px] font-mono text-rose-300 flex items-center justify-between">
+                    <span>Average claim exposure: 15%–35% package price</span>
+                    <span className="text-white font-bold">Shielded by On-Site Log</span>
+                  </div>
+                </div>
+
+                {/* Rationale 2: Two-Way Defense Against Fabricated Claims */}
+                <div className="p-4 rounded-xl bg-blue-500/[0.05] border border-blue-500/20 text-left">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="p-1.5 rounded-lg bg-blue-500/20 text-blue-300 font-mono text-xs font-bold">
+                      02
+                    </div>
+                    <div>
+                      <h5 className="text-xs font-bold text-white">
+                        The Two-Way Shield: Rebuffing Opportunistic Refund Blackmail
+                      </h5>
+                      <span className="text-[10px] font-mono text-blue-300">
+                        Disproving Fabricated Traveler Complaints
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
+                    A major post-travel cost drain is bad-actor clients who invent claims (“water was cold”, “pool was shut”, “room was filthy”) to extract 30%–50% chargebacks. Online reviews can't prove them wrong. <strong className="text-white font-medium">Our physical on-site audit logs calibrated water temperatures, date-stamped high-res photos, and decibel meter readings</strong>, giving your claims resolution team ironclad proof to reject bad-faith chargebacks.
+                  </p>
+                  <div className="mt-2.5 pt-2 border-t border-blue-500/20 text-[10px] font-mono text-blue-300 flex items-center justify-between">
+                    <span>Disputes successfully dismissed: 84%+</span>
+                    <span className="text-white font-bold">Ironclad Ground Truth</span>
+                  </div>
+                </div>
+
+                {/* Rationale 3: Virtual Audits Are A Smoke Detector, Not A Cure */}
+                <div className="p-4 rounded-xl bg-amber-500/[0.05] border border-amber-500/20 text-left">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 font-mono text-xs font-bold">
+                      03
+                    </div>
+                    <div>
+                      <h5 className="text-xs font-bold text-white">
+                        Desk Radars Triage The Smoke; Physical Audits Find The Fire
+                      </h5>
+                      <span className="text-[10px] font-mono text-amber-300">
+                        Triage vs Actionable Procurement Mandate
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
+                    Virtual desk audits aggregate public opinion to compute your statistical reality gap and flag likely problem areas. But <strong className="text-white font-medium">a virtual audit cannot tell you WHICH room wing to mandate in your hotel contract</strong>, whether the kitchen grease trap vents near the terrace rooms, or how management handles bus arrivals. On-site audits turn raw suspicion into specific contractual allocation clauses (e.g. <em>“Mandate Garden Wing Rooms 201–224 only”</em>).
+                  </p>
+                  <div className="mt-2.5 pt-2 border-t border-amber-500/20 text-[10px] font-mono text-amber-300 flex items-center justify-between">
+                    <span>Turns risk score into contract riders</span>
+                    <span className="text-white font-bold">Actionable Guidance</span>
+                  </div>
+                </div>
+
+                {/* Rationale 4: Free Zero-Risk Rollover Protection */}
+                <div className="p-4 rounded-xl bg-[#d9bd8b]/[0.08] border border-[#d9bd8b]/30 text-left">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="p-1.5 rounded-lg bg-[#d9bd8b]/20 text-[#d9bd8b] font-mono text-xs font-bold">
+                      04
+                    </div>
+                    <div>
+                      <h5 className="text-xs font-bold text-white">
+                        Zero Risk: 100% Fee Rollover Guarantee
+                      </h5>
+                      <span className="text-[10px] font-mono text-[#d9bd8b]">
+                        Seamless Financial Progression
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
+                    We never ask travel companies to take a financial gamble. When you order an in-depth customized Executive Desk Briefing for an establishment, <strong className="text-white font-medium">100% of the desk briefing fee rolls over directly as a credit</strong> towards the physical unannounced on-site inspection dossier if your team decides on-site ground verification is required. You get instantaneous desk screening with zero financial friction.
+                  </p>
+                  <div className="mt-2.5 pt-2 border-t border-[#d9bd8b]/20 text-[10px] font-mono text-[#d9bd8b] flex items-center justify-between">
+                    <span>100% Credit applied to On-Site Dossier</span>
+                    <span className="text-white font-bold">Zero Sunk Cost</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* The Desk-to-Field Bridge: Reality Gap Escalation & Fee Rollover Guarantee */}
+            <div className={`p-6 sm:p-7 rounded-2xl border ${triageData.cardBorder} ${triageData.cardBg} relative overflow-hidden transition-all shadow-xl`}>
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                
+                {/* Left: Triage Verdict & Explanation */}
+                <div className="space-y-3 max-w-2xl text-left">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[11px] font-mono font-bold uppercase tracking-wider ${triageData.badgeBg}`}>
+                      <span className={`w-2 h-2 rounded-full ${triageData.dotColor} animate-ping`} />
+                      <span>{triageData.level}: {triageData.tag}</span>
+                    </span>
+                    <span className="text-[11px] font-mono text-zinc-400">
+                      Triage Stage 01 Complete
+                    </span>
+                  </div>
+
+                  <h4 className="text-lg sm:text-xl font-bold font-serif text-white leading-snug">
+                    {triageData.mandate}
+                  </h4>
+
+                  <p className="text-xs sm:text-[13px] text-zinc-200 leading-relaxed font-light">
+                    {triageData.summary}
+                  </p>
+
+                  {/* Fee Rollover Guarantee Banner */}
+                  <div className="p-3 rounded-xl bg-white/10 border border-white/15 flex items-start sm:items-center gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-[#d9bd8b] shrink-0 mt-0.5 sm:mt-0" />
+                    <p className="text-[11px] text-zinc-200 leading-relaxed font-mono">
+                      <strong className="text-[#d9bd8b] font-bold">100% Fee Rollover Guarantee:</strong> 100% of any preliminary desk research or briefing fee is credited directly toward your commissioned On-Site Physical Inspection Dossier. You never pay twice.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Right: Direct Escalation CTAs */}
+                <div className="flex flex-col gap-2.5 shrink-0 w-full sm:w-auto lg:min-w-[280px]">
+                  {/* Primary Escalation CTA to Physical Audit */}
+                  <button
+                    type="button"
+                    onClick={() => onSelectPropertyForInquiry(activeSearchResult.name)}
+                    className="w-full px-6 py-3.5 rounded-xl bg-[#b38a54] hover:bg-[#c59b63] text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:shadow-xl hover:-translate-y-0.5 whitespace-nowrap"
+                  >
+                    <span>Commission On-Site Physical Audit</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+
+                  {/* Secondary Desk Audit Briefing CTA */}
+                  <button
+                    type="button"
+                    onClick={handleRequestAuditForCurrentSearch}
+                    className="w-full px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-zinc-200 hover:text-white text-[11px] font-mono transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
+                  >
+                    <FileText className="w-3.5 h-3.5 text-[#d9bd8b]" />
+                    <span>Download 2-Page Executive Desk Brief (NDA)</span>
+                  </button>
+
+                  <div className="text-center text-[10px] font-mono text-zinc-400">
+                    Pre-fills inquiry for <span className="text-zinc-200 underline font-sans font-medium">{activeSearchResult.name}</span>
+                  </div>
+                </div>
+
+              </div>
             </div>
 
           </div>

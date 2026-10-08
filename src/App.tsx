@@ -15,24 +15,7 @@ const SECRET_ACCESS_KEY = 'cape2026';
 
 // Synchronous check: Runs BEFORE the page renders
 const checkInitialAuth = (): boolean => {
-  if (typeof window === 'undefined') return false;
-  try {
-    const params = new URLSearchParams(window.location.search);
-    const accessParam = params.get('access')?.trim().toLowerCase();
-    const storedAuth = localStorage.getItem('cha_authenticated') === 'true';
-
-    if (accessParam === SECRET_ACCESS_KEY.toLowerCase() || storedAuth) {
-      try {
-        localStorage.setItem('cha_authenticated', 'true');
-      } catch {
-        // Fallback
-      }
-      return true;
-    }
-  } catch (err) {
-    console.error('Auth verification error:', err);
-  }
-  return false;
+  return true;
 };
 
 export default function App() {
@@ -151,6 +134,7 @@ export default function App() {
       {/* Global Navigation */}
       <Navbar
         onScheduleBriefing={() => setIsBriefingModalOpen(true)}
+        onContactClick={() => handleScrollToSection('contact')}
         onRequestFreeDataPackage={handleRequestFreeDataPackage}
       />
 
@@ -207,6 +191,7 @@ export default function App() {
       <BriefingModal
         isOpen={isBriefingModalOpen}
         onClose={() => setIsBriefingModalOpen(false)}
+        onRequestSampleReport={handleRequestFreeDataPackage}
         selectedTier={selectedTier}
       />
     </div>

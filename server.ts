@@ -4,6 +4,7 @@ import { GoogleGenAI } from '@google/genai';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import { generateContextualAuditProfile } from './src/lib/propertyAuditEngine.ts';
 
 dotenv.config();
 
@@ -31,51 +32,52 @@ app.post('/api/audit-hotel', async (req: Request, res: Response) => {
     const prompt = `You are a senior hospitality intelligence specialist for Cape Hospitality Advisors, auditing accommodation properties for European travel companies.
 
 Search the live web for the following property in South Africa (or Southern Africa): "${cleanQuery}".
-Query Google Search and travel listings to find authentic, real public review data across 8 major review platforms: Booking.com, TripAdvisor, Google Maps reviews, HolidayCheck, Expedia Group, Agoda, TrustYou meta-index, and TUI/DERTOUR travel company catalog sentiment.
+Execute targeted searches across Google Maps reviews, Booking.com, TripAdvisor, Airbnb, HolidayCheck, and travel listings for "${cleanQuery}" Western Cape South Africa to find authentic public review data.
 
-Extract or synthesize accurate ground facts with all scores normalized to unified percentages (0% to 100%):
-1. Exact official property name
-2. Real neighborhood / region (e.g. Camps Bay, V&A Waterfront, Franschhoek, Lagoon Beach Milnerton, Knysna, etc.)
-3. Accurate property type (e.g. 5-Star Boutique Lodge, 4-Star Urban Hotel, 3-Star Self-Catering Holiday Apartments, Historic Wine Estate, Oceanfront Guest House)
-4. Classification tier (e.g. "5-Star Luxury Asset", "4-Star Commercial Hotel", "3-Star / Self-Catering Holiday Asset")
-5. Normalized percentage scores for 8 recognized providers:
-   - Booking.com (e.g. 9.1/10 -> 91%)
-   - TripAdvisor (e.g. 4.5/5 -> 90%)
-   - Google Reviews (e.g. 4.6/5 -> 92%)
-   - HolidayCheck recommendation % (e.g. 91%)
-   - Expedia Group verified % (e.g. 90%)
-   - Agoda global network % (e.g. 92%)
-   - TrustYou™ meta-score % (e.g. 91%)
-   - TUI / DERTOUR catalog satisfaction % (e.g. 89%)
-6. Overall Public OTA Meta-Average (percentage average of the 8 scores above, e.g. 91%)
-7. Proprietary Cape Hospitality Advisors Score (CHA Quality Index™) (percentage typically 3% to 10% lower than public average due to stringent European catalog law & physical defect standards, e.g. 86%)
-8. Status: "Optimal" (if 90%+), "Advisory" (if 80-89%), or "Attention Required" (if under 80%)
-9. Deduction reason explaining the Operational Reality Gap delta (e.g. "-5.4% vs Public OTA Avg: Deductions driven by weekend road acoustics and peak breakfast rush water pressure.")
-10. 3 specific Inspection Delta Drivers where physical friction occurred
-11. Review count estimate (e.g. "500+ Reviews", "2,400+ Reviews")
-12. Component subscores (0 to 100): cleanliness, comfort, location, service, dining, value
-13. Traveler segment mix (percentages summing to 100): couples, families, solo, business
-14. Estimated European / DACH traveler share percentage (e.g. 35 to 65)
-15. 3 real, specific frequent praises from verified guests
-16. 3 real, specific frequent critiques or complaints from verified guests
-17. A concise 2-sentence public summary
-18. Exactly 3 operational "Blind Spots" that public reviews mask (e.g. acoustic isolation, peak morning hot water stability, catalog room category discrepancy).
+ACCURACY & AGGREGATION DIRECTIVES (CRITICAL):
+1. SIGNATURE LOCATION & NATURAL PRAISES:
+   - Inspect the real geographic setting and guest sentiment.
+   - If the property is oceanfront or beachfront (e.g. Neptune Isle, Tintswalo, etc.), the top praises MUST capture the actual sea views, beach access, and mountain vistas (e.g., "Uninterrupted sea views across Table Bay", "Direct beach access steps to the sand", "Postcard Table Mountain vistas").
+   - If it is a wine estate or historic hotel, capture its signature estate grounds, dining, or heritage setting.
+2. PHYSICAL SECURITY VS RECEPTION DESK NUANCE:
+   - Clearly distinguish between PHYSICAL SECURITY (e.g., 24/7 guarded gate access, perimeter security, secured parking) and HOSPITALITY DESK CONCIERGE (e.g., full-service 24/7 hotel front-desk concierge vs self-catering lockbox / host greeting).
+   - NEVER report that an establishment lacks security if it has 24-hour gate security or access control! If it is self-catering, accurately note: "Self-catering arrival format (lockbox / pre-arranged key handover) rather than 24/7 staffed hotel reception desk (notwithstanding active 24-hr access gate security)".
+3. REAL SCORES AGGREGATION:
+   - Look for actual rating numbers in search results (e.g., Booking.com 8.2/10 -> 82%, Google 4.4/5 -> 88%, TripAdvisor 4.0/5 -> 80%).
+   - Normalize all 8 provider scores to 0-100% percentages based on real web data found.
+4. UNIQUE, TAILORED INSPECTION DELTA DRIVERS (NEVER REUSE GENERIC TEMPLATES):
+   - You MUST generate 3 distinct operational reality gap drivers tailored STRICTLY to this property's setting, building type, and European catalog risk factors.
+   - For oceanfront/beachfront: focus on sea vs rear road acoustic allocation, coastal southeaster wind/salt door wear, or self-catering gate arrival vs concierge desk.
+   - For wine estates: focus on wedding decibel curfews, dawn agricultural tractor noise, or outlying cottage walking distances.
+   - For urban/waterfront: focus on working harbor/traffic acoustics, peak tour coach breakfast pacing, or courtyard vs mountain view allocations.
+   - For heritage: focus on single-glazed sash windows, legacy boiler loops, or historic room size variances.
+   - NEVER use the generic boilerplate phrases: "Acoustic insulation variance in street-facing or mechanical equipment wings" or "Morning shower hot water temperature drops during 07:15–08:15 peak rushes".
+
+5. DISTINCT, REAL PUBLIC CRITIQUES (BAN GENERIC CLICHES):
+   - ABSOLUTELY DO NOT repeat generic boilerplate critiques like "breakfast queue", "elevator wait times", or "substantial rate premiums required".
+   - Extract the TRUE, HIGHLY SPECIFIC friction points mentioned in real guest reviews for this exact property typology:
+     * For self-catering / holiday apartments: unit decor inconsistency across private owners, lack of daily towel service, tight basement parking bays, lockbox arrival logistics.
+     * For boutique guesthouses / villas: absence of elevator (steep stairs with luggage), no on-site night reception after 20:00, intimate pool size.
+     * For wine estates: vineyard tractor / harvest noise at dawn, seasonal insects/midges in summer vineyards, distance walking from outlying cottages to main dining.
+     * For safari reserves: bumpy unpaved gravel access road, limited solar/inverter appliance wattage, spotty bush Wi-Fi.
+     * For beachfront / coastal properties: southeaster coastal gale wind on balconies, ocean salt corrosion on patio doors, sea fog dampness.
+     * For city center / business hotels: commercial delivery bay noise, parking garage surcharge, lack of opening fresh-air windows.
 
 Output ONLY a raw valid JSON object without markdown code blocks, following this exact schema:
 {
-  "name": "Exact Name",
-  "location": "District, City/Region",
-  "propertyType": "Specific Type",
-  "classification": "Classification Tier",
-  "chaScore": 86,
-  "chaStatus": "Advisory",
-  "chaDeltaReason": "-5.4% vs Public OTA Avg: Operational friction detected in night acoustics and peak morning water temperature.",
+  "name": "Exact Official Property Name",
+  "location": "District/Suburb, City/Region, South Africa",
+  "propertyType": "Specific Type (e.g. Oceanfront Self-Catering Apartments, 5-Star Boutique Lodge, Historic Heritage Hotel)",
+  "classification": "Classification Tier (e.g. 5-Star Luxury Asset, 4-Star Commercial Hotel, 3-Star / Self-Catering Holiday Asset)",
+  "chaScore": 84,
+  "chaStatus": "Optimal" | "Advisory" | "Attention Required",
+  "chaDeltaReason": "-X% vs Public OTA Avg: Specific operational reality gap explanation.",
   "inspectionDeltaDrivers": [
-    "Acoustic transmission during peak morning traffic",
-    "Morning shower water temperature stability during 07:30 rush",
-    "Catalog room orientation specification requirement"
+    "Specific operational delta driver 1",
+    "Specific operational delta driver 2",
+    "Specific operational delta driver 3"
   ],
-  "publicMetaAverage": 91.4,
+  "publicMetaAverage": 90.5,
   "platformScores": [
     { "id": "booking", "name": "Booking.com", "scorePercent": 91, "label": "Verified Stays", "category": "Global OTA" },
     { "id": "tripadvisor", "name": "TripAdvisor", "scorePercent": 90, "label": "Traveler Bubble", "category": "Review Community" },
@@ -86,30 +88,42 @@ Output ONLY a raw valid JSON object without markdown code blocks, following this
     { "id": "trustyou", "name": "TrustYou™", "scorePercent": 91, "label": "Meta Aggregate", "category": "Meta Index" },
     { "id": "tui", "name": "TUI / DERTOUR", "scorePercent": 89, "label": "Catalog Satisfaction", "category": "Travel Companies" }
   ],
-  "reviewCount": "1,200+ Reviews",
+  "reviewCount": "500+ Reviews",
   "subscores": {
-    "cleanliness": 92,
+    "cleanliness": 90,
     "comfort": 88,
-    "location": 95,
-    "service": 90,
-    "dining": 85,
-    "value": 84
+    "location": 96,
+    "service": 87,
+    "dining": 82,
+    "value": 86
   },
   "travelerSegments": {
-    "couples": 55,
-    "families": 25,
+    "couples": 52,
+    "families": 28,
     "solo": 12,
     "business": 8
   },
-  "europeanShare": 50,
-  "frequentPraise": ["Praise 1", "Praise 2", "Praise 3"],
-  "frequentCritiques": ["Critique 1", "Critique 2", "Critique 3"],
+  "europeanShare": 48,
+  "frequentPraise": [
+    "Accurate grounded praise 1 (e.g. Uninterrupted sea views across Table Bay)",
+    "Accurate grounded praise 2 (e.g. Direct beach access steps to the sand)",
+    "Accurate grounded praise 3 (e.g. 24-hour guarded security & gated access)"
+  ],
+  "frequentCritiques": [
+    "Accurate grounded critique 1",
+    "Accurate grounded critique 2",
+    "Accurate grounded critique 3"
+  ],
   "publicSummary": "Two sentence factual summary.",
   "blindSpots": [
     { "title": "Blind Spot 1 Title", "description": "Operational detail for travel companies." },
     { "title": "Blind Spot 2 Title", "description": "Operational detail for travel companies." },
     { "title": "Blind Spot 3 Title", "description": "Operational detail for travel companies." }
-  ]
+  ],
+  "provenanceTier": "LIVE_GROUNDED",
+  "provenanceLabel": "Live Multi-Platform Web Radar (High Web Presence)",
+  "webPresenceStrength": "High",
+  "sentimentDisclaimer": "Aggregated from unweighted online guest reviews across public OTAs. Physical on-site inspection independently verifies catalog compliance."
 }`;
 
     const response = await ai.models.generateContent({
@@ -142,119 +156,9 @@ Output ONLY a raw valid JSON object without markdown code blocks, following this
       grounded: true,
     });
   } catch (error: any) {
-    console.warn('Gemini live grounding unavailable or quota reached, generating regional synthesis fallback:', error?.message);
+    console.warn('Gemini live grounding unavailable or quota reached, generating tailored contextual synthesis fallback:', error?.message);
 
-    const lowerQuery = cleanQuery.toLowerCase();
-    const hash = cleanQuery.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const bScore = (7.9 + (hash % 16) / 10).toFixed(1);
-    const gScore = (4.1 + (hash % 7) / 10).toFixed(1);
-    const numBScore = parseFloat(bScore);
-    const numGScore = parseFloat(gScore);
-    const hCheck = Math.min(96, Math.max(72, Math.round(numBScore * 9.8)));
-
-    const isApartmentOrGuest =
-      lowerQuery.includes('apartment') ||
-      lowerQuery.includes('house') ||
-      lowerQuery.includes('lodge') ||
-      lowerQuery.includes('villa') ||
-      lowerQuery.includes('isle') ||
-      lowerQuery.includes('cottage');
-
-    const inferredType = isApartmentOrGuest
-      ? 'Regional Holiday Apartments & Self-Catering'
-      : 'Regional Hotel & Accommodation Asset';
-
-    const inferredClass = isApartmentOrGuest
-      ? 'Self-Catering / Guesthouse Profile'
-      : numBScore >= 9.0
-      ? '4 to 5-Star Hotel Profile'
-      : '3 to 4-Star Commercial Hotel Profile';
-
-    const bookingPct = Math.min(99, Math.max(70, Math.round(numBScore * 10)));
-    const tripAdvisorPct = Math.min(98, Math.max(70, Math.round(numGScore * 20)));
-    const googlePct = Math.min(98, Math.max(70, Math.round(numGScore * 20)));
-    const holidayCheckPct = hCheck;
-    const expediaPct = Math.min(97, Math.max(69, Math.round(numBScore * 9.8)));
-    const agodaPct = Math.min(98, Math.max(71, Math.round(numBScore * 9.9)));
-    const trustYouPct = Math.min(97, Math.max(72, Math.round(numBScore * 9.8)));
-    const tuiPct = Math.min(96, Math.max(68, Math.round(numBScore * 9.5)));
-
-    const platformScores = [
-      { id: 'booking', name: 'Booking.com', scorePercent: bookingPct, label: 'Verified Stays', category: 'Global OTA' },
-      { id: 'tripadvisor', name: 'TripAdvisor', scorePercent: tripAdvisorPct, label: 'Traveler Bubble', category: 'Review Community' },
-      { id: 'google', name: 'Google Reviews', scorePercent: googlePct, label: 'Global Sentiment', category: 'Public Network' },
-      { id: 'holidaycheck', name: 'HolidayCheck', scorePercent: holidayCheckPct, label: 'DACH Benchmark', category: 'German Travelers' },
-      { id: 'expedia', name: 'Expedia Group', scorePercent: expediaPct, label: 'Package Stays', category: 'Global OTA' },
-      { id: 'agoda', name: 'Agoda', scorePercent: agodaPct, label: 'Luxury Network', category: 'Global OTA' },
-      { id: 'trustyou', name: 'TrustYou™', scorePercent: trustYouPct, label: 'Meta Aggregate', category: 'Meta Index' },
-      { id: 'tui', name: 'TUI / DERTOUR', scorePercent: tuiPct, label: 'Catalog Satisfaction', category: 'Travel Companies' },
-    ];
-
-    const publicMetaAvg = Math.round(
-      platformScores.reduce((acc, curr) => acc + curr.scorePercent, 0) / platformScores.length
-    );
-
-    const deltaDeduction = isApartmentOrGuest ? 8 : 5;
-    const chaScore = Math.max(62, publicMetaAvg - deltaDeduction);
-    const chaStatus = chaScore >= 90 ? 'Optimal' : chaScore >= 80 ? 'Advisory' : 'Attention Required';
-
-    const fallbackProfile = {
-      name: cleanQuery,
-      location: 'Western Cape Corridor, South Africa',
-      propertyType: inferredType,
-      classification: inferredClass,
-      chaScore,
-      chaStatus,
-      chaDeltaReason: `-${deltaDeduction}% vs Public OTA Avg (${publicMetaAvg}%): Operational deductions reflecting real room wing acoustics, morning plumbing stability, and European catalog compliance.`,
-      inspectionDeltaDrivers: [
-        'Acoustic insulation variance in street-facing or mechanical equipment wings',
-        'Morning shower hot water temperature drops during 07:15–08:15 peak rushes',
-        'Discrepancy between brochure marketing imagery and contractual room allocations',
-      ],
-      publicMetaAverage: publicMetaAvg,
-      platformScores,
-      reviewCount: `${(hash * 4) % 1200 + 150}+ Reviews`,
-      subscores: {
-        cleanliness: Math.min(96, 78 + (hash % 18)),
-        comfort: Math.min(94, 76 + (hash % 18)),
-        location: Math.min(97, 82 + (hash % 16)),
-        service: Math.min(95, 79 + (hash % 17)),
-        dining: Math.min(92, 75 + (hash % 17)),
-        value: Math.min(91, 78 + (hash % 14)),
-      },
-      travelerSegments: {
-        couples: 52,
-        families: 28,
-        solo: 12,
-        business: 8,
-      },
-      europeanShare: Math.min(65, 32 + (hash % 28)),
-      frequentPraise: [
-        'Convenient regional access and scenic outlook',
-        'Friendly staff and responsive local greeting',
-        'Generous room dimensions and comfortable beds',
-      ],
-      frequentCritiques: [
-        'Variable exterior traffic or coastal wind noise',
-        'Morning breakfast and reception queue pacing',
-        'Older bathroom plumbing or fixture maintenance',
-      ],
-      publicSummary: `Public platform ratings reflect standard mixed traveler feedback across platforms, but lack verified European catalog liability calibration (DRV standards) and specific room wing acoustic validation.`,
-      blindSpots: [
-        {
-          title: 'Acoustic Insulation & Night Sleep Quietness',
-          description: 'Public reviews rarely measure decibel transmission from perimeter roads, internal corridors, or regional power equipment.',
-        },
-        {
-          title: 'Morning Plumbing Stability & Hot Water Delivery',
-          description: 'Public ratings do not test water temperature or pressure drops during simultaneous 07:00–08:30 morning showering rushes.',
-        },
-        {
-          title: 'German Catalog Standards (DRV) & Defect Exposure',
-          description: 'Public platforms aggregate domestic day-visitors, masking room defects that trigger 10%–25% post-trip compensation claims under European travel law.',
-        },
-      ],
-    };
+    const fallbackProfile = generateContextualAuditProfile(cleanQuery);
 
     return res.json({
       success: true,
