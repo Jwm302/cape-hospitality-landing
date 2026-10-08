@@ -1253,46 +1253,6 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
                   <p className="text-xs text-zinc-300 leading-relaxed font-light mb-3">
                     {activeSearchResult.chaDeltaReason}
                   </p>
-
-                  {/* Summarised Rationale: Only Key Points in Favour of Physical Audit */}
-                  <div className="my-3 p-3.5 rounded-xl bg-black/40 border border-[#d9bd8b]/30 shadow-inner">
-                    <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-white/10">
-                      <div className="text-[10px] font-mono uppercase font-bold text-[#d9bd8b] tracking-wider flex items-center gap-1.5">
-                        <Scale className="w-3.5 h-3.5 text-[#d9bd8b]" />
-                        <span>Key Rationale For Physical Audit:</span>
-                      </div>
-                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#d9bd8b]/20 text-[#d9bd8b] border border-[#d9bd8b]/30">
-                        Core Protection
-                      </span>
-                    </div>
-
-                    <ul className="space-y-2 text-[11px] text-zinc-200">
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                        <span className="leading-snug">
-                          <strong className="text-white font-semibold">Legal & Catalog Shield:</strong> OTAs carry zero legal standing in court; only on-site audits provide admissible evidence against EU Package Directive & Frankfurt Table claims (15%–25% refund liability).
-                        </span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                        <span className="leading-snug">
-                          <strong className="text-white font-semibold">Unmask Hidden Blind Spots:</strong> Objectively tests physical stress points online reviews miss (07:30 shower pressure, 02:00 acoustic spikes, back-of-house hygiene).
-                        </span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                        <span className="leading-snug">
-                          <strong className="text-white font-semibold">Actual Wing Verification:</strong> Confirms the exact physical room inventory & view allocations contracted for your clients, not stage-managed showroom units.
-                        </span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                        <span className="leading-snug">
-                          <strong className="text-white font-semibold">Opportunistic Claim Defense:</strong> Date-stamped decibel readings, temperature logs, and photo evidence protect against bad-faith post-travel chargebacks.
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
                 </div>
 
                 {/* Inspection Delta Drivers */}
@@ -1507,249 +1467,92 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
               </div>
             </div>
 
-            {/* The Travel Company Reality Check: What Public Reviews Hide */}
-            <div className="py-6 space-y-3">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                <div className="flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-400" />
-                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
-                    The Travel Company Reality Gap: 3 Blind Spots Public Reviews Mask
-                  </span>
-                </div>
-                <span className="text-[10px] font-mono text-zinc-400">
-                  Calibrated for European Travel Companies
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {(activeSearchResult.blindSpots || []).map((spot, idx) => (
-                  <div
-                    key={idx}
-                    className="p-4 rounded-xl bg-amber-500/[0.04] border border-amber-500/20 flex flex-col justify-between"
-                  >
-                    <div>
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-white mb-1.5">
-                        <Lock className="w-3.5 h-3.5 text-[#d9bd8b] shrink-0" />
-                        <span>{spot.title}</span>
+            {/* Ground Reality vs Public Sentiment: Consolidated Executive Briefing */}
+            <div className="py-6 border-t border-white/10">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+                {/* Left: 3 Operational Blind Spots for this specific property */}
+                <div className="lg:col-span-6 p-5 rounded-2xl bg-amber-500/[0.04] border border-amber-500/25 flex flex-col justify-between text-left">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-amber-300">
+                        <AlertTriangle className="w-4 h-4 text-amber-400" />
+                        <span>3 Blind Spots Public Reviews Mask</span>
                       </div>
-                      <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
-                        {spot.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* 4 Unverifiable Remote Vectors Card: The Physical Reality Boundary */}
-            <div className="py-6 border-t border-white/10 space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-[#d9bd8b] animate-pulse" />
-                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#d9bd8b]">
-                    The Physical Reality Boundary: 4 Vectors Virtual Audits Cannot Measure
-                  </span>
-                </div>
-                <span className="text-[10px] font-mono text-zinc-400">
-                  Why Desk Radars Flag Triage, But On-Site Audits Protect Contracts
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                {/* Vector 1: Decibel & Acoustics */}
-                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-[#d9bd8b]/40 transition-all flex flex-col justify-between">
-                  <div>
-                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-2.5">
-                      <Volume2 className="w-4 h-4" />
-                    </div>
-                    <div className="text-xs font-bold text-white mb-1">
-                      01. Decibel & Sleep Acoustics
-                    </div>
-                    <div className="text-[10px] font-mono text-zinc-400 mb-2">
-                      Night Interval: 22:00 – 06:00
-                    </div>
-                    <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
-                      <strong className="text-zinc-200 font-medium">Remote blind spot:</strong> OTAs reflect daytime scenic drinks. Web scrapers cannot measure road motorcycle spikes, corridor echo, or rooftop chiller harmonics that disrupt night sleep.
-                    </p>
-                  </div>
-                  <div className="mt-3 pt-2 border-t border-white/5 text-[10px] font-mono text-[#d9bd8b]">
-                    ✓ Verified via On-Site Decibel Meter
-                  </div>
-                </div>
-
-                {/* Vector 2: Peak Hydraulics & Hot Water */}
-                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-[#d9bd8b]/40 transition-all flex flex-col justify-between">
-                  <div>
-                    <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-2.5">
-                      <Droplets className="w-4 h-4" />
-                    </div>
-                    <div className="text-xs font-bold text-white mb-1">
-                      02. Peak Hydraulic & Shower Pressure
-                    </div>
-                    <div className="text-[10px] font-mono text-zinc-400 mb-2">
-                      Morning Rush: 07:15 – 08:30
-                    </div>
-                    <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
-                      <strong className="text-zinc-200 font-medium">Remote blind spot:</strong> Desk tools cannot open shower valves when 40 rooms bathe concurrently. Pressure drop and thermal shock trigger #1 Frankfurt Table claims.
-                    </p>
-                  </div>
-                  <div className="mt-3 pt-2 border-t border-white/5 text-[10px] font-mono text-[#d9bd8b]">
-                    ✓ Tested via Simultaneous Flow Audits
-                  </div>
-                </div>
-
-                {/* Vector 3: Room Wing Allocation Reality */}
-                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-[#d9bd8b]/40 transition-all flex flex-col justify-between">
-                  <div>
-                    <div className="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-2.5">
-                      <BedDouble className="w-4 h-4" />
-                    </div>
-                    <div className="text-xs font-bold text-white mb-1">
-                      03. Contracted Wing vs Show Suite
-                    </div>
-                    <div className="text-[10px] font-mono text-zinc-400 mb-2">
-                      Inventory Verification
-                    </div>
-                    <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
-                      <strong className="text-zinc-200 font-medium">Remote blind spot:</strong> Marketing photos display the renovated presidential suite. Wholesale allotments often receive older garden wings with dampness or rear generator outlooks.
-                    </p>
-                  </div>
-                  <div className="mt-3 pt-2 border-t border-white/5 text-[10px] font-mono text-[#d9bd8b]">
-                    ✓ Room-by-Room Physical Catalog Check
-                  </div>
-                </div>
-
-                {/* Vector 4: Service Cadence & Micro-Climate */}
-                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 hover:border-[#d9bd8b]/40 transition-all flex flex-col justify-between">
-                  <div>
-                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-2.5">
-                      <Wind className="w-4 h-4" />
-                    </div>
-                    <div className="text-xs font-bold text-white mb-1">
-                      04. Odor, HVAC & Peak Service Pacing
-                    </div>
-                    <div className="text-[10px] font-mono text-zinc-400 mb-2">
-                      Arrival & Dining Pressure
-                    </div>
-                    <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
-                      <strong className="text-zinc-200 font-medium">Remote blind spot:</strong> AI sentiment algorithms cannot smell kitchen exhaust draft, measure AC coil mold, or test front-desk queue delays during 30-person bus arrivals.
-                    </p>
-                  </div>
-                  <div className="mt-3 pt-2 border-t border-white/5 text-[10px] font-mono text-[#d9bd8b]">
-                    ✓ Clocked via Unannounced Mystery Stays
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Why On-Site Verification is Essential: The 4 Core Business Rationales */}
-            <div className="py-6 border-t border-white/10 space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                <div className="flex items-center gap-2">
-                  <Scale className="w-4 h-4 text-[#d9bd8b]" />
-                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-white">
-                    Why Travel Companies Must Back Virtual Screening with On-Site Verification
-                  </span>
-                </div>
-                <span className="text-[10px] font-mono text-emerald-400">
-                  Virtual Desk = Triage Smoke Detector • On-Site = Fireproof Legal Armor
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-                {/* Rationale 1: EU Package Directive & Frankfurt Table Liability */}
-                <div className="p-4 rounded-xl bg-rose-500/[0.05] border border-rose-500/20 text-left">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="p-1.5 rounded-lg bg-rose-500/20 text-rose-300 font-mono text-xs font-bold">
-                      01
-                    </div>
-                    <div>
-                      <h5 className="text-xs font-bold text-white">
-                        EU Package Directive (2015/2302) & Frankfurt Table Liability
-                      </h5>
-                      <span className="text-[10px] font-mono text-rose-300">
-                        Strict European Operator Liability
+                      <span className="text-[10px] font-mono text-zinc-400">
+                        Property-Specific
                       </span>
                     </div>
+
+                    <div className="space-y-3">
+                      {(activeSearchResult.blindSpots || []).map((spot, idx) => (
+                        <div key={idx} className="p-3 rounded-xl bg-white/[0.03] border border-white/10">
+                          <div className="text-xs font-bold text-white mb-1 flex items-center gap-1.5">
+                            <Lock className="w-3.5 h-3.5 text-[#d9bd8b] shrink-0" />
+                            <span>{spot.title}</span>
+                          </div>
+                          <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
+                            {spot.description}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
-                    Under European travel regulations, European tour operators are held strictly liable for catalog deviations, noisy night wings, and defective room facilities. A high online review score cannot be submitted in a German or UK arbitration court as proof of contract delivery. <strong className="text-white font-medium">Only an independent physical audit dossier provides timestamped, legally admissible evidence</strong> that your room inventory met European consumer standards.
-                  </p>
-                  <div className="mt-2.5 pt-2 border-t border-rose-500/20 text-[10px] font-mono text-rose-300 flex items-center justify-between">
-                    <span>Average claim exposure: 15%–35% package price</span>
-                    <span className="text-white font-bold">Shielded by On-Site Log</span>
+
+                  <div className="mt-3.5 pt-2.5 border-t border-white/10 text-[10px] font-mono text-amber-300 flex items-center gap-1.5">
+                    <Info className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <span>Uncoverable remotely: Requires on-site room allocation and hydraulic validation.</span>
                   </div>
                 </div>
 
-                {/* Rationale 2: Two-Way Defense Against Fabricated Claims */}
-                <div className="p-4 rounded-xl bg-blue-500/[0.05] border border-blue-500/20 text-left">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="p-1.5 rounded-lg bg-blue-500/20 text-blue-300 font-mono text-xs font-bold">
-                      02
-                    </div>
-                    <div>
-                      <h5 className="text-xs font-bold text-white">
-                        The Two-Way Shield: Rebuffing Opportunistic Refund Blackmail
-                      </h5>
-                      <span className="text-[10px] font-mono text-blue-300">
-                        Disproving Fabricated Traveler Complaints
+                {/* Right: Why Physical Verification Protects Your Catalog Contracts */}
+                <div className="lg:col-span-6 p-5 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col justify-between text-left">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-[#d9bd8b]">
+                        <Scale className="w-4 h-4 text-[#d9bd8b]" />
+                        <span>Why Physical Verification Is Essential</span>
+                      </div>
+                      <span className="text-[10px] font-mono text-emerald-400">
+                        Legal & Contract Shield
                       </span>
                     </div>
-                  </div>
-                  <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
-                    A major post-travel cost drain is bad-actor clients who invent claims (“water was cold”, “pool was shut”, “room was filthy”) to extract 30%–50% chargebacks. Online reviews can't prove them wrong. <strong className="text-white font-medium">Our physical on-site audit logs calibrated water temperatures, date-stamped high-res photos, and decibel meter readings</strong>, giving your claims resolution team ironclad proof to reject bad-faith chargebacks.
-                  </p>
-                  <div className="mt-2.5 pt-2 border-t border-blue-500/20 text-[10px] font-mono text-blue-300 flex items-center justify-between">
-                    <span>Disputes successfully dismissed: 84%+</span>
-                    <span className="text-white font-bold">Ironclad Ground Truth</span>
-                  </div>
-                </div>
 
-                {/* Rationale 3: Virtual Audits Are A Smoke Detector, Not A Cure */}
-                <div className="p-4 rounded-xl bg-amber-500/[0.05] border border-amber-500/20 text-left">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 font-mono text-xs font-bold">
-                      03
-                    </div>
-                    <div>
-                      <h5 className="text-xs font-bold text-white">
-                        Desk Radars Triage The Smoke; Physical Audits Find The Fire
-                      </h5>
-                      <span className="text-[10px] font-mono text-amber-300">
-                        Triage vs Actionable Procurement Mandate
-                      </span>
-                    </div>
-                  </div>
-                  <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
-                    Virtual desk audits aggregate public opinion to compute your statistical reality gap and flag likely problem areas. But <strong className="text-white font-medium">a virtual audit cannot tell you WHICH room wing to mandate in your hotel contract</strong>, whether the kitchen grease trap vents near the terrace rooms, or how management handles bus arrivals. On-site audits turn raw suspicion into specific contractual allocation clauses (e.g. <em>“Mandate Garden Wing Rooms 201–224 only”</em>).
-                  </p>
-                  <div className="mt-2.5 pt-2 border-t border-amber-500/20 text-[10px] font-mono text-amber-300 flex items-center justify-between">
-                    <span>Turns risk score into contract riders</span>
-                    <span className="text-white font-bold">Actionable Guidance</span>
-                  </div>
-                </div>
+                    <div className="space-y-3">
+                      <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                        <div className="text-xs font-bold text-white mb-1 flex items-center gap-2">
+                          <span className="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono text-[10px] font-bold">01</span>
+                          <span>Frankfurt Table & EU Directive Immunity</span>
+                        </div>
+                        <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
+                          Online reviews carry zero legal standing in court. Only an independent on-site audit dossier provides timestamped proof shielding your brand against statutory 15%–25% customer compensation claims.
+                        </p>
+                      </div>
 
-                {/* Rationale 4: Free Zero-Risk Rollover Protection */}
-                <div className="p-4 rounded-xl bg-[#d9bd8b]/[0.08] border border-[#d9bd8b]/30 text-left">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="p-1.5 rounded-lg bg-[#d9bd8b]/20 text-[#d9bd8b] font-mono text-xs font-bold">
-                      04
-                    </div>
-                    <div>
-                      <h5 className="text-xs font-bold text-white">
-                        Zero Risk: 100% Fee Rollover Guarantee
-                      </h5>
-                      <span className="text-[10px] font-mono text-[#d9bd8b]">
-                        Seamless Financial Progression
-                      </span>
+                      <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                        <div className="text-xs font-bold text-white mb-1 flex items-center gap-2">
+                          <span className="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono text-[10px] font-bold">02</span>
+                          <span>Unmask Hidden Operational Reality</span>
+                        </div>
+                        <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
+                          Our unannounced mystery stays physically stress-test peak 07:30 shower pressure, 02:00 night decibels, and exact contracted room wing allocations before your clients arrive.
+                        </p>
+                      </div>
+
+                      <div className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
+                        <div className="text-xs font-bold text-white mb-1 flex items-center gap-2">
+                          <span className="px-1.5 py-0.5 rounded bg-[#d9bd8b]/20 text-[#d9bd8b] font-mono text-[10px] font-bold">03</span>
+                          <span>100% Fee Rollover Guarantee</span>
+                        </div>
+                        <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
+                          Zero financial gamble: 100% of any preliminary desk briefing fee rolls over directly as a credit toward the on-site physical inspection dossier if your team escalates.
+                        </p>
+                      </div>
                     </div>
                   </div>
-                  <p className="text-[11px] text-zinc-300 leading-relaxed font-light">
-                    We never ask travel companies to take a financial gamble. When you order an in-depth customized Executive Desk Briefing for an establishment, <strong className="text-white font-medium">100% of the desk briefing fee rolls over directly as a credit</strong> towards the physical unannounced on-site inspection dossier if your team decides on-site ground verification is required. You get instantaneous desk screening with zero financial friction.
-                  </p>
-                  <div className="mt-2.5 pt-2 border-t border-[#d9bd8b]/20 text-[10px] font-mono text-[#d9bd8b] flex items-center justify-between">
-                    <span>100% Credit applied to On-Site Dossier</span>
-                    <span className="text-white font-bold">Zero Sunk Cost</span>
+
+                  <div className="mt-3.5 pt-2.5 border-t border-white/10 text-[10px] font-mono text-[#d9bd8b] flex items-center justify-between">
+                    <span>Zero Sunk Cost Guarantee</span>
+                    <span className="text-white font-bold">Credit Applied Directly</span>
                   </div>
                 </div>
               </div>
