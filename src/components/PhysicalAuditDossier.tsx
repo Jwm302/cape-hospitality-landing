@@ -30,23 +30,23 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 shadow-xs mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-[#b38a54]" />
             <span className="tracking-widest uppercase font-mono text-[11px]">
-              STAGE 02 • ON-SITE MYSTERY AUDIT CASE STUDY
+              STAGE 02 • SAMPLE ON-SITE AUDIT
             </span>
           </div>
 
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#10213a] tracking-tight font-serif leading-tight">
-            Case Study: The Gardens Heritage Manor
+            Sample Audit: The Historic City Hotel
           </h2>
 
           <p className="mt-3 text-sm sm:text-base text-zinc-600 font-normal leading-relaxed">
-            A real, unannounced overnight stay at a 5-star Cape Town hotel, commissioned after the Virtual Audit flagged a problem.
+            An illustrative example of an unannounced overnight stay at a historic 5-star Cape Town hotel, showing the findings and recommendations your team receives.
           </p>
 
           {/* POPIA / Discretion Banner */}
           <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-zinc-300 text-xs text-zinc-700 shadow-xs text-left max-w-2xl">
             <Lock className="w-3.5 h-3.5 text-[#b38a54] shrink-0" />
             <span className="text-[11px] leading-relaxed">
-              <strong>POPIA & Confidentiality Notice:</strong> In compliance with the South African Protection of Personal Information Act (POPIA) and client non-disclosure agreements, the real establishment trade name is masked under the property pseudonym <em>“The Gardens Heritage Manor”</em>.
+              <strong>Sample Dossier:</strong> <em>“The Historic City Hotel”</em> is an archetype, and the findings are representative of what we look for. Client audits are confidential and are never published.
             </span>
           </div>
         </div>
@@ -59,22 +59,22 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
             <div>
               <div className="flex items-center gap-2 mb-1 flex-wrap">
                 <span className="font-mono text-[10px] text-[#d9bd8b] tracking-wider uppercase font-semibold">
-                  PHYSICAL INSPECTION DOSSIER • REF: CHA-CPT-2026-084
+                  PHYSICAL INSPECTION DOSSIER • ARCHETYPE EXAMPLE
                 </span>
                 <span className="bg-emerald-500/20 text-emerald-300 text-[9px] font-mono px-2 py-0.2 rounded border border-emerald-500/30 font-bold uppercase">
-                  ACTUAL COMPLETED AUDIT
+                  SAMPLE DOSSIER
                 </span>
               </div>
               <h3 className="text-xl font-serif font-bold text-white">
-                The Gardens Heritage Manor
+                The Historic City Hotel
               </h3>
               <p className="text-xs text-zinc-300 mt-1 flex items-center gap-2 flex-wrap font-light">
                 <span className="text-[#d9bd8b] font-mono text-[11px]">
-                  (5-Star Hotel • Historic Prestige Archetype)
+                  (Archetype: Historic 5-Star City Hotel)
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1">
-                  <MapPin className="w-3 h-3 text-[#d9bd8b]" /> Gardens, Cape Town
+                  <MapPin className="w-3 h-3 text-[#d9bd8b]" /> Cape Town
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1">
@@ -108,7 +108,7 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
             <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200/80 flex items-start gap-3">
               <Activity className="w-4 h-4 text-amber-800 shrink-0 mt-0.5" />
               <p className="text-xs text-amber-900 leading-relaxed">
-                <strong>Why This Audit Was Commissioned:</strong> The Virtual Audit flagged repeated German guest complaints about lukewarm morning showers and rattling air conditioning. The travel company asked us to verify on site before contracting.
+                <strong>Scenario:</strong> The Virtual Audit flags repeated German guest complaints about lukewarm morning showers and rattling air conditioning. The travel company asks us to verify on site before contracting.
               </p>
             </div>
 
@@ -147,7 +147,7 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
                     </span>
                   </div>
                   <p className="text-[11px] text-zinc-600 leading-relaxed">
-                    Room 114 (Historic East Wing) AC unit produced an audible mechanical rattle every few minutes, disturbing sleep. Older sash windows let in 05:45 street cleaning noise.
+                    A room in the older historic wing had an AC unit that produced an audible mechanical rattle every few minutes, disturbing sleep. Older sash windows let in 05:45 street cleaning noise.
                   </p>
                 </div>
 
@@ -195,7 +195,7 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
                 <div>
                   <div className="text-xs font-bold text-[#10213a] mb-1">1. We Observe</div>
                   <p className="text-[11px] text-zinc-600 leading-relaxed">
-                    Historic East Wing rooms suffer from AC rattling at night and lukewarm morning shower water. Dining and gardens are exemplary, but sleep comfort falls short.
+                    Rooms in the older historic wing suffer from AC rattling at night and lukewarm morning shower water. Dining and grounds are exemplary, but sleep comfort falls short.
                   </p>
                 </div>
 
@@ -209,7 +209,7 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
                 <div>
                   <div className="text-xs font-bold text-emerald-800 mb-1">3. We Recommend</div>
                   <p className="text-[11px] text-zinc-600 leading-relaxed">
-                    Do not cancel your contract. Mandate room allocations in the renovated Garden Wing (Rooms 201–224) where AC and plumbing are modern and quiet.
+                    Do not cancel your contract. Insist on room allocations in the renovated wing, where AC and plumbing are modern and quiet.
                   </p>
                 </div>
               </div>
@@ -232,7 +232,7 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
             {/* Action Row */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-zinc-200">
               <div className="text-[11px] font-mono text-zinc-500">
-                Full 15-page dossier with photographic appendix available on request.
+                Full client reports include a photographic appendix.
               </div>
               <div className="flex items-center gap-2.5 w-full sm:w-auto">
                 <button

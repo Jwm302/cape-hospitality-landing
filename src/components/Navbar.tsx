@@ -27,7 +27,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navLinks = [
     { label: 'How We Work', href: '#reality-gap' },
     { label: 'Virtual Audit', href: '#virtual-audit' },
-    { label: 'Case Study', href: '#sample-audit' },
+    { label: 'Sample Audit', href: '#sample-audit' },
     { label: 'Why Us', href: '#usp' },
     { label: 'Services', href: '#pricing' },
   ];
