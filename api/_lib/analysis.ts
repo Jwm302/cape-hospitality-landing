@@ -1,5 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
-import { Review, ReviewAnalysis, Theme, ThemeQuote } from './types';
+import { Review, ReviewAnalysis, Theme, ThemeQuote } from './types.js';
 
 const MODEL = 'gemini-3.8-flash';
 const MIN_REVIEWS_PER_THEME = 3;

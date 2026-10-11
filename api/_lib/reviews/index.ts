@@ -1,5 +1,5 @@
-import { ReviewSource } from '../types';
-import { dataForSeo } from './dataforseo';
+import { ReviewSource } from '../types.js';
+import { dataForSeo } from './dataforseo.js';
 
 // Review sources available to the live lookup. To swap providers (for example
 // a self-hosted open-source scraper), add an implementation of ReviewSource

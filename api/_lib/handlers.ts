@@ -1,8 +1,8 @@
-import { analyzeReviews } from './analysis';
-import { cacheConfigured, cacheGet, cacheSet, countToday } from './cache';
-import { findPlace, placesConfigured } from './places';
-import { getReviewSource } from './reviews';
-import { PlaceSnapshot, ReviewAnalysis, ReviewsState, SnapshotResponse } from './types';
+import { analyzeReviews } from './analysis.js';
+import { cacheConfigured, cacheGet, cacheSet, countToday } from './cache.js';
+import { findPlace, placesConfigured } from './places.js';
+import { getReviewSource } from './reviews/index.js';
+import { PlaceSnapshot, ReviewAnalysis, ReviewsState, SnapshotResponse } from './types.js';
 
 // Framework-agnostic request handlers, shared by the Vercel functions in /api
 // and the local Express dev server.

@@ -1,4 +1,4 @@
-import { PlaceSnapshot } from './types';
+import { PlaceSnapshot } from './types.js';
 
 // Google Places API (New) Text Search. Requesting rating fields bills at the
 // Enterprise tier, which includes a free monthly allowance.
