@@ -6,6 +6,18 @@ export interface PlatformScoreItem {
   category: string;
 }
 
+export interface GuestExperienceMetrics {
+  acousticRestScore: number;
+  morningPacingScore: number;
+  arrivalWarmthScore: number;
+  diningAtmosphereScore: number;
+  germanMarketIndex: number;
+  sentimentTrajectory: 'Improving' | 'Stable' | 'Seasonal Friction' | 'Rising Fatigue';
+  trajectoryDetail: string;
+  livedExperienceNarrative: string;
+  compellingInspectionMandate: string;
+}
+
 export interface HotelPublicProfile {
   name: string;
   location: string;
@@ -40,6 +52,7 @@ export interface HotelPublicProfile {
     title: string;
     description: string;
   }[];
+  guestExperience?: GuestExperienceMetrics;
   provenanceTier?: 'HAND_VERIFIED' | 'LIVE_GROUNDED' | 'SYNTHETIC_REGIONAL';
   provenanceLabel?: string;
   webPresenceStrength?: 'High' | 'Moderate' | 'Limited';
@@ -517,6 +530,41 @@ export function generateContextualAuditProfile(cleanQuery: string): HotelPublicP
     frequentCritiques,
     publicSummary: `${cleanQuery} shows solid public review scores across OTAs, but physical on-site audit calibration highlights clear operational reality gaps in room acoustic allocation, peak morning service pacing, and European catalog compliance.`,
     blindSpots,
+    guestExperience: isApartmentOrSelfCatering
+      ? {
+          acousticRestScore: Math.min(88, 72 + (hash % 14)),
+          morningPacingScore: Math.min(86, 74 + (hash % 12)),
+          arrivalWarmthScore: Math.min(88, 78 + (hash % 10)),
+          diningAtmosphereScore: Math.min(82, 70 + (hash % 12)),
+          germanMarketIndex: Math.min(84, 72 + (hash % 14)),
+          sentimentTrajectory: hash % 3 === 0 ? 'Seasonal Friction' : hash % 3 === 1 ? 'Stable' : 'Rising Fatigue',
+          trajectoryDetail: `24-Month longitudinal review mining highlights strong high-season demand for beachfront self-catering independence, offset by coastal southeaster wind vibration and commuter road acoustics on rear units.`,
+          livedExperienceNarrative: `Guests praise the direct coastal access and panoramic balcony vistas. As a 100% self-catering property, there is no breakfast or on-site restaurant (guests cook in-unit or dine at local spots); reviews reflect noticeable differences in private owner kitchen equipment and periodic traffic hum on rear street-facing units.`,
+          compellingInspectionMandate: `While surface review stars (${publicMetaAvg}%) celebrate beachfront freedom, they mask sectional-title unit differences in kitchen appliances, inverter backup power, and road vs ocean acoustic exposure. A physical unit inspection is essential before European travel catalog contracting.`,
+        }
+      : isWinelands
+      ? {
+          acousticRestScore: Math.min(95, 84 + (hash % 12)),
+          morningPacingScore: Math.min(94, 82 + (hash % 14)),
+          arrivalWarmthScore: Math.min(98, 86 + (hash % 12)),
+          diningAtmosphereScore: Math.min(98, 88 + (hash % 10)),
+          germanMarketIndex: Math.min(94, 80 + (hash % 15)),
+          sentimentTrajectory: 'Stable',
+          trajectoryDetail: `24-Month review mining reflects exceptional estate serenity and world-class wine dining, punctuated by early morning agricultural tractor movement during autumn harvest.`,
+          livedExperienceNarrative: `Guests celebrate the historic Cape Dutch architecture, vineyard tranquility, and farm-to-table cuisine. Over 12–24 months, reviews highlight occasional early dawn tractor activity in harvest season and wedding music decibel curfews.`,
+          compellingInspectionMandate: `While public reviews praise world-class estate dining, an on-site physical audit verifies outlying cottage transfer distances, seasonal harvest noise profiles, and guaranteed resident dinner seating before catalog publication.`,
+        }
+      : {
+          acousticRestScore: Math.min(94, 76 + (hash % 17)),
+          morningPacingScore: Math.min(92, 74 + (hash % 16)),
+          arrivalWarmthScore: Math.min(96, 80 + (hash % 16)),
+          diningAtmosphereScore: Math.min(95, 78 + (hash % 17)),
+          germanMarketIndex: Math.min(92, 73 + (hash % 18)),
+          sentimentTrajectory: hash % 3 === 0 ? 'Seasonal Friction' : hash % 3 === 1 ? 'Stable' : 'Rising Fatigue',
+          trajectoryDetail: `24-Month longitudinal review mining reveals recurring seasonal compression during European travel peak (Nov–Feb), where service pacing drops by ~7% under peak capacity.`,
+          livedExperienceNarrative: `Guests consistently celebrate the property's scenic presence and welcoming demeanor, yet longitudinal reviews reveal recurring friction when morning routines intersect with operational bottlenecks (acoustic bleed through uninsulated corridors, water temperature moderation at 07:45, and service pacing during prime hours).`,
+          compellingInspectionMandate: `While surface review stars aggregate casual tourist contentment, they conceal catalog-critical liabilities. An unannounced on-site physical inspection is required to stress-test contracted room allocations, decibel levels, and peak service pacing before catalog commitment.`,
+        },
     provenanceTier: 'SYNTHETIC_REGIONAL',
     provenanceLabel: 'Regional Synthesis (Offline Fallback)',
     webPresenceStrength: 'Moderate',

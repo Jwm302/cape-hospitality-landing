@@ -3,7 +3,11 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: './', // CRUCIAL: Forces the compiler to use relative assets paths so it never breaks on Netlify
+  base: '/',
+  server: {
+    port: 3000,
+    host: '0.0.0.0',
+  },
   build: {
     outDir: 'dist',
   }
