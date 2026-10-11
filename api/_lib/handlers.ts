@@ -25,7 +25,10 @@ export async function handleSnapshot(query: unknown): Promise<HandlerResult> {
   if (typeof query !== 'string' || query.trim().length < 2 || query.length > 120) {
     return { status: 400, body: { error: 'Please enter a hotel name.' } };
   }
-  if (!placesConfigured()) return ok({ status: 'unavailable' } satisfies SnapshotResponse);
+  if (!placesConfigured()) {
+    console.warn('Place lookup skipped: GOOGLE_PLACES_API_KEY is not set for this deployment');
+    return ok({ status: 'unavailable' } satisfies SnapshotResponse);
+  }
 
   let place: PlaceSnapshot | null;
   try {
@@ -34,7 +37,10 @@ export async function handleSnapshot(query: unknown): Promise<HandlerResult> {
     console.warn('Place lookup failed:', err?.message);
     return ok({ status: 'unavailable' } satisfies SnapshotResponse);
   }
-  if (!place) return ok({ status: 'not_found' } satisfies SnapshotResponse);
+  if (!place) {
+    console.info(`Place lookup: no Google match for "${query.trim()}"`);
+    return ok({ status: 'not_found' } satisfies SnapshotResponse);
+  }
 
   return ok({ status: 'ok', place, reviews: await startReviews(place) } satisfies SnapshotResponse);
 }
