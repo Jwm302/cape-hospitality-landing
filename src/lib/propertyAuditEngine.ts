@@ -267,7 +267,7 @@ export function generateContextualAuditProfile(cleanQuery: string): HotelPublicP
       },
       {
         title: 'Contractual Ocean View vs Partial Glimpse Allocation',
-        description: 'German catalog law (Frankfurt Table) triggers financial refund liabilities if contractual sea view rooms have obstructed angles.',
+        description: 'Guests booked into sea-view rooms with obstructed views are likely to complain and request refunds.',
       },
     ];
     chaDeltaReason = `-${deltaDeduction}% vs Public OTA Avg (${publicMetaAvg}%): Deductions reflecting coastal scenic route acoustic variance, marine salt-mist hardware wear, and catalog ocean-view tiering verification.`;
@@ -448,7 +448,7 @@ export function generateContextualAuditProfile(cleanQuery: string): HotelPublicP
         description: 'Boutique properties often lack 24/7 on-site management, creating service delays for late flight disruptions or maintenance emergencies.',
       },
       {
-        title: 'Residential Water Pressure Calibration',
+        title: 'Residential Water Pressure Check',
         description: 'Simultaneous morning showering in multiple boutique suites can temporarily exhaust residential booster pump capacity.',
       },
       {
@@ -489,7 +489,7 @@ export function generateContextualAuditProfile(cleanQuery: string): HotelPublicP
       },
       {
         title: 'Catalog Contract Room Category Allocation',
-        description: 'Tour operators face defect liability if clients booked on deluxe terms are placed in standard entry-level room footprints.',
+        description: 'Guests booked on deluxe terms but placed in standard entry-level rooms are a common source of complaints and refund requests.',
       },
     ];
     chaDeltaReason = `-${deltaDeduction}% vs Public OTA Avg (${publicMetaAvg}%): Operational deductions reflecting elevator core acoustic variance, HVAC summer temperature recovery, and catalog contractual room allocation compliance.`;
@@ -528,7 +528,7 @@ export function generateContextualAuditProfile(cleanQuery: string): HotelPublicP
     europeanShare: Math.min(65, 32 + (hash % 28)),
     frequentPraise,
     frequentCritiques,
-    publicSummary: `${cleanQuery} shows solid public review scores across OTAs, but physical on-site audit calibration highlights clear operational reality gaps in room acoustic allocation, peak morning service pacing, and European catalog compliance.`,
+    publicSummary: `${cleanQuery} shows solid public review scores across OTAs, but an on-site check is needed to confirm clear operational reality gaps in room acoustic allocation, peak morning service pacing, and European catalog compliance.`,
     blindSpots,
     guestExperience: isApartmentOrSelfCatering
       ? {
@@ -563,7 +563,7 @@ export function generateContextualAuditProfile(cleanQuery: string): HotelPublicP
           sentimentTrajectory: hash % 3 === 0 ? 'Seasonal Friction' : hash % 3 === 1 ? 'Stable' : 'Rising Fatigue',
           trajectoryDetail: `24-Month longitudinal review mining reveals recurring seasonal compression during European travel peak (Nov–Feb), where service pacing drops by ~7% under peak capacity.`,
           livedExperienceNarrative: `Guests consistently celebrate the property's scenic presence and welcoming demeanor, yet longitudinal reviews reveal recurring friction when morning routines intersect with operational bottlenecks (acoustic bleed through uninsulated corridors, water temperature moderation at 07:45, and service pacing during prime hours).`,
-          compellingInspectionMandate: `While surface review stars aggregate casual tourist contentment, they conceal catalog-critical liabilities. An unannounced on-site physical inspection is required to stress-test contracted room allocations, decibel levels, and peak service pacing before catalog commitment.`,
+          compellingInspectionMandate: `While surface review stars aggregate casual tourist contentment, they can hide issues that matter for your catalog. An unannounced on-site physical inspection is required to stress-test contracted room allocations, noise levels, and peak service pacing before catalog commitment.`,
         },
     provenanceTier: 'SYNTHETIC_REGIONAL',
     provenanceLabel: 'Regional Synthesis (Offline Fallback)',

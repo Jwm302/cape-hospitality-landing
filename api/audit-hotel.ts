@@ -36,6 +36,10 @@ ACCURACY & AGGREGATION DIRECTIVES (CRITICAL):
    - DO NOT repeat generic boilerplate critiques like "breakfast queue", "elevator wait times", or "substantial rate premiums required".
    - Extract the TRUE, HIGHLY SPECIFIC friction points from real guest reviews for this exact property.
 
+6. NO LEGAL OR TECHNICAL CLAIMS:
+   - Do NOT cite laws, the Frankfurt Table / Frankfurter Tabelle, the EU Package Travel Directive, refund percentages, or legal liability.
+   - Describe risks in plain terms: likely guest complaints, refund requests, and catalog accuracy. Do not present findings as technical or certified measurements.
+
 Output ONLY a raw valid JSON object without markdown code blocks, following this exact schema:
 {
   "name": "Exact Official Property Name",

@@ -73,6 +73,10 @@ ACCURACY & AGGREGATION DIRECTIVES (CRITICAL):
      * Morning routine pacing must describe en-suite shower pressure, hot water recovery, and key lockbox departure routines, NOT breakfast.
      * Lived experience narrative MUST explicitly state the self-catering format (no hotel dining/breakfast provided).
 
+7. NO LEGAL OR TECHNICAL CLAIMS:
+   - Do NOT cite laws, the Frankfurt Table / Frankfurter Tabelle, the EU Package Travel Directive, refund percentages, or legal liability.
+   - Describe risks in plain terms: likely guest complaints, refund requests, and catalog accuracy. Do not present findings as technical or certified measurements.
+
 Output ONLY a raw valid JSON object without markdown code blocks, following this exact schema:
 {
   "name": "Exact Official Property Name",
