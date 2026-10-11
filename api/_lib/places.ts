@@ -11,6 +11,7 @@ const FIELD_MASK = [
   'places.userRatingCount',
   'places.googleMapsUri',
   'places.primaryTypeDisplayName',
+  'places.types',
 ].join(',');
 
 // Bias results towards the Western Cape (Cape Town to the Garden Route).
@@ -37,8 +38,9 @@ const tokens = (text: string) =>
 
 // Google's first result is sometimes a single unit (e.g. one apartment in a
 // complex) with no rating. Prefer the result whose name matches the search
-// best, then the one with the most reviews, then Google's own order.
-export function rankPlaces(query: string, places: PlaceSnapshot[]): PlaceSnapshot[] {
+// best, then accommodation over other place types, then the one with the most
+// reviews, then Google's own order.
+export function rankPlaces(query: string, places: (PlaceSnapshot & { lodging?: boolean })[]): PlaceSnapshot[] {
   const wanted = tokens(query);
   const score = (p: PlaceSnapshot) => {
     if (!wanted.length) return 1;
@@ -46,9 +48,9 @@ export function rankPlaces(query: string, places: PlaceSnapshot[]): PlaceSnapsho
     return wanted.filter((t) => name.includes(t)).length / wanted.length;
   };
   return places
-    .map((p, index) => ({ p, index, match: score(p), reviews: p.ratingCount ?? 0 }))
-    .sort((a, b) => b.match - a.match || b.reviews - a.reviews || a.index - b.index)
-    .map((x) => x.p);
+    .map((p, index) => ({ p, index, match: score(p), lodging: p.lodging ? 1 : 0, reviews: p.ratingCount ?? 0 }))
+    .sort((a, b) => b.match - a.match || b.lodging - a.lodging || b.reviews - a.reviews || a.index - b.index)
+    .map(({ p: { lodging, ...place } }) => place);
 }
 
 export async function findPlaces(query: string): Promise<PlaceSnapshot[]> {
@@ -61,7 +63,6 @@ export async function findPlaces(query: string): Promise<PlaceSnapshot[]> {
     },
     body: JSON.stringify({
       textQuery: query,
-      includedType: 'lodging',
       regionCode: 'ZA',
       languageCode: 'en',
       locationBias: WESTERN_CAPE,
@@ -74,7 +75,7 @@ export async function findPlaces(query: string): Promise<PlaceSnapshot[]> {
   }
 
   const data = await res.json();
-  const places: PlaceSnapshot[] = (data.places ?? [])
+  const places = (data.places ?? [])
     .filter((p: any) => p?.id)
     .map((p: any) => ({
       placeId: p.id,
@@ -84,6 +85,12 @@ export async function findPlaces(query: string): Promise<PlaceSnapshot[]> {
       rating: typeof p.rating === 'number' ? p.rating : undefined,
       ratingCount: typeof p.userRatingCount === 'number' ? p.userRatingCount : undefined,
       mapsUrl: p.googleMapsUri,
+      lodging: Array.isArray(p.types) && p.types.includes('lodging'),
     }));
-  return rankPlaces(query, places);
+  const ranked = rankPlaces(query, places);
+  console.info(
+    `Place lookup "${query}": ${ranked.length} result(s): ` +
+      ranked.map((p) => `${p.name} [${p.rating ?? '-'}★/${p.ratingCount ?? 0}]`).join(' | '),
+  );
+  return ranked;
 }
