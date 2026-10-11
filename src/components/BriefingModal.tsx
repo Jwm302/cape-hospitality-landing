@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { SERVICE_TIERS } from '../data/landingData';
+import { SERVICE_TIERS, getServiceTier } from '../data/landingData';
+import { CONTACT_EMAIL, sendInquiry, mailtoLink } from '../lib/sendInquiry';
 import { X, Calendar, Clock, CheckCircle2, Shield, ArrowRight, Building, Mail, User, ChevronRight } from 'lucide-react';
 
 interface BriefingModalProps {
@@ -14,12 +15,15 @@ export const BriefingModal: React.FC<BriefingModalProps> = ({
   selectedTier,
 }) => {
   const [step, setStep] = useState<'form' | 'success'>('form');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [fallbackHref, setFallbackHref] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     company: '',
     email: '',
     tier: selectedTier || 'PHYSICAL_AUDIT',
-    date: 'Tomorrow at 14:00 CET',
+    date: '',
     focusRegion: 'Cape Town & Peninsula Luxury Assets',
     notes: '',
   });
@@ -32,9 +36,31 @@ export const BriefingModal: React.FC<BriefingModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStep('success');
+    setErrorMsg('');
+    setFallbackHref('');
+    setIsSubmitting(true);
+
+    const subject = `Briefing request — ${formData.company}`;
+    const fields = {
+      Name: formData.name,
+      Company: formData.company,
+      Email: formData.email,
+      Service: getServiceTier(formData.tier).title,
+      Region: formData.focusRegion,
+      'Preferred times': formData.date,
+    };
+
+    try {
+      await sendInquiry(subject, fields, formData.email);
+      setStep('success');
+    } catch {
+      setErrorMsg(`Your request could not be sent. Please email us directly at ${CONTACT_EMAIL}.`);
+      setFallbackHref(mailtoLink(subject, fields));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -158,26 +184,38 @@ export const BriefingModal: React.FC<BriefingModalProps> = ({
 
               <div className="space-y-1.5 text-left">
                 <label className="block font-bold uppercase tracking-wider text-zinc-700 text-[11px] font-mono">
-                  Preferred Time Window
+                  Preferred Days & Times (CET)
                 </label>
-                <select
+                <input
+                  type="text"
+                  placeholder="e.g. Tue or Thu afternoon"
                   value={formData.date}
                   onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  className="w-full px-3.5 py-3 rounded-xl bg-zinc-50 border border-zinc-200 text-sm text-zinc-900 focus:outline-none focus:border-[#162544] transition-all"
-                >
-                  <option value="Tomorrow at 10:00 CET">Tomorrow at 10:00 CET (Munich / Zurich / Frankfurt)</option>
-                  <option value="Tomorrow at 14:00 CET">Tomorrow at 14:00 CET (Munich / Zurich / Frankfurt)</option>
-                  <option value="Thursday at 11:00 CET">Thursday at 11:00 CET</option>
-                  <option value="Next Week Monday 15:00 CET">Next Week Monday 15:00 CET</option>
-                </select>
+                  className="w-full px-3.5 py-3 rounded-xl bg-zinc-50 border border-zinc-200 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-[#162544] focus:bg-white transition-all"
+                />
               </div>
+
+              {errorMsg && (
+                <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium">
+                  {errorMsg}
+                  {fallbackHref && (
+                    <>
+                      {' '}
+                      <a href={fallbackHref} className="underline font-semibold">
+                        Open a pre-filled email
+                      </a>
+                    </>
+                  )}
+                </div>
+              )}
 
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full py-3.5 px-6 rounded-full bg-[#162544] text-white font-bold tracking-wide hover:bg-[#1f3460] transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-xs shadow-sm active:scale-[0.99]"
+                  disabled={isSubmitting}
+                  className="w-full disabled:opacity-50 py-3.5 px-6 rounded-full bg-[#162544] text-white font-bold tracking-wide hover:bg-[#1f3460] transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-xs shadow-sm active:scale-[0.99]"
                 >
-                  <span>Confirm Confidential Briefing</span>
+                  <span>{isSubmitting ? 'Sending...' : 'Request Briefing'}</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -187,9 +225,9 @@ export const BriefingModal: React.FC<BriefingModalProps> = ({
               <div className="w-12 h-12 rounded-full bg-emerald-100 border border-emerald-200 text-emerald-700 flex items-center justify-center mx-auto shadow-xs">
                 <CheckCircle2 className="w-6 h-6" />
               </div>
-              <h3 className="font-sans text-xl font-extrabold text-[#162544]">Briefing Confirmed</h3>
+              <h3 className="font-sans text-xl font-extrabold text-[#162544]">Request Received</h3>
               <p className="text-xs text-zinc-600 leading-relaxed max-w-sm mx-auto">
-                We have registered your briefing for <strong className="text-zinc-900">{formData.date}</strong>. A calendar invitation and bilateral NDA confirmation have been sent to <span className="font-mono text-emerald-700 font-bold">{formData.email}</span>.
+                Thank you. We will email <span className="font-mono text-emerald-700 font-bold">{formData.email}</span> to confirm a time for your 20-minute briefing.
               </p>
               <div className="pt-3 flex justify-center gap-3">
                 <button

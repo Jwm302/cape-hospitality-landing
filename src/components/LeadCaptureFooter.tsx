@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { LeadFormData } from '../types';
 import { SERVICE_TIERS, getServiceTier } from '../data/landingData';
+import { CONTACT_EMAIL, sendInquiry, mailtoLink } from '../lib/sendInquiry';
 
 interface LeadCaptureFooterProps {
   onScheduleBriefing: () => void;
@@ -47,8 +48,9 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [fallbackHref, setFallbackHref] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.company.trim() || !formData.corporateEmail.trim()) {
       setErrorMsg('Please complete all required fields.');
@@ -61,12 +63,28 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
     }
 
     setErrorMsg('');
+    setFallbackHref('');
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      setIsSubmitting(false);
+    const serviceTitle = getServiceTier(formData.selectedTier || '').title;
+    const subject = `Website inquiry: ${serviceTitle} — ${formData.company}`;
+    const fields = {
+      Name: formData.name,
+      Company: formData.company,
+      Email: formData.corporateEmail,
+      Service: serviceTitle,
+      'Property or destination': formData.location,
+    };
+
+    try {
+      await sendInquiry(subject, fields, formData.corporateEmail);
       setIsSubmitted(true);
-    }, 450);
+    } catch {
+      setErrorMsg(`Your inquiry could not be sent. Please email us directly at ${CONTACT_EMAIL}.`);
+      setFallbackHref(mailtoLink(subject, fields));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -121,6 +139,14 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
               {errorMsg && (
                 <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium">
                   {errorMsg}
+                  {fallbackHref && (
+                    <>
+                      {' '}
+                      <a href={fallbackHref} className="underline font-semibold">
+                        Open a pre-filled email
+                      </a>
+                    </>
+                  )}
                 </div>
               )}
 
@@ -259,7 +285,7 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
             <span className="hidden sm:inline text-zinc-300">|</span>
             <span>Cape Town & Garden Route, South Africa</span>
             <span className="hidden sm:inline text-zinc-300">|</span>
-            <span className="font-mono text-[#b38a54]">advisory@capehospitalityadvisors.com</span>
+            <a href={`mailto:${CONTACT_EMAIL}`} className="font-mono text-[#b38a54] hover:underline">{CONTACT_EMAIL}</a>
           </div>
           <p>© {new Date().getFullYear()} Cape Hospitality Advisors. All rights reserved.</p>
         </div>
