@@ -1,6 +1,6 @@
 import { analyzeReviews } from './analysis.js';
 import { cacheConfigured, cacheGet, cacheSet, countToday } from './cache.js';
-import { findPlace, placesConfigured } from './places.js';
+import { findPlaces, placesConfigured } from './places.js';
 import { getReviewSource } from './reviews/index.js';
 import { PlaceSnapshot, ReviewAnalysis, ReviewsState, SnapshotResponse } from './types.js';
 
@@ -30,19 +30,25 @@ export async function handleSnapshot(query: unknown): Promise<HandlerResult> {
     return ok({ status: 'unavailable' } satisfies SnapshotResponse);
   }
 
-  let place: PlaceSnapshot | null;
+  let places: PlaceSnapshot[];
   try {
-    place = await findPlace(query.trim());
+    places = await findPlaces(query.trim());
   } catch (err: any) {
     console.warn('Place lookup failed:', err?.message);
     return ok({ status: 'unavailable' } satisfies SnapshotResponse);
   }
+  const [place, ...others] = places;
   if (!place) {
     console.info(`Place lookup: no Google match for "${query.trim()}"`);
     return ok({ status: 'not_found' } satisfies SnapshotResponse);
   }
 
-  return ok({ status: 'ok', place, reviews: await startReviews(place) } satisfies SnapshotResponse);
+  return ok({
+    status: 'ok',
+    place,
+    alternatives: others.slice(0, 4),
+    reviews: await startReviews(place),
+  } satisfies SnapshotResponse);
 }
 
 async function startReviews(place: PlaceSnapshot): Promise<ReviewsState> {

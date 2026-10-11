@@ -25,7 +25,33 @@ export function placesConfigured(): boolean {
   return Boolean(process.env.GOOGLE_PLACES_API_KEY);
 }
 
-export async function findPlace(query: string): Promise<PlaceSnapshot | null> {
+// Words that say nothing about which property is meant.
+const GENERIC = new Set(['the', 'and', 'hotel', 'cape', 'town', 'south', 'africa']);
+
+const tokens = (text: string) =>
+  text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .split(' ')
+    .filter((t) => t.length >= 3 && !GENERIC.has(t));
+
+// Google's first result is sometimes a single unit (e.g. one apartment in a
+// complex) with no rating. Prefer the result whose name matches the search
+// best, then the one with the most reviews, then Google's own order.
+export function rankPlaces(query: string, places: PlaceSnapshot[]): PlaceSnapshot[] {
+  const wanted = tokens(query);
+  const score = (p: PlaceSnapshot) => {
+    if (!wanted.length) return 1;
+    const name = p.name.toLowerCase();
+    return wanted.filter((t) => name.includes(t)).length / wanted.length;
+  };
+  return places
+    .map((p, index) => ({ p, index, match: score(p), reviews: p.ratingCount ?? 0 }))
+    .sort((a, b) => b.match - a.match || b.reviews - a.reviews || a.index - b.index)
+    .map((x) => x.p);
+}
+
+export async function findPlaces(query: string): Promise<PlaceSnapshot[]> {
   const res = await fetch(ENDPOINT, {
     method: 'POST',
     headers: {
@@ -39,7 +65,7 @@ export async function findPlace(query: string): Promise<PlaceSnapshot | null> {
       regionCode: 'ZA',
       languageCode: 'en',
       locationBias: WESTERN_CAPE,
-      pageSize: 1,
+      pageSize: 5,
     }),
   });
 
@@ -48,16 +74,16 @@ export async function findPlace(query: string): Promise<PlaceSnapshot | null> {
   }
 
   const data = await res.json();
-  const p = data.places?.[0];
-  if (!p?.id) return null;
-
-  return {
-    placeId: p.id,
-    name: p.displayName?.text ?? query,
-    address: p.formattedAddress ?? '',
-    type: p.primaryTypeDisplayName?.text,
-    rating: typeof p.rating === 'number' ? p.rating : undefined,
-    ratingCount: typeof p.userRatingCount === 'number' ? p.userRatingCount : undefined,
-    mapsUrl: p.googleMapsUri,
-  };
+  const places: PlaceSnapshot[] = (data.places ?? [])
+    .filter((p: any) => p?.id)
+    .map((p: any) => ({
+      placeId: p.id,
+      name: p.displayName?.text ?? query,
+      address: p.formattedAddress ?? '',
+      type: p.primaryTypeDisplayName?.text,
+      rating: typeof p.rating === 'number' ? p.rating : undefined,
+      ratingCount: typeof p.userRatingCount === 'number' ? p.userRatingCount : undefined,
+      mapsUrl: p.googleMapsUri,
+    }));
+  return rankPlaces(query, places);
 }

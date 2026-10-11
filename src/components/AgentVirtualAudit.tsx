@@ -79,14 +79,18 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
     if (searchId.current === id) setReviews({ status: 'error' });
   };
 
-  const handleSearch = async (e: React.FormEvent) => {
+  const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    const query = searchInput.trim();
+    runSearch(searchInput.trim());
+  };
+
+  const runSearch = async (query: string) => {
     if (query.length < 2) {
       setInputError('Please enter a hotel name.');
       return;
     }
     const id = ++searchId.current;
+    setSearchInput(query);
     setInputError('');
     setSubmittedQuery(query);
     setIsLoading(true);
@@ -224,6 +228,12 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
           {!isLoading && result?.status === 'ok' && (
             <div className="rounded-2xl bg-[#0c182a] border border-white/15 shadow-2xl p-6 sm:p-8 text-left space-y-6">
               <PlaceHeader place={result.place} />
+              {result.alternatives && result.alternatives.length > 0 && (
+                <Alternatives
+                  places={result.alternatives}
+                  onPick={(p) => runSearch(`${p.name}, ${p.address}`.slice(0, 120))}
+                />
+              )}
               <ReviewsPanel state={reviews} overallRating={result.place.rating} />
               <BriefCta
                 name={result.place.name}
@@ -312,6 +322,33 @@ const PlaceHeader: React.FC<{ place: PlaceSnapshot }> = ({ place }) => (
         <div className="text-xs text-zinc-300">No Google rating yet</div>
       )}
       <div className="text-[10px] font-mono text-zinc-500 mt-2">Source: Google Maps</div>
+    </div>
+  </div>
+);
+
+const Alternatives: React.FC<{ places: PlaceSnapshot[]; onPick: (p: PlaceSnapshot) => void }> = ({
+  places,
+  onPick,
+}) => (
+  <div className="-mt-2">
+    <p className="text-[11px] text-zinc-400 mb-2">Not the right place? Other matches on Google:</p>
+    <div className="flex flex-wrap gap-2">
+      {places.map((p) => (
+        <button
+          key={p.placeId}
+          type="button"
+          onClick={() => onPick(p)}
+          className="text-left text-[11px] px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-zinc-200 hover:bg-white/10 hover:text-white cursor-pointer max-w-full"
+        >
+          <span className="font-semibold">{p.name}</span>
+          {typeof p.rating === 'number' && (
+            <span className="text-zinc-400">
+              {' '}
+              · {p.rating.toFixed(1)}★{p.ratingCount ? ` (${formatCount(p.ratingCount)})` : ''}
+            </span>
+          )}
+        </button>
+      ))}
     </div>
   </div>
 );

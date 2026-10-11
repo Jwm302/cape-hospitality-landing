@@ -66,6 +66,6 @@ export type ReviewsState =
   | { status: 'error' };
 
 export type SnapshotResponse =
-  | { status: 'ok'; place: PlaceSnapshot; reviews: ReviewsState }
+  | { status: 'ok'; place: PlaceSnapshot; alternatives?: PlaceSnapshot[]; reviews: ReviewsState }
   | { status: 'not_found' }
   | { status: 'unavailable' };
