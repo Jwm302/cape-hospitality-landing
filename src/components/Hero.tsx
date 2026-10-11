@@ -71,7 +71,7 @@ export const Hero: React.FC<HeroProps> = ({
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 text-xs sm:text-sm font-bold rounded-full bg-[#10213a] text-white hover:bg-[#1a335a] active:scale-[0.98] transition-all shadow-md shadow-zinc-300/80 cursor-pointer"
           >
             <Sparkles className="w-4 h-4 text-[#d9bd8b]" />
-            <span>Request Free 24h Virtual Audit</span>
+            <span>Request Free Virtual Audit</span>
             <ArrowRight className="w-4 h-4" />
           </button>
 
@@ -81,7 +81,7 @@ export const Hero: React.FC<HeroProps> = ({
             id="hero-secondary-cta"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 text-xs sm:text-sm font-semibold rounded-full border border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-50 active:scale-[0.98] transition-all shadow-xs cursor-pointer"
           >
-            <span>Explore Live Demo & Case Study</span>
+            <span>Try the Live Demo</span>
             <ChevronRight className="w-4 h-4 text-zinc-400" />
           </button>
         </div>
@@ -93,8 +93,8 @@ export const Hero: React.FC<HeroProps> = ({
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold text-[#10213a]">Current Reality, Not Static Plaques</div>
-              <div className="text-[11px] text-zinc-500 leading-snug mt-0.5">What guests experience today, not when the star plaque was issued.</div>
+              <div className="text-xs font-bold text-[#10213a]">Today’s Reality, Not Old Star Ratings</div>
+              <div className="text-[11px] text-zinc-500 leading-snug mt-0.5">What guests experience now, not when the rating was issued.</div>
             </div>
           </div>
 
@@ -104,7 +104,7 @@ export const Hero: React.FC<HeroProps> = ({
             </div>
             <div>
               <div className="text-xs font-bold text-[#10213a]">German Travel Company Lens</div>
-              <div className="text-[11px] text-zinc-500 leading-snug mt-0.5">Evaluated against European standards: acoustics, hygiene, punctuality & service.</div>
+              <div className="text-[11px] text-zinc-500 leading-snug mt-0.5">Judged on what European guests notice: noise, hygiene, punctuality, service.</div>
             </div>
           </div>
 
@@ -113,8 +113,8 @@ export const Hero: React.FC<HeroProps> = ({
               <CheckCircle2 className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold text-[#10213a]">We Observe, We Assess Risk, We Recommend</div>
-              <div className="text-[11px] text-zinc-500 leading-snug mt-0.5">Actionable advisory to protect your brand before client complaints occur.</div>
+              <div className="text-xs font-bold text-[#10213a]">On the Ground, Reports in 48h</div>
+              <div className="text-[11px] text-zinc-500 leading-snug mt-0.5">Inspectors based in the Western Cape, from Cape Town to the Garden Route.</div>
             </div>
           </div>
         </div>

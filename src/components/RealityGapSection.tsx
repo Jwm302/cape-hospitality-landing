@@ -19,16 +19,16 @@ export const RealityGapSection: React.FC<RealityGapSectionProps> = ({
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-200 bg-zinc-50 text-xs font-semibold text-zinc-700 shadow-xs mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-[#b38a54]" />
             <span className="tracking-wider uppercase font-mono text-[11px]">
-              OUR 3-STEP AUDIT METHODOLOGY
+              HOW WE WORK
             </span>
           </div>
 
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#10213a] tracking-tight font-serif">
-            How We Protect Your Bookings & Catalog Reputation
+            What Your Guest Will Actually Find
           </h2>
 
           <p className="mt-3 text-sm sm:text-base text-zinc-600 font-normal leading-relaxed">
-            Official star grading committees award ratings every few years based on structural checklists. We answer the question that protects your business: <em>What will your client actually encounter tomorrow morning?</em>
+            Star ratings are awarded every few years from structural checklists. We answer a more useful question: <em>what will your client find tomorrow morning?</em>
           </p>
         </div>
 
@@ -47,11 +47,11 @@ export const RealityGapSection: React.FC<RealityGapSectionProps> = ({
                 We Observe
               </h3>
               <p className="text-xs text-zinc-600 leading-relaxed font-normal">
-                Unvarnished ground reality: arrival queue pacing, luggage handover, bathroom cleanliness, night acoustic isolation, and morning shower stability. No polite corporate filters.
+                Check-in queues, luggage handover, bathroom cleanliness, night-time noise and morning hot water, recorded as they happen.
               </p>
             </div>
             <div className="pt-4 mt-5 border-t border-zinc-200/60 text-[11px] font-mono text-zinc-400">
-              ✓ 100% Conflict-free inspection
+              ✓ Independent of the hotel
             </div>
           </div>
 
@@ -68,11 +68,11 @@ export const RealityGapSection: React.FC<RealityGapSectionProps> = ({
                 We Assess Risk
               </h3>
               <p className="text-xs text-zinc-600 leading-relaxed font-normal">
-                We evaluate where hotel reality contradicts your catalog promise. Crucially, our timestamped data also defends you against bad actors fabricating claims for post-trip refunds.
+                We compare what we found with what your catalog promises, and rate the risk of complaints and refund claims.
               </p>
             </div>
             <div className="pt-4 mt-5 border-t border-zinc-200/60 text-[11px] font-mono text-amber-700/80 font-medium">
-              ✓ Two-Way Shield & false claim defense
+              ✓ Catalog risk, clearly rated
             </div>
           </div>
 
@@ -89,11 +89,11 @@ export const RealityGapSection: React.FC<RealityGapSectionProps> = ({
                 We Recommend
               </h3>
               <p className="text-xs text-zinc-600 leading-relaxed font-normal">
-                Actionable solutions: specific quiet room wings to mandate, management negotiation points, or itinerary adjustments to safeguard your clients' experience.
+                Practical fixes: which room wing to insist on, what to raise with management, or when to change the itinerary.
               </p>
             </div>
             <div className="pt-4 mt-5 border-t border-zinc-200/60 text-[11px] font-mono text-zinc-400">
-              ✓ Actionable procurement clarity
+              ✓ Clear next steps for procurement
             </div>
           </div>
         </div>

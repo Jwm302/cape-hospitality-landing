@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
+import { SERVICE_TIERS } from '../data/landingData';
 import { X, Calendar, Clock, CheckCircle2, Shield, ArrowRight, Building, Mail, User, ChevronRight } from 'lucide-react';
 
 interface BriefingModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onRequestSampleReport: () => void;
   selectedTier?: string;
 }
 
 export const BriefingModal: React.FC<BriefingModalProps> = ({
   isOpen,
   onClose,
-  onRequestSampleReport,
   selectedTier,
 }) => {
   const [step, setStep] = useState<'form' | 'success'>('form');
@@ -19,7 +18,7 @@ export const BriefingModal: React.FC<BriefingModalProps> = ({
     name: '',
     company: '',
     email: '',
-    tier: selectedTier || 'PROFESSIONAL',
+    tier: selectedTier || 'PHYSICAL_AUDIT',
     date: 'Tomorrow at 14:00 CET',
     focusRegion: 'Cape Town & Peninsula Luxury Assets',
     notes: '',
@@ -125,17 +124,18 @@ export const BriefingModal: React.FC<BriefingModalProps> = ({
 
               <div className="space-y-1.5 text-left">
                 <label className="block font-bold uppercase tracking-wider text-zinc-700 text-[11px] font-mono">
-                  Target Service Tier
+                  Service of Interest
                 </label>
                 <select
                   value={formData.tier}
                   onChange={(e) => setFormData({ ...formData, tier: e.target.value })}
                   className="w-full px-3.5 py-3 rounded-xl bg-zinc-50 border border-zinc-200 text-sm text-zinc-900 focus:outline-none focus:border-[#162544] transition-all font-medium"
                 >
-                  <option value="ESSENTIAL">01 — Essential Hotel Check</option>
-                  <option value="PROFESSIONAL">02 — Professional Hotel Audit (⭐ Most Popular)</option>
-                  <option value="PREMIUM">03 — Premium Deep-Dive Audit</option>
-                  <option value="PARTNERSHIP">04 — Quality Monitoring Partnership</option>
+                  {SERVICE_TIERS.map((t) => (
+                    <option key={t.key} value={t.key}>
+                      {t.tierNumber} — {t.shortLabel}
+                    </option>
+                  ))}
                 </select>
               </div>
 
