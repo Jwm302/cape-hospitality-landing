@@ -1,4 +1,4 @@
-import { PlaceSnapshot, Review, ReviewJob, ReviewSource } from '../types';
+import { PlaceSnapshot, Review, ReviewJob, ReviewSource } from '../types.js';
 
 // DataForSEO Google Reviews API (task-based: post a task, then poll for it).
 const BASE = 'https://api.dataforseo.com/v3/business_data/google/reviews';

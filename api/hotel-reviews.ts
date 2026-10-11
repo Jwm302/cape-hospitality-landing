@@ -1,4 +1,4 @@
-import { handleReviewPoll } from './_lib/handlers';
+import { handleReviewPoll } from './_lib/handlers.js';
 
 // Grouping 100 reviews into themes can take a few seconds.
 export const maxDuration = 60;

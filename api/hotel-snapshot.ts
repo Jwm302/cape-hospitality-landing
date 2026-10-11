@@ -1,4 +1,4 @@
-import { handleSnapshot } from './_lib/handlers';
+import { handleSnapshot } from './_lib/handlers.js';
 
 // POST { query } -> live Google snapshot of a hotel, and the state of the
 // recent-review analysis (ready, pending with a job id, or disabled).
