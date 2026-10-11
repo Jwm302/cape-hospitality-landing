@@ -1170,30 +1170,30 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#d9bd8b]/30 bg-white/5 text-xs font-semibold text-[#d9bd8b] shadow-xs mb-3">
             <Eye className="w-3.5 h-3.5 text-[#d9bd8b]" />
             <span className="tracking-widest uppercase font-mono text-[11px]">
-              STAGE 01 • DESK RADAR & GUEST PERSPECTIVE ENGINE
+              STAGE 01 • FREE VIRTUAL AUDIT — LIVE DEMO
             </span>
           </div>
 
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight font-serif leading-tight">
-            Multi-Platform Review Radar & Quality Index
+            See What Guests Really Say About Any Hotel
           </h2>
 
           <p className="mt-3 text-sm sm:text-base text-zinc-300 font-light leading-relaxed max-w-2xl mx-auto">
-            Public stars only skim the surface. We decode thousands of historical guest reviews across 8 platforms to capture the <strong className="text-white font-medium">aggregated lived feeling of guests over time</strong>—revealing acoustic stress, morning friction, and catalog contract vulnerabilities before your clients arrive.
+            Type a hotel name. We combine guest reviews from 8 platforms into one <strong className="text-white font-medium">CHA Quality Index™</strong> and show where the public score hides risk for your guests.
           </p>
 
           {/* 3-Step Decision Flow Pill */}
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[11px] font-mono text-zinc-300">
             <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[#d9bd8b]">
-              1️⃣ Surface Virtual Audit
-            </span>
-            <span className="text-zinc-500">→</span>
-            <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-cyan-300">
-              2️⃣ Full Deeper-Dive Data Report
+              01 Free Virtual Audit
             </span>
             <span className="text-zinc-500">→</span>
             <span className="px-2.5 py-1 rounded-md bg-[#b38a54]/20 border border-[#b38a54]/40 text-amber-300 font-bold">
-              3️⃣ Data-Informed Physical Inspection
+              02 On-Site Mystery Audit
+            </span>
+            <span className="text-zinc-500">→</span>
+            <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-zinc-300">
+              03 Portfolio Partnership
             </span>
           </div>
         </div>
@@ -1824,67 +1824,6 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
               </div>
             </div>
 
-            {/* THE STRATEGIC COMPARISON: WHY SURFACE DATA COMPELS PHYSICAL INSPECTION */}
-            <div className="py-4 border-t border-white/10">
-              <div className="text-center max-w-2xl mx-auto mb-4">
-                <div className="text-xs font-mono font-bold uppercase tracking-wider text-[#d9bd8b] mb-1">
-                  CRITICAL TRAVEL COMPANY MANDATE
-                </div>
-                <h4 className="text-lg sm:text-xl font-bold font-serif text-white">
-                  Why This Surface-Level Virtual Audit Compels You to Go Deeper
-                </h4>
-                <p className="text-xs text-zinc-300 font-light mt-1">
-                  Desk screening flags emotional friction, but contracting on review scores alone creates dangerous legal exposure under European travel laws.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch text-left">
-                {/* Left: What Surface Data Reveals */}
-                <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-3">
-                  <div className="flex items-center gap-2 text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider">
-                    <Search className="w-4 h-4 text-cyan-400" />
-                    <span>🔍 What Surface-Level Virtual Audit Reveals (Desk-Level)</span>
-                  </div>
-                  <ul className="space-y-2 text-xs text-zinc-300 font-light">
-                    <li className="flex items-start gap-2">
-                      <Check className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
-                      <span><strong>Aggregated Guest Sentiment:</strong> Identifies long-term emotional satisfaction trends and recurring complaint clusters.</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
-                      <span><strong>8-Platform Consensus:</strong> Normalizes ratings across Booking, HolidayCheck, TripAdvisor, Google, and German catalog benchmarks.</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
-                      <span><strong>Fast Risk Screening:</strong> Flags high-probability operational friction hotspots before spending time on negotiations.</span>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Right: What Surface Data Conceals */}
-                <div className="p-4 sm:p-5 rounded-2xl bg-rose-500/[0.04] border border-rose-500/25 space-y-3">
-                  <div className="flex items-center gap-2 text-xs font-mono font-bold text-rose-300 uppercase tracking-wider">
-                    <AlertTriangle className="w-4 h-4 text-rose-400" />
-                    <span>⚠️ What Surface Data Conceals (The Critical Ground Unknowns)</span>
-                  </div>
-                  <ul className="space-y-2 text-xs text-zinc-300 font-light">
-                    <li className="flex items-start gap-2">
-                      <span className="text-rose-400 font-bold shrink-0 mt-0.5">✕</span>
-                      <span><strong>Zero Legal Weight in Court:</strong> Public online reviews have NO evidentiary standing under the <em>Frankfurt Table</em> or EU Package Travel Directive (15%–25% refund liability).</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-rose-400 font-bold shrink-0 mt-0.5">✕</span>
-                      <span><strong>Specific Room Wing Blind Spots:</strong> Reviews cannot tell you whether noise or water pressure deficits affect <em>your</em> contracted room allocation or other wings.</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-rose-400 font-bold shrink-0 mt-0.5">✕</span>
-                      <span><strong>Unannounced Operational Drop-Off:</strong> Surface averages mask temporary drops under high tour capacity surges or maintenance shifts.</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
             {/* 3 Operational Blind Spots For This Specific Property */}
             <div className="p-5 rounded-2xl bg-amber-500/[0.04] border border-amber-500/25 space-y-3 text-left">
               <div className="flex items-center justify-between">
@@ -1912,143 +1851,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
               </div>
             </div>
 
-            {/* THE 3-TIER QUALITY ASSURANCE LADDER: HOW WE SHIELD GERMAN CONTRACTING */}
-            <div className="py-5 border-t border-white/10">
-              <div className="text-center max-w-3xl mx-auto mb-5">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#d9bd8b]/15 border border-[#d9bd8b]/40 text-[#d9bd8b] text-[10px] font-mono font-bold uppercase tracking-wider mb-2">
-                  <Scale className="w-3.5 h-3.5" />
-                  <span>DACH Tour Operator Quality Protocol • § 651m BGB Compliance</span>
-                </div>
-                <h4 className="text-lg sm:text-2xl font-bold font-serif text-white">
-                  The 3-Tier Quality Shield: From Desk Triage to Legal On-Site Ground Truth
-                </h4>
-                <p className="text-xs text-zinc-300 font-light mt-1.5 leading-relaxed">
-                  German travel law enforces strict warranty liability for catalog discrepancies (<em>Frankfurter Tabelle</em>). Public online review stars offer zero legal protection in consumer disputes. Here is how our quality ladder shields your contracting:
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 text-left items-stretch">
-                {/* Tier 1: Surface Screening */}
-                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col justify-between relative overflow-hidden">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                        STAGE 01 • THIS TOOL
-                      </span>
-                      <span className="text-xs font-mono text-zinc-400">Desktop Triage</span>
-                    </div>
-                    <h5 className="text-sm font-bold text-white mb-1">
-                      Multi-Platform Review Radar & Quality Index
-                    </h5>
-                    <p className="text-[11px] text-zinc-300 font-light leading-relaxed mb-3">
-                      Surface screening across 8 recognition networks over 12–24 months. Identifies friction hotspots, public consensus, and sentiment trajectory.
-                    </p>
-                    <ul className="text-[10.5px] text-zinc-300 space-y-1.5 font-light">
-                      <li className="flex items-start gap-1.5">
-                        <Check className="w-3 h-3 text-cyan-400 shrink-0 mt-0.5" />
-                        <span>Instant preliminary risk screening</span>
-                      </li>
-                      <li className="flex items-start gap-1.5">
-                        <Check className="w-3 h-3 text-cyan-400 shrink-0 mt-0.5" />
-                        <span>Flags unannounced quality cluster drops</span>
-                      </li>
-                      <li className="flex items-start gap-1.5 text-rose-300 font-medium">
-                        <span className="shrink-0 text-rose-400">✕</span>
-                        <span>Zero legal court weight; cannot measure decibels or plumbing</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="mt-4 pt-2.5 border-t border-white/10 text-[10px] font-mono text-cyan-300 font-semibold">
-                    Current Desk Screening Phase
-                  </div>
-                </div>
-
-                {/* Tier 2: Deeper Dive Data Report */}
-                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col justify-between relative overflow-hidden">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#d9bd8b]/20 text-[#d9bd8b] border border-[#d9bd8b]/30">
-                        STAGE 02 • BRIEFING
-                      </span>
-                      <span className="text-xs font-mono text-zinc-400">Deeper Data</span>
-                    </div>
-                    <h5 className="text-sm font-bold text-white mb-1">
-                      Full Deeper-Dive Data Report
-                    </h5>
-                    <p className="text-[11px] text-zinc-300 font-light leading-relaxed mb-3">
-                      Comprehensive review corpus mining, specific room-tier complaint matching, competitor DACH benchmarking, and catalog wording liability review.
-                    </p>
-                    <ul className="text-[10.5px] text-zinc-300 space-y-1.5 font-light">
-                      <li className="flex items-start gap-1.5">
-                        <Check className="w-3 h-3 text-[#d9bd8b] shrink-0 mt-0.5" />
-                        <span>Room-category sentiment breakdown</span>
-                      </li>
-                      <li className="flex items-start gap-1.5">
-                        <Check className="w-3 h-3 text-[#d9bd8b] shrink-0 mt-0.5" />
-                        <span>Catalog claim vulnerability audit</span>
-                      </li>
-                      <li className="flex items-start gap-1.5">
-                        <Check className="w-3 h-3 text-[#d9bd8b] shrink-0 mt-0.5" />
-                        <span><strong>100% Fee Rollover:</strong> Credited to on-site audit</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleRequestAuditForCurrentSearch}
-                    className="mt-4 pt-2.5 border-t border-white/10 text-[10.5px] font-mono text-[#d9bd8b] hover:text-white font-bold text-left flex items-center justify-between cursor-pointer transition-colors"
-                  >
-                    <span>Request Full Data Report</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-                {/* Tier 3: Physical Inspection Dossier (Core Business) */}
-                <div className="p-4 rounded-2xl bg-gradient-to-b from-[#b38a54]/25 to-[#b38a54]/5 border-2 border-[#d9bd8b] flex flex-col justify-between relative overflow-hidden shadow-xl ring-1 ring-[#d9bd8b]/30">
-                  <div className="absolute top-0 right-0 bg-[#b38a54] text-white text-[9px] font-mono font-bold px-2.5 py-0.5 rounded-bl-lg">
-                    PRIMARY SERVICE
-                  </div>
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                        STAGE 03 • ON-SITE TRUTH
-                      </span>
-                      <span className="text-xs font-mono text-zinc-300 font-medium">Physical Mystery Stay</span>
-                    </div>
-                    <h5 className="text-sm font-bold text-white mb-1">
-                      Data-Informed Physical Inspection Dossier
-                    </h5>
-                    <p className="text-[11px] text-zinc-200 font-light leading-relaxed mb-3">
-                      Unannounced mystery stay in the Western Cape by experienced hospitality inspectors. Day/night calibrated decibel tests, 07:15 shower temperature logging, and room key allocation checks.
-                    </p>
-                    <ul className="text-[10.5px] text-zinc-200 space-y-1.5 font-light">
-                      <li className="flex items-start gap-1.5">
-                        <Check className="w-3 h-3 text-emerald-400 shrink-0 mt-0.5" />
-                        <span>Calibrated acoustic decibel meter testing (dB(A))</span>
-                      </li>
-                      <li className="flex items-start gap-1.5">
-                        <Check className="w-3 h-3 text-emerald-400 shrink-0 mt-0.5" />
-                        <span>Peak 07:15–08:15 hydraulic pressure & water logs</span>
-                      </li>
-                      <li className="flex items-start gap-1.5">
-                        <Check className="w-3 h-3 text-emerald-400 shrink-0 mt-0.5" />
-                        <span><strong>Legally Admissible Proof:</strong> Refutes false customer refund claims & guarantees catalog room allocations</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => onSelectPropertyForInquiry(activeSearchResult.name)}
-                    className="mt-4 pt-2.5 border-t border-white/20 text-[10.5px] font-mono text-white font-bold text-left flex items-center justify-between cursor-pointer hover:text-[#d9bd8b] transition-colors"
-                  >
-                    <span>Commission On-Site Audit ({activeSearchResult.name})</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-[#d9bd8b]" />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* The Desk-to-Field Bridge: Reality Gap Escalation & Fee Rollover Guarantee */}
+            {/* The Desk-to-Field Bridge: Reality Gap Escalation */}
             <div className={`p-6 sm:p-7 rounded-2xl border ${triageData.cardBorder} ${triageData.cardBg} relative overflow-hidden transition-all shadow-xl`}>
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                 
@@ -2071,14 +1874,6 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
                   <p className="text-xs sm:text-[13px] text-zinc-200 leading-relaxed font-light">
                     {triageData.summary}
                   </p>
-
-                  {/* Fee Rollover Guarantee Banner */}
-                  <div className="p-3 rounded-xl bg-white/10 border border-white/15 flex items-start sm:items-center gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#d9bd8b] shrink-0 mt-0.5 sm:mt-0" />
-                    <p className="text-[11px] text-zinc-200 leading-relaxed font-mono">
-                      <strong className="text-[#d9bd8b] font-bold">100% Fee Rollover Guarantee:</strong> 100% of any preliminary desk research or briefing fee is credited directly toward your commissioned On-Site Physical Inspection Dossier. You never pay twice.
-                    </p>
-                  </div>
                 </div>
 
                 {/* Right: Direct Escalation CTAs */}
@@ -2089,7 +1884,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
                     onClick={() => onSelectPropertyForInquiry(activeSearchResult.name)}
                     className="w-full px-6 py-3.5 rounded-xl bg-[#b38a54] hover:bg-[#c59b63] text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:shadow-xl hover:-translate-y-0.5 whitespace-nowrap"
                   >
-                    <span>🛡️ Commission Data-Informed Physical Inspection</span>
+                    <span>Commission On-Site Audit</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
 
@@ -2100,7 +1895,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
                     className="w-full px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-zinc-200 hover:text-white text-[11px] font-mono transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
                   >
                     <FileText className="w-3.5 h-3.5 text-[#d9bd8b]" />
-                    <span>📋 Request Full Deeper-Dive Data Report</span>
+                    <span>Request the Full 24h Virtual Audit Brief</span>
                   </button>
 
                   <div className="text-center text-[10px] font-mono text-zinc-400">
@@ -2121,7 +1916,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-mono text-zinc-300 hover:text-white transition-all cursor-pointer shadow-xs"
           >
             <span className="text-[#d9bd8b] font-bold">STAGE 02 ↓</span>
-            <span>Identified friction points in your virtual screening? See how we physically verify the property on-site</span>
+            <span>See how we verify a hotel on site</span>
             <ArrowRight className="w-3 h-3 text-[#d9bd8b]" />
           </a>
         </div>

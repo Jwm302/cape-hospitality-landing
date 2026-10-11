@@ -11,6 +11,7 @@ import {
   FileSpreadsheet
 } from 'lucide-react';
 import { LeadFormData } from '../types';
+import { SERVICE_TIERS, getServiceTier } from '../data/landingData';
 
 interface LeadCaptureFooterProps {
   onScheduleBriefing: () => void;
@@ -89,7 +90,7 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
             </h3>
 
             <p className="mt-2 text-xs sm:text-sm text-zinc-600 font-normal leading-relaxed">
-              Request an independent Agent Virtual Audit, obtain a free data package, or commission an on-the-ground mystery inspection across Cape Town and the Garden Route.
+              Tell us which hotel concerns you. We reply within 4 hours on business days.
             </p>
           </div>
 
@@ -105,7 +106,7 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
                 Request Confirmed
               </h4>
               <p className="text-xs sm:text-sm text-zinc-600 max-w-md mx-auto leading-relaxed">
-                Thank you, <strong className="text-zinc-900">{formData.name}</strong> ({formData.company}). Your request for <span className="font-semibold text-[#10213a]">{formData.selectedTier === 'VIRTUAL_AUDIT' ? 'Free Data Package' : 'Hotel Quality Audit'}</span> has been received. Our senior advisory contact will reach out to <span className="font-mono text-[#10213a] font-semibold">{formData.corporateEmail}</span> within 4 hours.
+                Thank you, <strong className="text-zinc-900">{formData.name}</strong> ({formData.company}). Your request for <span className="font-semibold text-[#10213a]">{getServiceTier(formData.selectedTier || '').title}</span> has been received. Our senior advisory contact will reach out to <span className="font-mono text-[#10213a] font-semibold">{formData.corporateEmail}</span> within 4 hours.
               </p>
               <button
                 onClick={() => setIsSubmitted(false)}
@@ -117,19 +118,6 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
           ) : (
             <form onSubmit={handleSubmit} id="lead-capture-form" className="space-y-4">
               
-              {/* High-Contrast Free Data Package Banner */}
-              <div className="flex items-center justify-between p-3.5 rounded-2xl bg-[#10213a]/5 border border-[#10213a]/15">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#b38a54] animate-pulse" />
-                  <span className="text-xs sm:text-sm font-bold text-[#10213a] tracking-wide">
-                    Get your free data package now
-                  </span>
-                </div>
-                <span className="text-[11px] font-mono font-medium text-zinc-500 hidden sm:inline">
-                  Instant Access • Zero Obligation
-                </span>
-              </div>
-
               {errorMsg && (
                 <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium">
                   {errorMsg}
@@ -200,7 +188,7 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div className="space-y-1">
                   <label htmlFor="field-service-tier" className="block text-[11px] font-bold uppercase tracking-wider text-zinc-700 font-mono">
-                    Requested Service / Option
+                    Service
                   </label>
                   <select
                     id="field-service-tier"
@@ -208,9 +196,11 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
                     onChange={(e) => setFormData({ ...formData, selectedTier: e.target.value })}
                     className="w-full px-3 py-2.5 rounded-xl bg-zinc-50 border border-zinc-200 text-xs text-zinc-900 focus:outline-none focus:border-[#10213a] focus:bg-white transition-all font-medium"
                   >
-                    <option value="VIRTUAL_AUDIT">01 — Agent Virtual Audit & Free Data Package (Complimentary)</option>
-                    <option value="PHYSICAL_AUDIT">02 — On-Site Mystery Hotel Audit (⭐ Most Popular)</option>
-                    <option value="PARTNERSHIP">03 — Continuous Portfolio Quality Monitoring</option>
+                    {SERVICE_TIERS.map((t) => (
+                      <option key={t.key} value={t.key}>
+                        {t.tierNumber} — {t.shortLabel}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -244,7 +234,7 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
                     <span>Processing Request...</span>
                   ) : (
                     <>
-                      <span>Submit Inquiry & Receive Data Package</span>
+                      <span>{formData.selectedTier === 'VIRTUAL_AUDIT' ? 'Request Free Virtual Audit' : 'Send Inquiry'}</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </>
                   )}
@@ -255,11 +245,8 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
               <div className="pt-2 text-center space-y-1.5">
                 <div className="flex items-center justify-center gap-2 text-[11px] text-zinc-500">
                   <Lock className="w-3 h-3 text-[#b38a54]" />
-                  <span>Strict confidentiality: In simple terms: we observe, we assess and we recommend — zero data shared with audited hotels.</span>
+                  <span>Strictly confidential. Nothing is shared with the hotels we audit.</span>
                 </div>
-                <p className="text-[10px] text-zinc-400 font-mono">
-                  “A five-star hotel does not automatically guarantee a five-star guest experience.”
-                </p>
               </div>
             </form>
           )}

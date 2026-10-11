@@ -35,11 +35,11 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
           </div>
 
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#10213a] tracking-tight font-serif leading-tight">
-            Actual On-Site Physical Audit: The Gardens Heritage Manor
+            Case Study: The Gardens Heritage Manor
           </h2>
 
           <p className="mt-3 text-sm sm:text-base text-zinc-600 font-normal leading-relaxed">
-            While Stage 1 above demonstrates our desk-based Virtual Audits, below is an actual on-site mystery inspection performed by Cape Hospitality Advisors. Conducted as an unannounced overnight stay at a 5-star hotel in Cape Town.
+            A real, unannounced overnight stay at a 5-star Cape Town hotel, commissioned after the Virtual Audit flagged a problem.
           </p>
 
           {/* POPIA / Discretion Banner */}
@@ -108,7 +108,7 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
             <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200/80 flex items-start gap-3">
               <Activity className="w-4 h-4 text-amber-800 shrink-0 mt-0.5" />
               <p className="text-xs text-amber-900 leading-relaxed">
-                <strong>Why This Audit Was Commissioned:</strong> Our Stage 1 Virtual Audit of this hotel flagged recurring German guest feedback regarding lukewarm morning showers and rattling bedroom air conditioning. The travel company commissioned our Cape Town team to physically verify the ground reality before contracting.
+                <strong>Why This Audit Was Commissioned:</strong> The Virtual Audit flagged repeated German guest complaints about lukewarm morning showers and rattling air conditioning. The travel company asked us to verify on site before contracting.
               </p>
             </div>
 
@@ -222,10 +222,10 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
                 <span>The Two-Way Protection Shield</span>
               </div>
               <h4 className="text-sm font-bold font-serif text-white mb-1.5">
-                Protecting Travel Companies from Bad Actors & False Guest Refund Claims
+                It Also Protects You Against False Refund Claims
               </h4>
               <p className="text-xs text-zinc-300 leading-relaxed font-light">
-                Our audits protect you in both directions. When a hotel genuinely underperforms, we alert you so you can fix allocations. But our unannounced, timestamped photos, recorded decibels, and water temperature logs also provide bulletproof evidence for your customer care team to <strong>refute opportunistic bad actors</strong> who submit fabricated complaints to extract 20%–50% post-trip refunds.
+                When a hotel underperforms, we tell you so you can fix allocations. When it doesn’t, our timestamped photos, noise readings and water-temperature logs give your customer care team a <strong>factual record to answer fabricated complaints</strong> made to claim post-trip refunds.
               </p>
             </div>
 
@@ -239,7 +239,7 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
                   onClick={onRequestFreeDataPackage}
                   className="flex-1 sm:flex-initial px-4 py-2 rounded-full border border-zinc-300 text-xs font-semibold text-zinc-700 hover:bg-zinc-100 transition-all cursor-pointer"
                 >
-                  Request Sample PDF
+                  Start with a Free Virtual Audit
                 </button>
                 <button
                   onClick={onCommissionAudit}

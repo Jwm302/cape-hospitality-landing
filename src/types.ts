@@ -1,49 +1,20 @@
-export interface PillarItem {
-  id: string;
-  columnNumber: number;
-  title: string;
-  description: string;
-  iconName: string;
-  focusAreas: string[];
-  metricsSample: string;
-}
+export type ServiceTierKey = 'VIRTUAL_AUDIT' | 'PHYSICAL_AUDIT' | 'PARTNERSHIP';
 
-export interface InspectionDeliverableData {
-  title: string;
-  description: string;
-  slaHours: number;
-  overallScore: number;
-  propertyCategory: string;
-  inspectionDate: string;
-  pillarsScores: {
-    name: string;
-    score: number;
-    benchmark: number;
-  }[];
-  sampleGaps: {
-    category: string;
-    severity: 'High' | 'Medium' | 'Low';
-    finding: string;
-    remedy: string;
-  }[];
-}
-
-export interface PricingPackage {
-  id: string;
+export interface ServiceTier {
+  key: ServiceTierKey;
   tierNumber: string;
-  tier: string;
+  badge: string;
+  badgeColor: string;
   title: string;
+  shortLabel: string;
   tagline: string;
   description: string;
+  isFree?: boolean;
   isPopular?: boolean;
-  additiveNote?: string;
-  features: string[];
-  idealFor: string;
-  questionAnswered: string;
+  priceDisplay: string;
   ctaText: string;
-  priceEur?: number;
-  priceDisplay?: string;
-  highlights?: string[];
+  features: string[];
+  questionAnswered: string;
 }
 
 export interface UspItem {

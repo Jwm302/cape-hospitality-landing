@@ -25,10 +25,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   const navLinks = [
-    { label: 'Methodology', href: '#reality-gap' },
+    { label: 'How We Work', href: '#reality-gap' },
     { label: 'Virtual Audit', href: '#virtual-audit' },
-    { label: 'On-Site Case Study', href: '#sample-audit' },
-    { label: 'Why Partner', href: '#usp' },
+    { label: 'Case Study', href: '#sample-audit' },
+    { label: 'Why Us', href: '#usp' },
     { label: 'Services', href: '#pricing' },
   ];
 
@@ -73,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               id="nav-free-package-btn"
             >
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Get Free Data Package</span>
+              <span>Free Virtual Audit</span>
             </button>
 
             <button
@@ -120,7 +120,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }}
                 className="w-full py-2.5 text-xs font-bold rounded-full border border-[#b38a54] text-[#9c753e] bg-[#b38a54]/10 flex items-center justify-center gap-2"
               >
-                Get Free Data Package Now
+                Request Free Virtual Audit
               </button>
               <button
                 onClick={() => {
@@ -129,7 +129,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }}
                 className="w-full py-2.5 text-xs font-bold rounded-full bg-[#10213a] text-white flex items-center justify-center gap-2"
               >
-                Schedule Confidential Briefing
+                Schedule Briefing
               </button>
             </div>
           </div>

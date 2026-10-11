@@ -33,15 +33,15 @@ export const UspSection: React.FC = () => {
             <span className="tracking-widest uppercase font-mono text-[11px]">THE INSTITUTIONAL EDGE</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#10213a] tracking-tight font-serif">
-            Why European Travel Companies Partner With Us
+            Why Travel Companies Choose Us
           </h2>
           <p className="mt-3 text-sm sm:text-base text-zinc-600 font-normal leading-relaxed">
-            Six operational principles engineered for travel procurement: conflict-free, hypothesis-driven, and aligned with European catalog liability.
+            Built for the people who contract hotels, not the people who run them.
           </p>
         </div>
 
         {/* 6-Item Grid: 2 rows of 3 columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mb-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-14">
           {OUR_USPS.map((usp, index) => (
             <div
               key={usp.key}
@@ -154,13 +154,13 @@ export const UspSection: React.FC = () => {
 
           <div className="mt-5 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
             <span className="text-zinc-400 font-mono text-[11px]">
-              We answer the buyer's question: <em>What will your client experience tomorrow morning?</em>
+              Paid by the buyer, not the seller.
             </span>
             <a
               href="#virtual-audit"
               className="inline-flex items-center gap-1.5 text-[#d9bd8b] font-bold hover:text-white transition-colors cursor-pointer"
             >
-              <span>Test the Virtual Audit Radar</span>
+              <span>Try the Virtual Audit demo</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </a>
           </div>
