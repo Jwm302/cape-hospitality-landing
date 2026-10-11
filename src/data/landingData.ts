@@ -40,7 +40,7 @@ export const SERVICE_TIERS: ServiceTier[] = [
       '24–48 hour anonymous mystery stay',
       'Arrival, room, bed comfort & bathroom hygiene',
       'Night-time noise and morning hot-water checks',
-      'Timestamped photo & measurement evidence',
+      'Dated photos, timings & indicative readings',
       'Factual record to answer disputed guest claims',
       'Management report within 48 hours',
     ],
@@ -88,9 +88,9 @@ export const OUR_USPS: UspItem[] = [
   },
   {
     key: 'OBJECTIVE EVIDENCE',
-    title: 'EVIDENCE, NOT OPINION',
-    tagline: 'Timestamps, photos and measurements.',
-    description: 'Queue times, noise levels and water temperatures give you leverage with the hotel, and a factual record when a guest complaint does not match reality.',
+    title: 'FACTS, NOT REVIEWS',
+    tagline: 'Reviews show patterns. We document facts.',
+    description: 'Online reviews are anonymous and unverified, and carry little weight when a complaint is disputed. Our inspectors record dated, first-hand observations with photographs and timings, giving your customer-care and contracting teams a factual record to work from.',
     icon: 'Zap',
   },
   {

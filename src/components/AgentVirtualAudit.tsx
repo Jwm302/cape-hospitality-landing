@@ -517,12 +517,12 @@ const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
       livedExperienceNarrative:
         'Guests love the immediate beach-gate access and postcard Table Mountain panoramas from private ocean balconies. As a 100% self-catering holiday apartment complex, there is NO breakfast buffet or on-site hotel dining (guests cook in-unit or eat at local cafes). Long-term guest reviews highlight noticeable variance between individually owned apartments, from modern renovated kitchens to older decor.',
       compellingInspectionMandate:
-        'Public OTA scores (81.0%) blend beachfront holiday impressions while masking sectional-title maintenance disparities. Under German travel law (Frankfurt Table), mislabeling Neptune Isle as having hotel meal services or failing to disclose rear-wing traffic noise and self-catering arrival logistics creates immediate refund liability.',
+        'Public OTA scores (81.0%) blend beachfront holiday impressions while masking sectional-title maintenance disparities. If a catalog describes Neptune Isle as having hotel meal services, or omits rear-wing traffic noise and self-catering arrival logistics, guests are likely to complain and request refunds.',
     },
     provenanceTier: 'HAND_VERIFIED',
-    provenanceLabel: 'Audited Reference Property (On-Site Calibrated)',
+    provenanceLabel: 'Audited Reference Property',
     webPresenceStrength: 'High',
-    sentimentDisclaimer: 'Public sentiment cross-referenced across 520+ verified online reviews. Hand-calibrated for European travel company catalog guarantees.',
+    sentimentDisclaimer: 'Public sentiment cross-referenced across 520+ verified online reviews. Reviewed by our desk against European travel company expectations.',
   },
   'ellerman house': {
     name: 'Ellerman House',
@@ -648,9 +648,9 @@ const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
       },
     ],
     provenanceTier: 'HAND_VERIFIED',
-    provenanceLabel: 'Audited Reference Property (On-Site Calibrated)',
+    provenanceLabel: 'Audited Reference Property',
     webPresenceStrength: 'High',
-    sentimentDisclaimer: 'Public sentiment cross-referenced across 4,200+ verified online reviews. Hand-calibrated for European travel company catalog guarantees.',
+    sentimentDisclaimer: 'Public sentiment cross-referenced across 4,200+ verified online reviews. Reviewed by our desk against European travel company expectations.',
   },
   'radisson blu waterfront': {
     name: 'Radisson Blu Hotel Waterfront',
@@ -718,9 +718,9 @@ const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
       },
     ],
     provenanceTier: 'HAND_VERIFIED',
-    provenanceLabel: 'Audited Reference Property (On-Site Calibrated)',
+    provenanceLabel: 'Audited Reference Property',
     webPresenceStrength: 'High',
-    sentimentDisclaimer: 'Public sentiment cross-referenced across 3,800+ verified online reviews. Hand-calibrated for European travel company catalog guarantees.',
+    sentimentDisclaimer: 'Public sentiment cross-referenced across 3,800+ verified online reviews. Reviewed by our desk against European travel company expectations.',
   },
   'the president hotel': {
     name: 'The President Hotel',
@@ -788,9 +788,9 @@ const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
       },
     ],
     provenanceTier: 'HAND_VERIFIED',
-    provenanceLabel: 'Audited Reference Property (On-Site Calibrated)',
+    provenanceLabel: 'Audited Reference Property',
     webPresenceStrength: 'High',
-    sentimentDisclaimer: 'Public sentiment cross-referenced across 4,500+ verified online reviews. Hand-calibrated for European travel company catalog guarantees.',
+    sentimentDisclaimer: 'Public sentiment cross-referenced across 4,500+ verified online reviews. Reviewed by our desk against European travel company expectations.',
   },
   'lagoon beach hotel': {
     name: 'Lagoon Beach Hotel & Spa',
@@ -858,9 +858,9 @@ const KNOWN_PROPERTIES: Record<string, HotelPublicProfile> = {
       },
     ],
     provenanceTier: 'HAND_VERIFIED',
-    provenanceLabel: 'Audited Reference Property (On-Site Calibrated)',
+    provenanceLabel: 'Audited Reference Property',
     webPresenceStrength: 'High',
-    sentimentDisclaimer: 'Public sentiment cross-referenced across 3,200+ verified online reviews. Hand-calibrated for European travel company catalog guarantees.',
+    sentimentDisclaimer: 'Public sentiment cross-referenced across 3,200+ verified online reviews. Reviewed by our desk against European travel company expectations.',
   },
 };
 
@@ -1111,9 +1111,9 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
         cardBg: 'bg-rose-950/30',
         textColor: 'text-rose-400',
         dotColor: 'bg-rose-400',
-        summary: `A severe ${deltaPercent}% divergence exists between public consumer sentiment (${activeSearchResult?.publicMetaAverage}%) and real ground conditions (${activeSearchResult?.chaScore}%). Contracting without on-site mystery verification exposes your brand to Frankfurt Table catalog compensation claims (15%–25% refund risk under European travel law).`,
+        summary: `A severe ${deltaPercent}% divergence exists between public consumer sentiment (${activeSearchResult?.publicMetaAverage}%) and real ground conditions (${activeSearchResult?.chaScore}%). Contracting without an on-site check leaves you exposed to guest complaints and refund requests that you cannot answer with facts.`,
         actionLabel: `Escalate to Mandatory On-Site Physical Audit for ${activeSearchResult?.name}`,
-        recommendation: 'Do not commit to room allocations without on-site acoustic and hydraulic validation.',
+        recommendation: 'Check noise levels and hot water on site before committing room allocations.',
       }
     : isAdvisoryRisk
     ? {
@@ -1156,7 +1156,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
       ? '🎯 Celebrated Benchmark: Exceptional operational foundation; requires proactive verification to protect luxury contract allocations and prestige.'
       : activeSearchResult.chaScore >= 80
       ? '⚠️ Advisory Gap: Solid surface praise, yet critical operational stress points create vulnerability for European catalog clients.'
-      : '🚨 Critical Growth Mandate: Substantial operational friction detected; high risk of Frankfurt Table catalog disputes without intervention.';
+      : '🚨 Critical Growth Mandate: Substantial operational friction detected; high risk of guest complaints and refund requests without intervention.';
 
   return (
     <section id="virtual-audit" className="py-16 sm:py-20 bg-[#10213a] text-white relative overflow-hidden">
@@ -1283,7 +1283,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
               Aggregating Historical Guest Sentiment for “{searchInput}”...
             </h3>
             <p className="text-xs text-zinc-300 max-w-md mx-auto mt-2 leading-relaxed">
-              Mining thousands of historical guest reviews across 8 recognition networks and calibrating European catalog contract compliance.
+              Reading guest reviews across 8 platforms and comparing them with what European travellers expect.
             </p>
             <div className="mt-4 flex items-center justify-center gap-2 text-[11px] font-mono text-[#d9bd8b]">
               <span className="inline-block w-2 h-2 rounded-full bg-[#d9bd8b] animate-ping" />
@@ -1513,7 +1513,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
 
                 {/* Institutional Explanatory Caption */}
                 <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 text-[11px] text-zinc-400 leading-relaxed font-light">
-                  <strong className="text-zinc-300 font-medium">Why scores diverge:</strong> Public OTAs aggregate feedback from unvetted domestic holidaymakers who overlook morning hot water dips, sash window drafts, or catalog room tiering. Cape Hospitality Advisors audits specific physical stress factors against strict German travel catalog standards (DRV & Frankfurt Table).
+                  <strong className="text-zinc-300 font-medium">Why scores diverge:</strong> Public OTAs aggregate feedback from unvetted domestic holidaymakers who overlook morning hot water dips, sash window drafts, or catalog room tiering. Our inspectors check these specific points in person, from the perspective of a German or European guest.
                 </div>
               </div>
 

@@ -219,13 +219,13 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
             <div className="p-4 sm:p-5 rounded-xl bg-[#0c182a] text-white border border-white/10 text-left">
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#d9bd8b] mb-1">
                 <Shield className="w-3.5 h-3.5 text-[#d9bd8b]" />
-                <span>The Two-Way Protection Shield</span>
+                <span>Useful in Both Directions</span>
               </div>
               <h4 className="text-sm font-bold font-serif text-white mb-1.5">
-                It Also Protects You Against False Refund Claims
+                A Factual Record When Complaints Are Disputed
               </h4>
               <p className="text-xs text-zinc-300 leading-relaxed font-light">
-                When a hotel underperforms, we tell you so you can fix allocations. When it doesn’t, our timestamped photos, noise readings and water-temperature logs give your customer care team a <strong>factual record to answer fabricated complaints</strong> made to claim post-trip refunds.
+                When a hotel underperforms, we tell you so you can fix allocations. When it doesn’t, our dated photos, timings and observations give your customer-care team a <strong>factual record to consult</strong> when a refund complaint does not match what we found.
               </p>
             </div>
 
