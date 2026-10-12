@@ -271,7 +271,11 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
               <div className="pt-2 text-center space-y-1.5">
                 <div className="flex items-center justify-center gap-2 text-[11px] text-zinc-500">
                   <Lock className="w-3 h-3 text-[#b38a54]" />
-                  <span>Strictly confidential. Nothing is shared with the hotels we audit. We observe and report; we do not provide technical or legal certification.</span>
+                  <span>
+                    Strictly confidential. Nothing is shared with the hotels we audit. We observe and report; we do not
+                    provide technical or legal certification. See our{' '}
+                    <a href="/privacy" className="underline hover:text-zinc-800">privacy notice</a>.
+                  </span>
                 </div>
               </div>
             </form>
@@ -287,7 +291,10 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
             <span className="hidden sm:inline text-zinc-300">|</span>
             <a href={`mailto:${CONTACT_EMAIL}`} className="font-mono text-[#b38a54] hover:underline">{CONTACT_EMAIL}</a>
           </div>
-          <p>© {new Date().getFullYear()} Cape Hospitality Advisors. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} Cape Hospitality Advisors. All rights reserved. ·{' '}
+            <a href="/privacy" className="underline hover:text-zinc-800">Privacy notice</a>
+          </p>
         </div>
 
       </div>

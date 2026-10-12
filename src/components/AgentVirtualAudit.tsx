@@ -695,6 +695,15 @@ const BriefCta: React.FC<{
         </form>
       )}
 
+      {state !== 'sent' && (
+        <p className="text-[10px] text-zinc-400">
+          We use your email only to send this brief.{' '}
+          <a href="/privacy" className="underline hover:text-white">
+            Privacy notice
+          </a>
+        </p>
+      )}
+
       {state === 'error' && (
         <p className="text-[11px] text-rose-300">
           {fallbackHref ? (
