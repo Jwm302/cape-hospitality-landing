@@ -22,6 +22,14 @@
 HOTEL_URL   <- "https://www.booking.com/hotel/za/the-twelve-apostles-hotel-and-spa.html"
 HOTEL_NAME  <- "The Twelve Apostles Hotel & Spa"
 MAX_REVIEWS <- 800   # newest reviews, ALL languages (needed to compare German vs other guests)
+REFRESH     <- FALSE  # TRUE = ignore the cached scrape and pay for a new one
+
+# Command line overrides: Rscript german_guest_brief.R "<booking url>" "<hotel name>" [max_reviews] [refresh]
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) >= 1) HOTEL_URL   <- args[1]
+if (length(args) >= 2) HOTEL_NAME  <- args[2]
+if (length(args) >= 3) MAX_REVIEWS <- as.integer(args[3])
+if (length(args) >= 4) REFRESH     <- tolower(args[4]) %in% c("true", "1", "yes", "refresh")
 
 APIFY_TOKEN  <- Sys.getenv("CAPE_HOTEL_APIFY_KEY")
 GEMINI_TOKEN <- Sys.getenv("CAPE_HOTEL_AUDIT_KEY")
@@ -29,8 +37,7 @@ GEMINI_MODEL <- Sys.getenv("CAPE_GEMINI_MODEL", "gemini-2.5-flash")
 ACTOR_ID     <- Sys.getenv("CAPE_APIFY_ACTOR", "solidcode~booking-reviews-scraper")
 APIFY_BASE   <- Sys.getenv("CAPE_APIFY_BASE", "https://api.apify.com")
 GEMINI_BASE  <- Sys.getenv("CAPE_GEMINI_BASE", "https://generativelanguage.googleapis.com")
-OUT_ROOT     <- "briefs"
-REFRESH      <- FALSE  # TRUE = ignore the cached scrape and pay for a new one
+OUT_ROOT     <- Sys.getenv("CAPE_BRIEFS_DIR", "briefs")
 
 # Countries counted as German-speaking guests (Booking shows reviewer country).
 DACH_COUNTRIES <- c("germany", "deutschland", "austria", "osterreich", "oesterreich",
