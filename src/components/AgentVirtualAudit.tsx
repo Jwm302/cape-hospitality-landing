@@ -426,7 +426,7 @@ const ReviewsPanel: React.FC<{ state: ReviewsState | null; overallRating?: numbe
         <Loader2 className="w-5 h-5 animate-spin text-[#d9bd8b] shrink-0" />
         <div>
           <p className="text-sm text-white">Reading the latest 100 guest reviews...</p>
-          <p className="text-[11px] text-zinc-400">This can take up to a minute. The Google rating above is already live.</p>
+          <p className="text-[11px] text-zinc-400">This usually takes about a minute. The Google rating above is already live.</p>
         </div>
       </div>
     );
