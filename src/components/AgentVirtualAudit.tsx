@@ -153,8 +153,10 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
           </h2>
 
           <p className="mt-3 text-sm sm:text-base text-zinc-300 font-light leading-relaxed max-w-2xl mx-auto">
-            Type a hotel name to see its live Google rating and what the latest 100 guests talk about —{' '}
-            <strong className="text-white font-medium">counted, dated and sourced</strong>.
+            Two parts. First an <strong className="text-white font-medium">instant snapshot</strong>: the hotel&rsquo;s
+            live Google rating and what the latest 100 guests talk about, counted, dated and sourced. Then, on request,
+            the <strong className="text-white font-medium">free 24-hour Desk Brief</strong>: what German-speaking guests
+            say, checked by our team and emailed to you.
           </p>
 
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[11px] font-mono text-zinc-300">
@@ -228,8 +230,8 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
           {!isLoading && result?.status === 'unavailable' && (
             <Notice
               title="Live hotel data is temporarily unavailable."
-              body="Our desk can still prepare your free 24-hour brief for this hotel."
-              actionLabel="Request Free 24h Brief"
+              body="Our team can still prepare the free 24-hour Desk Brief for this hotel."
+              actionLabel="Request the 24h Desk Brief"
               onAction={() => requestBrief(submittedQuery)}
             />
           )}
@@ -414,7 +416,7 @@ const ReviewsPanel: React.FC<{ state: ReviewsState | null; overallRating?: numbe
   if (!state || state.status === 'disabled') {
     return (
       <p className="text-xs text-zinc-400">
-        A breakdown of recent guest reviews is included in the free 24-hour brief.
+        A breakdown of recent guest reviews is included in the free 24-hour Desk Brief.
       </p>
     );
   }
@@ -639,7 +641,7 @@ const BriefCta: React.FC<{
       return;
     }
     setState('sending');
-    const subject = `Snapshot request — ${place.name}`;
+    const subject = `Desk Brief request — ${place.name}`;
     const fields = { Email: address, Hotel: place.name, Snapshot: snapshotText(place, reviews) };
     try {
       await sendInquiry(subject, fields, address);
@@ -654,11 +656,13 @@ const BriefCta: React.FC<{
     <div className="rounded-2xl border border-[#d9bd8b]/40 bg-[#b38a54]/10 p-5 sm:p-6 space-y-4">
       <div>
         <h4 className="text-base sm:text-lg font-bold text-white font-serif">
-          Get this snapshot and the full 24h brief by email
+          Want the deeper picture? Get the 24-hour Desk Brief
         </h4>
         <p className="text-xs text-zinc-300 mt-1 leading-relaxed">
-          Our desk adds HolidayCheck, Booking.com and German-guest analysis and sends a 2-page brief on {place.name}{' '}
-          within 24 hours. Free for travel companies.
+          This snapshot is instant and based on Google. The Desk Brief on {place.name} goes further: what
+          German-speaking guests say on Booking.com compared with other guests, a risk checklist with verbatim quotes,
+          and what to check on site. Our team reviews it and emails it to you within 24 hours. Free for travel
+          companies.
         </p>
       </div>
 
@@ -666,8 +670,8 @@ const BriefCta: React.FC<{
         <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-3 text-xs text-emerald-200 flex items-start gap-2">
           <CheckCircle2 className="w-4 h-4 shrink-0 mt-px" />
           <span>
-            Thank you. Our desk will email this snapshot and the full brief on {place.name} to{' '}
-            <strong>{email.trim()}</strong> within 24 hours.
+            Thank you. Our team is preparing the Desk Brief on {place.name} and will email it, with this
+            snapshot, to <strong>{email.trim()}</strong> within 24 hours.
           </span>
         </div>
       ) : (
@@ -690,7 +694,7 @@ const BriefCta: React.FC<{
             className="px-5 py-2.5 rounded-xl bg-[#b38a54] hover:bg-[#c59b63] disabled:opacity-60 text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
           >
             <FileText className="w-3.5 h-3.5" />
-            <span>{state === 'sending' ? 'Sending...' : 'Email me the snapshot + brief'}</span>
+            <span>{state === 'sending' ? 'Sending...' : 'Send me the 24h Desk Brief'}</span>
           </button>
         </form>
       )}

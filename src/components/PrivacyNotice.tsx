@@ -49,7 +49,7 @@ export const PrivacyNotice: React.FC = () => (
             in, the property or region you mention, and any preferred meeting times.
           </li>
           <li>
-            <strong>“Email me the snapshot” requests:</strong> your email address and a summary of the hotel results
+            <strong>Desk Brief requests:</strong> your email address and a summary of the hotel results
             you were viewing.
           </li>
           <li>

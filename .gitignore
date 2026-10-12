@@ -6,3 +6,7 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# R desk-brief outputs (scraped reviews)
+briefs/
+analysis/briefs/
