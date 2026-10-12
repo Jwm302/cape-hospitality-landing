@@ -42,7 +42,7 @@ export const Hero: React.FC<HeroProps> = ({
           </h1>
 
           <p className="text-base sm:text-lg text-zinc-600 leading-relaxed max-w-2xl mx-auto">
-            Independent, anonymous hotel inspections for European tour operators across Cape Town and the Western Cape.
+            Independent, anonymous hotel inspections for European travel companies across Cape Town and the Western Cape.
           </p>
         </div>
 
