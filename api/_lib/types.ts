@@ -50,11 +50,13 @@ export interface Theme {
 
 export interface ReviewAnalysis {
   sourceLabel: string;
-  sampleSize: number;
+  sampleSize: number; // all reviews fetched, including star-only ones
+  writtenCount: number; // reviews with a written comment
+  lastYearCount: number; // reviews from the last 12 months
   dateFrom?: string;
   dateTo?: string;
   averageRating?: number;
-  germanCount?: number; // undefined when the source does not report language
+  germanCount?: number; // written reviews in German; undefined when the source does not report language
   themes: Theme[]; // empty when theme grouping is unavailable
   generatedAt: string;
 }

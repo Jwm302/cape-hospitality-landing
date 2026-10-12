@@ -19,17 +19,21 @@ export async function analyzeReviews(
 ): Promise<ReviewAnalysis> {
   const dates = reviews.map((r) => r.date).filter((d): d is string => Boolean(d)).sort();
   const ratings = reviews.map((r) => r.rating).filter((n): n is number => typeof n === 'number');
+  const written = reviews.filter((r) => r.text.length > 0);
+  const yearAgo = Date.now() - 365 * 24 * 3600 * 1000;
 
   return {
     sourceLabel,
     sampleSize: reviews.length,
+    writtenCount: written.length,
+    lastYearCount: dates.filter((d) => Date.parse(d) >= yearAgo).length,
     dateFrom: dates[0],
     dateTo: dates[dates.length - 1],
     averageRating: ratings.length ? round1(ratings.reduce((a, b) => a + b, 0) / ratings.length) : undefined,
     germanCount: reportsLanguage
-      ? reviews.filter((r) => r.language?.toLowerCase().startsWith('de')).length
+      ? written.filter((r) => r.language?.toLowerCase().startsWith('de')).length
       : undefined,
-    themes: await groupThemes(reviews).catch((err) => {
+    themes: await groupThemes(written).catch((err) => {
       console.warn('Theme grouping unavailable:', err?.message);
       return [];
     }),

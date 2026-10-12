@@ -380,6 +380,7 @@ const ReviewsPanel: React.FC<{ state: ReviewsState | null; overallRating?: numbe
 
 const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number }> = ({ analysis, overallRating }) => {
   const n = analysis.sampleSize;
+  const written = analysis.writtenCount ?? n;
   if (n === 0) {
     return <p className="text-xs text-zinc-400">No recent written reviews were found for this hotel.</p>;
   }
@@ -403,12 +404,12 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
       <div>
         <h4 className="text-base font-bold text-white font-serif">What recent guests say</h4>
         <p className="text-[11px] font-mono text-zinc-400 mt-0.5">
-          Based on the latest {n} {analysis.sourceLabel}
+          Based on the latest {n} {analysis.sourceLabel} ({written} with written comments)
           {range}
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {typeof analysis.averageRating === 'number' && (
           <Stat
             label="Recent average"
@@ -416,16 +417,27 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
             note={comparison}
           />
         )}
-        {typeof analysis.germanCount === 'number' && (
-          <Stat label="Written in German" value={`${analysis.germanCount} of ${n}`} note="reviews in this sample" />
+        {typeof analysis.lastYearCount === 'number' && (
+          <Stat
+            label="Last 12 months"
+            value={`${analysis.lastYearCount} review${analysis.lastYearCount === 1 ? '' : 's'}`}
+            note={analysis.dateTo ? `most recent: ${formatMonth(analysis.dateTo)}` : undefined}
+          />
         )}
-        <Stat label="Reviews analysed" value={String(n)} note={n < 20 ? 'small sample' : 'most recent first'} />
+        {typeof analysis.germanCount === 'number' && written > 0 && (
+          <Stat label="Written in German" value={`${analysis.germanCount} of ${written}`} note="written reviews" />
+        )}
+        <Stat
+          label="Reviews analysed"
+          value={String(n)}
+          note={written < 20 ? `only ${written} with comments` : `${written} with comments`}
+        />
       </div>
 
       {analysis.themes.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {analysis.themes.map((theme) => (
-            <ThemeCard key={theme.label} theme={theme} total={n} />
+            <ThemeCard key={theme.label} theme={theme} total={written} />
           ))}
         </div>
       ) : (
@@ -433,8 +445,8 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
       )}
 
       <p className="text-[10px] text-zinc-500 leading-relaxed">
-        Themes are grouped by AI from the review text. Counts show how many reviews in this sample mention each theme,
-        and quotes are copied word for word. Review data: Google.
+        Themes are grouped by AI from the review text. Counts show how many written reviews in this sample mention each
+        theme, and quotes are copied word for word. The average includes star-only ratings. Review data: Google.
       </p>
     </div>
   );
