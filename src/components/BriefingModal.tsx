@@ -219,6 +219,10 @@ export const BriefingModal: React.FC<BriefingModalProps> = ({
                   <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               </div>
+              <p className="text-[10px] text-zinc-400 text-center">
+                We use your details only to arrange the briefing.{' '}
+                <a href="/privacy" className="underline hover:text-zinc-700">Privacy notice</a>
+              </p>
             </form>
           ) : (
             <div className="text-center py-6 space-y-4">

@@ -8,6 +8,7 @@ import { UspSection } from './components/UspSection';
 import { PricingSection } from './components/PricingSection';
 import { LeadCaptureFooter } from './components/LeadCaptureFooter';
 import { BriefingModal } from './components/BriefingModal';
+import { PrivacyNotice } from './components/PrivacyNotice';
 
 export default function App() {
   const [isBriefingModalOpen, setIsBriefingModalOpen] = useState(false);
@@ -42,6 +43,11 @@ export default function App() {
     setSelectedTier('PHYSICAL_AUDIT');
     handleScrollToSection('contact');
   };
+
+  // Single extra page; vercel.json already serves index.html for every path.
+  if (window.location.pathname.replace(/\/+$/, '') === '/privacy') {
+    return <PrivacyNotice />;
+  }
 
   return (
     <div className="min-h-screen bg-[#fbfbfa] text-zinc-900 selection:bg-[#10213a] selection:text-white font-sans antialiased">

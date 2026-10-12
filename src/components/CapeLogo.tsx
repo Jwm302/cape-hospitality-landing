@@ -1,5 +1,5 @@
 import React from 'react';
-import logoImg from '../assets/images/logo.png';
+import logoImg from '../assets/images/logo.webp';
 
 interface CapeLogoProps {
   variant?: 'navbar' | 'full' | 'prominent' | 'mark-only';
@@ -20,7 +20,7 @@ export const CapeLogo: React.FC<CapeLogoProps> = ({
           <img
             src={logoImg}
             alt="Cape Hospitality Advisors - Cape Town, South Africa"
-            className="w-full max-w-[310px] sm:max-w-[390px] md:max-w-[430px] h-auto object-contain select-none mix-blend-multiply transition-all"
+            className="w-full max-w-[180px] sm:max-w-[220px] md:max-w-[240px] h-auto object-contain select-none mix-blend-multiply transition-all"
             loading="eager"
           />
         </div>

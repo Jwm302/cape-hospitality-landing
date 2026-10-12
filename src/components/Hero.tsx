@@ -21,22 +21,14 @@ export const Hero: React.FC<HeroProps> = ({
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[950px] h-[380px] bg-[radial-gradient(ellipse_at_top,rgba(179,138,84,0.09),transparent_70%)] pointer-events-none" />
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
-        {/* Prominent Brand Logo */}
-        <div className="w-full max-w-md sm:max-w-lg mx-auto mb-6 sm:mb-8">
+        {/* Brand Logo (the navbar already carries the full lockup) */}
+        <div className="w-full mx-auto mb-5 sm:mb-6">
           <CapeLogo variant="prominent" showTagline={true} />
         </div>
 
-        {/* Primary Headline: The Big Reality */}
-        <div className="max-w-4xl mx-auto space-y-3">
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-serif text-[#10213a] leading-relaxed tracking-tight">
-            <span className="italic font-medium">“A five-star hotel does not automatically guarantee a five-star guest experience.”</span>
-            <span className="inline-block text-[11px] sm:text-xs font-serif font-normal text-zinc-400 not-italic ml-2 sm:ml-2.5">
-              A. Gutman Milne, Library Hotel Collection, New York
-            </span>
-          </h1>
-
-          {/* Badge: Independent Hotel Quality Auditing • Western Cape */}
-          <div className="pt-1">
+        {/* Headline: what we do, for whom, where */}
+        <div className="max-w-4xl mx-auto space-y-4">
+          <div>
             <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 shadow-xs">
               <span className="w-1.5 h-1.5 rounded-full bg-[#b38a54]" />
               <span className="tracking-widest uppercase font-serif text-[11px] font-semibold text-zinc-700">
@@ -45,21 +37,13 @@ export const Hero: React.FC<HeroProps> = ({
             </span>
           </div>
 
-          <p className="text-base sm:text-lg text-zinc-600 font-serif leading-relaxed max-w-2xl mx-auto pt-1">
-            We provide European travel companies and agencies with an independent, current quality perspective on hotels and guest houses across Cape Town and the Western Cape.
-          </p>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-[#10213a] leading-tight tracking-tight">
+            Know what your guests will find, before they arrive.
+          </h1>
 
-          {/* Simple Mission Pill */}
-          <div className="pt-2">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-200 bg-white text-xs text-zinc-700 shadow-xs font-serif">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#b38a54] shrink-0" />
-              <span>
-                <span>In simple terms: </span>
-                <strong className="text-[#10213a] font-semibold">we observe, we assess and we recommend</strong>
-                <span> — we do not certify or legally determine compliance.</span>
-              </span>
-            </span>
-          </div>
+          <p className="text-base sm:text-lg text-zinc-600 leading-relaxed max-w-2xl mx-auto">
+            Independent, anonymous hotel inspections for European tour operators across Cape Town and the Western Cape.
+          </p>
         </div>
 
         {/* Action Buttons: 2 Clear, Focused Choices (Action vs Exploration) */}
@@ -86,8 +70,18 @@ export const Hero: React.FC<HeroProps> = ({
           </button>
         </div>
 
+        {/* Attributed quote */}
+        <figure className="mt-10 max-w-2xl mx-auto">
+          <blockquote className="font-[Georgia,serif] italic text-base sm:text-lg text-zinc-600 leading-relaxed">
+            “A five-star hotel does not automatically guarantee a five-star guest experience.”
+          </blockquote>
+          <figcaption className="mt-1.5 text-[11px] sm:text-xs text-zinc-400">
+            — A. Gutman Milne, Library Hotel Collection, New York
+          </figcaption>
+        </figure>
+
         {/* 3 Simple, Clear Highlights */}
-        <div className="mt-12 pt-8 border-t border-zinc-200/80 w-full max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+        <div className="mt-8 pt-8 border-t border-zinc-200/80 w-full max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
           <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-zinc-200 shadow-xs">
             <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-[#b38a54] shrink-0 mt-0.5">
               <ShieldCheck className="w-4 h-4" />

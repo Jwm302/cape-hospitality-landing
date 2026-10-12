@@ -3,57 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CAPE HOSPITALITY ADVISORS | Hotel Quality Inspections</title>
-    <meta name="description" content="Independent, anonymous hotel quality inspections tailored for premier European travel companies across the Cape, from Cape Town to the Garden Route." />
-    <meta property="og:title" content="CAPE HOSPITALITY ADVISORS | Hotel Quality Inspections" />
-    <meta property="og:description" content="Independent, anonymous hotel quality inspections tailored for premier European travel companies across the Cape, from Cape Town to the Garden Route." />
+    <title>Cape Hospitality Advisors | Independent Hotel Inspections for Tour Operators</title>
+    <meta name="description" content="Know what your guests will find, before they arrive. Independent, anonymous hotel inspections for European tour operators across Cape Town and the Western Cape." />
+    <meta property="og:title" content="Cape Hospitality Advisors | Independent Hotel Inspections for Tour Operators" />
+    <meta property="og:description" content="Know what your guests will find, before they arrive. Independent, anonymous hotel inspections for European tour operators across Cape Town and the Western Cape." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     
-    <script>
-      // Suppress unhandled WebSocket / Vite HMR disconnection events in iFrame proxy
-      window.addEventListener('unhandledrejection', function(event) {
-        var reason = event && event.reason;
-        var msg = (reason && (reason.message || reason.stack || String(reason))) || '';
-        if (msg.indexOf('WebSocket') !== -1 || msg.indexOf('@vite/client') !== -1 || msg.indexOf('vite:ws') !== -1) {
-          event.preventDefault();
-        }
-      });
-      window.addEventListener('error', function(event) {
-        var msg = (event && (event.message || event.filename || '')) || '';
-        if (msg.indexOf('WebSocket') !== -1 || msg.indexOf('@vite/client') !== -1) {
-          event.preventDefault();
-        }
-      });
-    </script>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- 1. LOAD TAILWIND CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- 2. CONFIGURE FONTS & COLORS FOR TAILWIND -->
-    <script>
-      window.tailwind = window.tailwind || {};
-      window.tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              serif: ['Cinzel', 'Georgia', 'serif'],
-              sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
-              cinzel: ['Cinzel', 'serif'],
-              montserrat: ['Montserrat', 'sans-serif'],
-            },
-            colors: {
-              navy: '#10213a',
-            }
-          }
-        }
-      };
-    </script>
-  </head>
+</head>
   <body class="bg-[#fbfbfa] text-zinc-900 antialiased selection:bg-[#10213a] selection:text-white font-sans m-0 p-0">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
