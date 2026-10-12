@@ -1,10 +1,20 @@
 import { GoogleGenAI } from '@google/genai';
-import { Review, ReviewAnalysis, Theme, ThemeQuote } from './types.js';
+import { Review, ReviewAnalysis, RiskCheck, Theme, ThemeQuote } from './types.js';
 
 const MODEL = 'gemini-3.8-flash';
 const MIN_REVIEWS_PER_THEME = 3;
 const MAX_THEMES = 6;
 const MAX_QUOTE_CHARS = 220;
+
+// Checked on every hotel, so operators can compare like with like.
+export const RISK_CHECKS = [
+  { key: 'noise', label: 'Noise', hint: 'traffic, neighbours, music, thin walls, noise at night' },
+  { key: 'hot_water', label: 'Hot water & showers', hint: 'cold or lukewarm water, low pressure, broken showers' },
+  { key: 'cleanliness', label: 'Cleanliness', hint: 'dirty rooms or bathrooms, stained linen, pests' },
+  { key: 'wifi', label: 'Wi-Fi', hint: 'slow, unreliable or no internet' },
+  { key: 'safety', label: 'Safety & security', hint: 'theft, break-ins, feeling unsafe, poor security' },
+  { key: 'power', label: 'Power cuts', hint: 'load-shedding, outages, no backup power' },
+] as const;
 
 const round1 = (n: number) => Math.round(n * 10) / 10;
 const squash = (s: string) => s.replace(/\s+/g, ' ').trim().toLowerCase();
@@ -21,6 +31,10 @@ export async function analyzeReviews(
   const ratings = reviews.map((r) => r.rating).filter((n): n is number => typeof n === 'number');
   const written = reviews.filter((r) => r.text.length > 0);
   const yearAgo = Date.now() - 365 * 24 * 3600 * 1000;
+  const grouped = await groupReviews(written).catch((err) => {
+    console.warn('Theme grouping unavailable:', err?.message);
+    return { themes: [] as Theme[], risks: undefined };
+  });
 
   return {
     sourceLabel,
@@ -33,10 +47,8 @@ export async function analyzeReviews(
     germanCount: reportsLanguage
       ? written.filter((r) => r.language?.toLowerCase().startsWith('de')).length
       : undefined,
-    themes: await groupThemes(written).catch((err) => {
-      console.warn('Theme grouping unavailable:', err?.message);
-      return [];
-    }),
+    themes: grouped.themes,
+    risks: grouped.risks,
     generatedAt: new Date().toISOString(),
   };
 }
@@ -48,8 +60,13 @@ interface ModelTheme {
   quotes?: { review?: unknown; text?: unknown }[];
 }
 
-async function groupThemes(reviews: Review[]): Promise<Theme[]> {
-  if (!process.env.GEMINI_API_KEY || reviews.length < MIN_REVIEWS_PER_THEME) return [];
+interface ModelRisk {
+  reviews?: unknown;
+  quote?: { review?: unknown; text?: unknown } | null;
+}
+
+async function groupReviews(reviews: Review[]): Promise<{ themes: Theme[]; risks?: RiskCheck[] }> {
+  if (!process.env.GEMINI_API_KEY || reviews.length === 0) return { themes: [] };
 
   const numbered = reviews.map((r, i) => ({ n: i, rating: r.rating, text: r.text.slice(0, 1200) }));
   const prompt = `You group hotel guest reviews by topic for a hotel quality report.
@@ -57,13 +74,16 @@ async function groupThemes(reviews: Review[]): Promise<Theme[]> {
 Reviews (JSON, "n" is the review number):
 ${JSON.stringify(numbered)}
 
-Return JSON: {"themes":[{"label":string,"sentiment":"positive"|"negative"|"mixed","reviews":number[],"quotes":[{"review":number,"text":string}]}]}
+Return JSON: {"themes":[{"label":string,"sentiment":"positive"|"negative"|"mixed","reviews":number[],"quotes":[{"review":number,"text":string}]}],
+"risks":{${RISK_CHECKS.map((r) => `"${r.key}":{"reviews":number[],"quote":{"review":number,"text":string}|null}`).join(',')}}}
 
 Rules:
 - Up to ${MAX_THEMES} themes that matter to travellers (e.g. cleanliness, noise, breakfast, staff, location, value, hot water, Wi-Fi).
 - "label": 2-5 plain English words, e.g. "Noise at night", "Friendly staff".
 - "reviews": every review number that clearly mentions the theme. Only include a theme mentioned by at least ${MIN_REVIEWS_PER_THEME} reviews.
 - "quotes": up to 2 short phrases copied EXACTLY, word for word, from the review text (no edits, no ellipses).
+- "risks": for each key, list ONLY the reviews that COMPLAIN about that problem at this property (praise such as "quiet" or "very secure" does not count). Use [] and null when no review complains.
+${RISK_CHECKS.map((r) => `  - ${r.key}: ${r.hint}`).join('\n')}
 - Use only what the reviews say. Do not add facts, scores or advice.`;
 
   const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -75,7 +95,38 @@ Rules:
 
   const parsed = JSON.parse(response.text || '{}');
   const raw: ModelTheme[] = Array.isArray(parsed.themes) ? parsed.themes : [];
-  return raw.map((t) => verifyTheme(t, reviews)).filter((t): t is Theme => t !== null).slice(0, MAX_THEMES);
+  const themes = raw.map((t) => verifyTheme(t, reviews)).filter((t): t is Theme => t !== null).slice(0, MAX_THEMES);
+  const risks =
+    parsed.risks && typeof parsed.risks === 'object'
+      ? RISK_CHECKS.map((r) => verifyRisk(r, parsed.risks[r.key], reviews))
+      : undefined;
+  return { themes, risks };
+}
+
+const validIndexes = (ids: unknown, max: number) =>
+  [...new Set((Array.isArray(ids) ? ids : []).filter((n): n is number => Number.isInteger(n) && n >= 0 && n < max))];
+
+// Same checks as themes: known review numbers only, quote word for word.
+export function verifyRisk(
+  check: { key: string; label: string },
+  raw: ModelRisk | undefined,
+  reviews: Review[],
+): RiskCheck {
+  const valid = validIndexes(raw?.reviews, reviews.length);
+  const result: RiskCheck = { key: check.key, label: check.label, count: valid.length };
+  const n = raw?.quote?.review;
+  const text = typeof raw?.quote?.text === 'string' ? raw.quote.text.trim() : '';
+  if (Number.isInteger(n) && valid.includes(n as number) && text.length >= 8) {
+    const review = reviews[n as number];
+    if (squash(review.text).includes(squash(text))) {
+      result.quote = {
+        text: text.length > MAX_QUOTE_CHARS ? `${text.slice(0, MAX_QUOTE_CHARS).trimEnd()}…` : text,
+        date: review.date,
+        rating: review.rating,
+      };
+    }
+  }
+  return result;
 }
 
 // Rejects anything the reviews don't support: unknown review numbers, too few
@@ -84,8 +135,7 @@ export function verifyTheme(t: ModelTheme, reviews: Review[]): Theme | null {
   if (typeof t.label !== 'string' || !t.label.trim()) return null;
   const sentiment = t.sentiment === 'positive' || t.sentiment === 'negative' ? t.sentiment : 'mixed';
 
-  const ids = Array.isArray(t.reviews) ? t.reviews : [];
-  const valid = [...new Set(ids.filter((n): n is number => Number.isInteger(n) && n >= 0 && n < reviews.length))];
+  const valid = validIndexes(t.reviews, reviews.length);
   if (valid.length < MIN_REVIEWS_PER_THEME) return null;
 
   const quotes: ThemeQuote[] = [];
