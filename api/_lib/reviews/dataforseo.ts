@@ -38,12 +38,13 @@ function parseTimestamp(value: unknown): string | undefined {
 
 export function normalizeItems(items: any[]): Review[] {
   return items
-    .filter((i) => i && (i.review_text || i.original_review_text))
+    // Keep star-only reviews too: they count towards the average and dates.
+    .filter((i) => i && (i.review_text || i.original_review_text || typeof i.rating?.value === 'number'))
     .map((i, idx) => ({
       id: String(i.review_id ?? idx),
       date: parseTimestamp(i.timestamp),
       rating: typeof i.rating?.value === 'number' ? i.rating.value : undefined,
-      text: String(i.review_text || i.original_review_text).trim(),
+      text: String(i.review_text || i.original_review_text || '').trim(),
       language: typeof i.original_language === 'string' ? i.original_language : undefined,
     }));
 }
