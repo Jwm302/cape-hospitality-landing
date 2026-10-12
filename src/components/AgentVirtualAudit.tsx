@@ -1,7 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  Accessibility,
+  AlertTriangle,
   ArrowRight,
+  Car,
+  CheckCircle2,
   Compass,
+  Globe,
+  Mail,
+  Phone,
   ExternalLink,
   Eye,
   FileText,
@@ -17,9 +24,11 @@ import type {
   PlaceSnapshot,
   ReviewAnalysis,
   ReviewsState,
+  RiskCheck,
   SnapshotResponse,
   Theme,
 } from '../../api/_lib/types';
+import { CONTACT_EMAIL, mailtoLink, sendInquiry } from '../lib/sendInquiry';
 
 interface AgentVirtualAuditProps {
   onSelectPropertyForInquiry: (propertyName: string) => void;
@@ -236,7 +245,8 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
               )}
               <ReviewsPanel state={reviews} overallRating={result.place.rating} />
               <BriefCta
-                name={result.place.name}
+                place={result.place}
+                reviews={reviews}
                 onBrief={() => requestBrief(result.place.name)}
                 onAudit={() => onSelectPropertyForInquiry(result.place.name)}
               />
@@ -295,6 +305,7 @@ const PlaceHeader: React.FC<{ place: PlaceSnapshot }> = ({ place }) => (
           <span>{place.address}</span>
         </p>
       )}
+      <PlaceFacts place={place} />
       {place.mapsUrl && (
         <a
           href={place.mapsUrl}
@@ -352,6 +363,52 @@ const Alternatives: React.FC<{ places: PlaceSnapshot[]; onPick: (p: PlaceSnapsho
     </div>
   </div>
 );
+
+const STATUS_LABEL: Record<NonNullable<PlaceSnapshot['status']>, { text: string; tone: string }> = {
+  OPERATIONAL: { text: 'Operating', tone: 'text-emerald-300 border-emerald-500/30 bg-emerald-500/10' },
+  CLOSED_TEMPORARILY: { text: 'Temporarily closed', tone: 'text-rose-300 border-rose-500/40 bg-rose-500/15' },
+  CLOSED_PERMANENTLY: { text: 'Permanently closed', tone: 'text-rose-300 border-rose-500/40 bg-rose-500/15' },
+};
+
+const chip = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[10.5px]';
+const plainChip = `${chip} text-zinc-300 border-white/10 bg-white/5`;
+
+// Facts straight from the Google listing; anything Google doesn't report is left out.
+const PlaceFacts: React.FC<{ place: PlaceSnapshot }> = ({ place }) => {
+  const status = place.status ? STATUS_LABEL[place.status] : null;
+  const hasFacts =
+    status || place.wheelchairEntrance !== undefined || place.parking || place.website || place.phone;
+  if (!hasFacts) return null;
+  return (
+    <div className="mt-2 flex flex-wrap items-center gap-1.5">
+      {status && <span className={`${chip} ${status.tone}`}>{status.text} (Google)</span>}
+      {place.wheelchairEntrance !== undefined && (
+        <span className={plainChip}>
+          <Accessibility className="w-3 h-3" />
+          {place.wheelchairEntrance ? 'Wheelchair-accessible entrance' : 'No wheelchair-accessible entrance'}
+        </span>
+      )}
+      {place.parking && (
+        <span className={plainChip}>
+          <Car className="w-3 h-3" />
+          {place.parking}
+        </span>
+      )}
+      {place.website && (
+        <a href={place.website} target="_blank" rel="noopener noreferrer" className={`${plainChip} hover:text-white`}>
+          <Globe className="w-3 h-3" />
+          Website
+        </a>
+      )}
+      {place.phone && (
+        <a href={`tel:${place.phone.replace(/\s+/g, '')}`} className={`${plainChip} hover:text-white`}>
+          <Phone className="w-3 h-3" />
+          {place.phone}
+        </a>
+      )}
+    </div>
+  );
+};
 
 const ReviewsPanel: React.FC<{ state: ReviewsState | null; overallRating?: number }> = ({ state, overallRating }) => {
   if (!state || state.status === 'disabled') {
@@ -434,6 +491,8 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
         />
       </div>
 
+      {analysis.risks && <RiskChecklist risks={analysis.risks} total={written} />}
+
       {analysis.themes.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {analysis.themes.map((theme) => (
@@ -451,6 +510,44 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
     </div>
   );
 };
+
+const RiskChecklist: React.FC<{ risks: RiskCheck[]; total: number }> = ({ risks, total }) => (
+  <div className="rounded-xl bg-white/[0.03] border border-white/10 p-4">
+    <h5 className="text-sm font-bold text-white">Risk checklist</h5>
+    <p className="text-[11px] text-zinc-400 mt-0.5">
+      Complaints in the {total} written reviews about the issues European guests notice most.
+    </p>
+    <ul className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+      {risks.map((r) => {
+        const icon =
+          r.count === 0 ? (
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          ) : (
+            <AlertTriangle className={`w-4 h-4 shrink-0 ${r.count >= 3 ? 'text-rose-400' : 'text-amber-300'}`} />
+          );
+        return (
+          <li key={r.key} className="rounded-lg bg-white/[0.03] border border-white/5 px-3 py-2">
+            <div className="flex items-center justify-between gap-2">
+              <span className="flex items-center gap-2 text-xs font-semibold text-white">
+                {icon}
+                {r.label}
+              </span>
+              <span className="text-[11px] font-mono text-zinc-300 whitespace-nowrap">
+                {r.count === 0 ? 'No complaints' : `${r.count} complaint${r.count === 1 ? '' : 's'}`}
+              </span>
+            </div>
+            {r.quote && (
+              <p className="mt-1 text-[11px] text-zinc-400 leading-relaxed">
+                <span className="italic">“{r.quote.text}”</span>
+                {r.quote.date && <span className="text-zinc-500"> — {formatMonth(r.quote.date)}</span>}
+              </p>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+);
 
 const Stat: React.FC<{ label: string; value: string; note?: string }> = ({ label, value, note }) => (
   <div className="rounded-xl bg-white/[0.04] border border-white/10 p-3.5">
@@ -499,34 +596,134 @@ const ThemeCard: React.FC<{ theme: Theme; total: number }> = ({ theme, total }) 
   );
 };
 
-const BriefCta: React.FC<{ name: string; onBrief: () => void; onAudit: () => void }> = ({ name, onBrief, onAudit }) => (
-  <div className="rounded-2xl border border-[#d9bd8b]/40 bg-[#b38a54]/10 p-5 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-    <div className="max-w-xl">
-      <h4 className="text-base sm:text-lg font-bold text-white font-serif">
-        Want HolidayCheck, Booking.com and German-guest analysis?
-      </h4>
-      <p className="text-xs text-zinc-300 mt-1 leading-relaxed">
-        Our desk adds the platforms German travellers use and sends a 2-page brief on {name} within 24 hours. Free for
-        travel companies.
-      </p>
+// Plain-text summary of what the visitor saw, sent with their snapshot request.
+function snapshotText(place: PlaceSnapshot, reviews: ReviewsState | null): string {
+  const lines = [
+    `Hotel: ${place.name}`,
+    place.address && `Address: ${place.address}`,
+    typeof place.rating === 'number' && `Google rating: ${place.rating} from ${place.ratingCount ?? '?'} reviews`,
+    place.status && `Google status: ${place.status}`,
+    place.mapsUrl && `Google Maps: ${place.mapsUrl}`,
+  ];
+  if (reviews?.status === 'ready') {
+    const a = reviews.analysis;
+    const w = a.writtenCount ?? a.sampleSize;
+    lines.push(
+      `Sample: latest ${a.sampleSize} Google reviews (${w} written), ${formatMonth(a.dateFrom)} – ${formatMonth(a.dateTo)}`,
+      typeof a.averageRating === 'number' && `Recent average: ${a.averageRating}`,
+      typeof a.lastYearCount === 'number' && `Reviews in last 12 months: ${a.lastYearCount}`,
+      typeof a.germanCount === 'number' && `Written in German: ${a.germanCount} of ${w}`,
+      a.themes.length > 0 && `Themes: ${a.themes.map((t) => `${t.label} (${t.count}/${w})`).join('; ')}`,
+      a.risks && `Risk checklist: ${a.risks.map((r) => `${r.label} ${r.count}`).join('; ')}`,
+    );
+  }
+  return lines.filter(Boolean).join('\n');
+}
+
+const BriefCta: React.FC<{
+  place: PlaceSnapshot;
+  reviews: ReviewsState | null;
+  onBrief: () => void;
+  onAudit: () => void;
+}> = ({ place, reviews, onBrief, onAudit }) => {
+  const [email, setEmail] = useState('');
+  const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [fallbackHref, setFallbackHref] = useState('');
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const address = email.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address)) {
+      setState('error');
+      setFallbackHref('');
+      return;
+    }
+    setState('sending');
+    const subject = `Snapshot request — ${place.name}`;
+    const fields = { Email: address, Hotel: place.name, Snapshot: snapshotText(place, reviews) };
+    try {
+      await sendInquiry(subject, fields, address);
+      setState('sent');
+    } catch {
+      setFallbackHref(mailtoLink(subject, fields));
+      setState('error');
+    }
+  };
+
+  return (
+    <div className="rounded-2xl border border-[#d9bd8b]/40 bg-[#b38a54]/10 p-5 sm:p-6 space-y-4">
+      <div>
+        <h4 className="text-base sm:text-lg font-bold text-white font-serif">
+          Get this snapshot and the full 24h brief by email
+        </h4>
+        <p className="text-xs text-zinc-300 mt-1 leading-relaxed">
+          Our desk adds HolidayCheck, Booking.com and German-guest analysis and sends a 2-page brief on {place.name}{' '}
+          within 24 hours. Free for travel companies.
+        </p>
+      </div>
+
+      {state === 'sent' ? (
+        <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-3 text-xs text-emerald-200 flex items-start gap-2">
+          <CheckCircle2 className="w-4 h-4 shrink-0 mt-px" />
+          <span>
+            Thank you. Our desk will email this snapshot and the full brief on {place.name} to{' '}
+            <strong>{email.trim()}</strong> within 24 hours.
+          </span>
+        </div>
+      ) : (
+        <form onSubmit={submit} className="flex flex-col sm:flex-row gap-2">
+          <div className="flex items-center gap-2 px-3 rounded-xl bg-white/10 border border-white/20 flex-1">
+            <Mail className="w-4 h-4 text-[#d9bd8b] shrink-0" />
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Your work email"
+              aria-label="Your work email"
+              className="w-full bg-transparent text-white placeholder-zinc-400 text-sm py-2.5 focus:outline-hidden"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={state === 'sending'}
+            className="px-5 py-2.5 rounded-xl bg-[#b38a54] hover:bg-[#c59b63] disabled:opacity-60 text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+          >
+            <FileText className="w-3.5 h-3.5" />
+            <span>{state === 'sending' ? 'Sending...' : 'Email me the snapshot + brief'}</span>
+          </button>
+        </form>
+      )}
+
+      {state === 'error' && (
+        <p className="text-[11px] text-rose-300">
+          {fallbackHref ? (
+            <>
+              This couldn’t be sent right now. Please email us at {CONTACT_EMAIL} —{' '}
+              <a href={fallbackHref} className="underline font-semibold">
+                open a pre-filled email
+              </a>
+              .
+            </>
+          ) : (
+            'Please enter a valid email address.'
+          )}
+        </p>
+      )}
+
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 pt-1">
+        <button
+          type="button"
+          onClick={onAudit}
+          className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-zinc-200 hover:text-white text-[11px] font-semibold flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <span>Commission On-Site Audit</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </button>
+        <button type="button" onClick={onBrief} className="text-[11px] text-zinc-400 hover:text-white underline cursor-pointer">
+          or use the full enquiry form
+        </button>
+      </div>
     </div>
-    <div className="flex flex-col gap-2 shrink-0 w-full sm:w-auto">
-      <button
-        type="button"
-        onClick={onBrief}
-        className="px-5 py-3 rounded-xl bg-[#b38a54] hover:bg-[#c59b63] text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer"
-      >
-        <FileText className="w-3.5 h-3.5" />
-        <span>Request Free 24h Brief</span>
-      </button>
-      <button
-        type="button"
-        onClick={onAudit}
-        className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-zinc-200 hover:text-white text-[11px] font-semibold flex items-center justify-center gap-2 cursor-pointer"
-      >
-        <span>Commission On-Site Audit</span>
-        <ArrowRight className="w-3.5 h-3.5" />
-      </button>
-    </div>
-  </div>
-);
+  );
+};

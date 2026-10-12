@@ -9,6 +9,11 @@ export interface PlaceSnapshot {
   rating?: number;
   ratingCount?: number;
   mapsUrl?: string;
+  status?: 'OPERATIONAL' | 'CLOSED_TEMPORARILY' | 'CLOSED_PERMANENTLY';
+  website?: string;
+  phone?: string;
+  wheelchairEntrance?: boolean;
+  parking?: 'Free parking' | 'Paid parking';
 }
 
 export interface Review {
@@ -48,6 +53,15 @@ export interface Theme {
   quotes: ThemeQuote[];
 }
 
+// A fixed list of problems that matter to European guests. Each entry counts
+// written reviews that complain about it (0 is a real result, not a gap).
+export interface RiskCheck {
+  key: string;
+  label: string;
+  count: number;
+  quote?: ThemeQuote;
+}
+
 export interface ReviewAnalysis {
   sourceLabel: string;
   sampleSize: number; // all reviews fetched, including star-only ones
@@ -58,6 +72,7 @@ export interface ReviewAnalysis {
   averageRating?: number;
   germanCount?: number; // written reviews in German; undefined when the source does not report language
   themes: Theme[]; // empty when theme grouping is unavailable
+  risks?: RiskCheck[]; // undefined when the AI step did not run
   generatedAt: string;
 }
 

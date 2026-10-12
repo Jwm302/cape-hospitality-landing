@@ -12,7 +12,21 @@ const FIELD_MASK = [
   'places.googleMapsUri',
   'places.primaryTypeDisplayName',
   'places.types',
+  'places.businessStatus',
+  'places.websiteUri',
+  'places.internationalPhoneNumber',
+  'places.accessibilityOptions',
+  'places.parkingOptions',
 ].join(',');
+
+const STATUSES = new Set(['OPERATIONAL', 'CLOSED_TEMPORARILY', 'CLOSED_PERMANENTLY']);
+
+function parkingSummary(o: any): PlaceSnapshot['parking'] {
+  if (!o || typeof o !== 'object') return undefined;
+  if (o.freeParkingLot || o.freeStreetParking || o.freeGarageParking) return 'Free parking';
+  if (o.paidParkingLot || o.paidStreetParking || o.paidGarageParking || o.valetParking) return 'Paid parking';
+  return undefined;
+}
 
 // Bias results towards the Western Cape (Cape Town to the Garden Route).
 const WESTERN_CAPE = {
@@ -85,6 +99,14 @@ export async function findPlaces(query: string): Promise<PlaceSnapshot[]> {
       rating: typeof p.rating === 'number' ? p.rating : undefined,
       ratingCount: typeof p.userRatingCount === 'number' ? p.userRatingCount : undefined,
       mapsUrl: p.googleMapsUri,
+      status: STATUSES.has(p.businessStatus) ? p.businessStatus : undefined,
+      website: typeof p.websiteUri === 'string' ? p.websiteUri : undefined,
+      phone: typeof p.internationalPhoneNumber === 'string' ? p.internationalPhoneNumber : undefined,
+      wheelchairEntrance:
+        typeof p.accessibilityOptions?.wheelchairAccessibleEntrance === 'boolean'
+          ? p.accessibilityOptions.wheelchairAccessibleEntrance
+          : undefined,
+      parking: parkingSummary(p.parkingOptions),
       lodging: Array.isArray(p.types) && p.types.includes('lodging'),
     }));
   const ranked = rankPlaces(query, places);
