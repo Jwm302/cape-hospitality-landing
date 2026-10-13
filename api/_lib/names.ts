@@ -30,9 +30,16 @@ export function sameBusiness(googleName: string, listingTitle: string): boolean 
   return shared.length / Math.min(a.length, b.size) >= 0.6;
 }
 
-// "Chapmans Peak Dr, Hout Bay, 7806" -> "Hout Bay": narrows the search to the right town.
+// Afrikaans names Google sometimes uses in addresses.
+const CITY_NAMES: Record<string, string> = { kaapstad: 'Cape Town' };
+
+// The town or city, which narrows a search without pulling in nearby places:
+// "Chapmans Peak Dr, Hout Bay, 7806" -> "Hout Bay";
+// "Silo Square, Victoria & Alfred Waterfront, Cape Town, 8001" -> "Cape Town"
+// (the neighbourhood would also match the Victoria & Alfred Hotel).
 export function townFromAddress(address: string): string | undefined {
   const parts = address.split(',').map((p) => p.trim()).filter(Boolean);
   const places = parts.slice(parts.length > 2 ? 1 : 0).filter((p) => !/\d{4}/.test(p) && !/south africa/i.test(p));
-  return places[0];
+  const town = places[places.length - 1];
+  return town ? CITY_NAMES[town.toLowerCase()] ?? town : undefined;
 }
