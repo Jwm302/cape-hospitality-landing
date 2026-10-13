@@ -71,28 +71,95 @@ interface ModelRisk {
   complaints?: { review?: unknown; quote?: unknown }[];
 }
 
+// Accepts the expected {complaints:[{review,quote}]} and close variants
+// (a bare array, "reviews", or plain review numbers), so a small change in
+// the model's answer cannot silently turn complaints into zero.
+function complaintList(raw: unknown): { review?: unknown; quote?: unknown }[] {
+  const r = raw as any;
+  const list = Array.isArray(r) ? r : Array.isArray(r?.complaints) ? r.complaints : Array.isArray(r?.reviews) ? r.reviews : [];
+  return list.map((c: any) => (typeof c === 'number' || typeof c === 'string' ? { review: c } : c));
+}
+
 // Two smaller requests run side by side (themes, and the risk checklist), with
 // minimal model "thinking": the task is sorting and copying, not reasoning.
-// If the faster setting is ever rejected, the request is repeated with defaults.
-async function askJson(ai: GoogleGenAI, prompt: string, label: string): Promise<any> {
-  const config = { responseMimeType: 'application/json', temperature: 0 };
+// A JSON schema fixes the shape of each answer. If the faster setting is ever
+// rejected, the request is repeated with defaults.
+async function askJson(ai: GoogleGenAI, prompt: string, schema: object, label: string): Promise<any> {
+  const base = { responseMimeType: 'application/json', temperature: 0 };
+  const attempts = [
+    { mode: 'minimal', config: { ...base, responseJsonSchema: schema, thinkingConfig: { thinkingLevel: ThinkingLevel.MINIMAL } } },
+    { mode: 'default', config: { ...base, responseJsonSchema: schema } },
+    { mode: 'no schema', config: base },
+  ];
   const started = Date.now();
-  try {
-    const fast = await ai.models.generateContent({
-      model: MODEL,
-      contents: prompt,
-      config: { ...config, thinkingConfig: { thinkingLevel: ThinkingLevel.MINIMAL } },
-    });
-    const parsed = JSON.parse(fast.text || '{}');
-    console.info(`Gemini ${label}: ${Date.now() - started} ms`);
-    return parsed;
-  } catch (err: any) {
-    console.warn(`Gemini ${label} with minimal thinking failed (${err?.message}); retrying with defaults`);
-    const slow = await ai.models.generateContent({ model: MODEL, contents: prompt, config });
-    console.info(`Gemini ${label} (default thinking): ${Date.now() - started} ms`);
-    return JSON.parse(slow.text || '{}');
+  let lastError: any;
+  for (const { mode, config } of attempts) {
+    try {
+      const res = await ai.models.generateContent({ model: MODEL, contents: prompt, config });
+      const parsed = JSON.parse(res.text || '{}');
+      console.info(`Gemini ${label} (${mode}): ${Date.now() - started} ms, thoughts ${res.usageMetadata?.thoughtsTokenCount ?? 0} tokens`);
+      return parsed;
+    } catch (err: any) {
+      lastError = err;
+      console.warn(`Gemini ${label} (${mode}) failed: ${err?.message}`);
+    }
   }
+  throw lastError;
 }
+
+const QUOTE_SCHEMA = {
+  type: 'object',
+  properties: { review: { type: 'integer' }, text: { type: 'string' } },
+  required: ['review', 'text'],
+};
+const THEMES_SCHEMA = {
+  type: 'object',
+  properties: {
+    themes: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          label: { type: 'string' },
+          sentiment: { type: 'string', enum: ['positive', 'negative', 'mixed'] },
+          reviews: { type: 'array', items: { type: 'integer' } },
+          quotes: { type: 'array', items: QUOTE_SCHEMA },
+        },
+        required: ['label', 'sentiment', 'reviews', 'quotes'],
+      },
+    },
+  },
+  required: ['themes'],
+};
+const RISKS_SCHEMA = {
+  type: 'object',
+  properties: {
+    risks: {
+      type: 'object',
+      properties: Object.fromEntries(
+        RISK_CHECKS.map((r) => [
+          r.key,
+          {
+            type: 'object',
+            properties: {
+              complaints: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: { review: { type: 'integer' }, quote: { type: 'string' } },
+                  required: ['review', 'quote'],
+                },
+              },
+            },
+            required: ['complaints'],
+          },
+        ]),
+      ),
+      required: RISK_CHECKS.map((r) => r.key),
+    },
+  },
+  required: ['risks'],
+};
 
 async function groupReviews(reviews: Review[]): Promise<{ themes: Theme[]; risks?: RiskCheck[] }> {
   if (!process.env.GEMINI_API_KEY || reviews.length === 0) return { themes: [] };
@@ -107,7 +174,8 @@ ${JSON.stringify(numbered)}
 Return JSON: {"themes":[{"label":string,"sentiment":"positive"|"negative"|"mixed","reviews":number[],"quotes":[{"review":number,"text":string}]}]}
 
 Rules:
-- Up to ${MAX_THEMES} themes that matter to travellers (e.g. cleanliness, noise, breakfast, staff, location, value, hot water, Wi-Fi).
+- Up to ${MAX_THEMES} themes that matter to travellers (e.g. location, staff, breakfast, food, rooms, value, pool, views).
+- Do NOT make themes about these topics, which a separate checklist counts: ${RISK_CHECKS.map((r) => r.label.toLowerCase()).join(', ')}.
 - "label": 2-5 plain English words, e.g. "Noise at night", "Friendly staff".
 - "reviews": every review number that clearly mentions the theme. Only include a theme mentioned by at least ${MIN_REVIEWS_PER_THEME} reviews.
 - "quotes": up to 2 short phrases copied EXACTLY, word for word, from the review text (no edits, no ellipses).
@@ -122,8 +190,8 @@ ${RISK_CHECKS.map((r) => `  - ${r.key}: ${r.hint}`).join('\n')}
 
   const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
   const [themesResult, risksResult] = await Promise.allSettled([
-    askJson(ai, themesPrompt, 'themes'),
-    askJson(ai, risksPrompt, 'risks'),
+    askJson(ai, themesPrompt, THEMES_SCHEMA, 'themes'),
+    askJson(ai, risksPrompt, RISKS_SCHEMA, 'risks'),
   ]);
 
   let themes: Theme[] = [];
@@ -135,7 +203,9 @@ ${RISK_CHECKS.map((r) => `  - ${r.key}: ${r.hint}`).join('\n')}
   }
 
   let risks: RiskCheck[] | undefined;
-  const parsedRisks = risksResult.status === 'fulfilled' ? risksResult.value.risks : undefined;
+  // Normally {"risks":{...}}; also accept the topics at the top level.
+  const value = risksResult.status === 'fulfilled' ? risksResult.value : undefined;
+  const parsedRisks = value?.risks ?? (RISK_CHECKS.some((r) => value && r.key in value) ? value : undefined);
   if (parsedRisks && typeof parsedRisks === 'object') {
     risks = RISK_CHECKS.map((r) => verifyRisk(r, parsedRisks[r.key], reviews));
   } else if (risksResult.status === 'rejected') {
@@ -159,8 +229,8 @@ export function verifyRisk(
 ): RiskCheck {
   const seen = new Set<number>();
   const mentions: ThemeQuote[] = [];
-  for (const c of Array.isArray(raw?.complaints) ? raw.complaints : []) {
-    const n = c?.review;
+  for (const c of complaintList(raw)) {
+    const n = typeof c?.review === 'string' ? Number(c.review) : c?.review;
     if (!Number.isInteger(n) || (n as number) < 0 || (n as number) >= reviews.length || seen.has(n as number)) continue;
     seen.add(n as number);
     const review = reviews[n as number];
