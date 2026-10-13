@@ -1,7 +1,7 @@
 import { handleReviewPoll } from './_lib/handlers.js';
 
-// Grouping 100 reviews into themes can take a few seconds.
-export const maxDuration = 60;
+// Grouping 150 Google and Tripadvisor reviews into themes can take close to a minute.
+export const maxDuration = 300;
 
 // GET ?jobId=...&placeId=... -> { status: 'pending' } or the finished analysis.
 export default async function handler(req: any, res: any) {

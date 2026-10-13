@@ -34,6 +34,16 @@ export async function cacheSet(key: string, value: unknown, ttlSeconds: number):
   await command('SET', key, JSON.stringify(value), 'EX', ttlSeconds);
 }
 
+// Sets the key only if it is free; true when this caller got it (always true without a cache).
+export async function cacheClaim(key: string, ttlSeconds: number): Promise<boolean> {
+  if (!cacheConfigured) return true;
+  return (await command('SET', key, '1', 'NX', 'EX', ttlSeconds)) === 'OK';
+}
+
+export async function cacheDelete(key: string): Promise<void> {
+  await command('DEL', key);
+}
+
 // Counts events per UTC day; returns the new count (0 when no cache).
 export async function countToday(name: string): Promise<number> {
   const key = `count:${name}:${new Date().toISOString().slice(0, 10)}`;
