@@ -11,7 +11,7 @@ import { PlaceSnapshot, PlatformScores, ReviewAnalysis, ReviewsState, SnapshotRe
 
 const REVIEW_LIMIT = 100;
 const ANALYSIS_TTL = 30 * 24 * 3600; // reuse a hotel's analysis for 30 days
-const ANALYSIS_VERSION = 'v2'; // bump when the analysis format changes, so old results are rebuilt
+const ANALYSIS_VERSION = 'v3'; // bump when the analysis format changes, so old results are rebuilt
 const JOB_TTL = 15 * 60;
 const ANALYSIS_LOCK_TTL = 240; // longer than one analysis, shorter than the browser's polling
 const MAX_REVIEW_LOOKUPS_PER_DAY = Number(process.env.MAX_REVIEW_LOOKUPS_PER_DAY) || 200;

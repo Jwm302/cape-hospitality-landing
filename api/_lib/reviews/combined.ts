@@ -1,4 +1,4 @@
-import { PlaceSnapshot, ReviewBatch, ReviewJob, ReviewSource } from '../types.js';
+import { PlaceSnapshot, Review, ReviewBatch, ReviewJob, ReviewSource } from '../types.js';
 import { dataForSeo } from './dataforseo.js';
 import { tripadvisor } from './tripadvisor.js';
 
@@ -55,8 +55,20 @@ export const googleAndTripadvisor: ReviewSource = {
     }
     if (!extra) return Date.now() - startedMs < TRIPADVISOR_WAIT_MS ? null : google;
     return {
-      reviews: [...google.reviews, ...extra.reviews],
+      reviews: [...google.reviews, ...withoutCrossPosts(extra.reviews, google.reviews)],
       listings: [...google.listings, ...extra.listings],
     };
   },
 };
+
+const squash = (s: string) => s.replace(/\s+/g, ' ').trim().toLowerCase();
+
+// Some guests post the same review on Google and Tripadvisor; count it once.
+// Tripadvisor text starts with the review title, so containment is checked both ways.
+export function withoutCrossPosts(extra: Review[], google: Review[]): Review[] {
+  const googleTexts = google.map((r) => squash(r.text)).filter((t) => t.length >= 40);
+  return extra.filter((r) => {
+    const text = squash(r.text);
+    return text.length < 40 || !googleTexts.some((g) => text.includes(g) || g.includes(text));
+  });
+}
