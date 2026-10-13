@@ -74,7 +74,8 @@ export interface RiskCheck {
   key: string;
   label: string;
   count: number;
-  quote?: ThemeQuote;
+  quote?: ThemeQuote; // the most recent complaint
+  mentions?: ThemeQuote[]; // every complaint, newest first (older cached results lack this)
 }
 
 export interface SourceCount extends SourceListing {
