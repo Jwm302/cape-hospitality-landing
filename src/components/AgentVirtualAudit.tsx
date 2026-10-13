@@ -356,8 +356,13 @@ const PlaceHeader: React.FC<{ place: PlaceSnapshot }> = ({ place }) => (
   </div>
 );
 
-const formatScore = (s: { value: number; max?: number }) =>
-  s.max === 100 ? `${Math.round(s.value)}%` : `${Number.isInteger(s.value) ? s.value : s.value.toFixed(1)}${s.max ? `/${s.max}` : ''}`;
+// Google Hotels sends site scores on a 5-point scale, often without saying so.
+const formatScore = (s: { value: number; max?: number }) => {
+  if (s.max === 100) return `${Math.round(s.value)}%`;
+  const max = s.max ?? (s.value <= 5 ? 5 : s.value <= 10 ? 10 : undefined);
+  const value = Math.round(s.value * 10) / 10;
+  return `${Number.isInteger(value) ? value : value.toFixed(1)}${max ? `/${max}` : ''}`;
+};
 
 const PlatformScoresRow: React.FC<{ state: PlatformScores | 'loading' | null }> = ({ state }) => {
   if (!state || (typeof state === 'object' && state.status === 'unavailable')) return null;
