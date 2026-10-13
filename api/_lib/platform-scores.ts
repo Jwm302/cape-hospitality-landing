@@ -27,7 +27,7 @@ export function toScore(entry: any): PlatformScore | null {
   const max = percent ? 100 : typeof entry.rating.rating_max === 'number' ? entry.rating.rating_max : undefined;
   return {
     site,
-    value,
+    value: Math.round(value * 10) / 10,
     max,
     votes: typeof entry.rating.votes_count === 'number' ? entry.rating.votes_count : undefined,
     url: typeof entry.url === 'string' && /^https?:\/\//.test(entry.url) ? entry.url : undefined,
