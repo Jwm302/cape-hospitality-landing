@@ -232,7 +232,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
           {isLoading && (
             <div className="rounded-2xl bg-[#0c182a]/90 border border-[#d9bd8b]/30 p-8 text-center">
               <Loader2 className="w-7 h-7 animate-spin text-[#d9bd8b] mx-auto mb-3" />
-              <p className="text-sm text-zinc-200">Looking up “{submittedQuery}” on Google...</p>
+              <p className="text-sm text-zinc-200">Finding “{submittedQuery}”...</p>
             </div>
           )}
 
@@ -370,7 +370,7 @@ const PlatformScoresRow: React.FC<{ state: PlatformScores | 'loading' | null }> 
   if (state === 'loading') {
     return (
       <p className="text-[11px] text-zinc-400 flex items-center gap-2 -mt-2">
-        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#d9bd8b]" /> Checking scores on other booking sites...
+        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#d9bd8b]" /> Collecting scores from other booking sites...
       </p>
     );
   }
@@ -506,8 +506,11 @@ const ReviewsPanel: React.FC<{ state: ReviewsState | null; overallRating?: numbe
       <div className="rounded-xl bg-white/[0.03] border border-white/10 p-5 flex items-center gap-3">
         <Loader2 className="w-5 h-5 animate-spin text-[#d9bd8b] shrink-0" />
         <div>
-          <p className="text-sm text-white">Reading the latest Google and Tripadvisor reviews...</p>
-          <p className="text-[11px] text-zinc-400">This usually takes about a minute. The Google rating above is already live.</p>
+          <p className="text-sm text-white">Aggregating and analysing recent guest reviews from several platforms...</p>
+          <p className="text-[11px] text-zinc-400">
+            We combine the reviews, remove duplicates, count every complaint and check each quote. This usually takes about a
+            minute.
+          </p>
         </div>
       </div>
     );
@@ -697,10 +700,10 @@ const Stat: React.FC<{ label: string; value: string; note?: string }> = ({ label
 const ThemeCard: React.FC<{ theme: Theme; total: number }> = ({ theme, total }) => {
   const tone =
     theme.sentiment === 'positive'
-      ? { icon: <ThumbsUp className="w-3.5 h-3.5 text-emerald-400" />, bar: 'bg-emerald-400' }
+      ? { icon: <ThumbsUp className="w-3.5 h-3.5 text-emerald-400" /> }
       : theme.sentiment === 'negative'
-      ? { icon: <ThumbsDown className="w-3.5 h-3.5 text-rose-400" />, bar: 'bg-rose-400' }
-      : { icon: <MessageSquareQuote className="w-3.5 h-3.5 text-amber-300" />, bar: 'bg-amber-300' };
+      ? { icon: <ThumbsDown className="w-3.5 h-3.5 text-rose-400" /> }
+      : { icon: <MessageSquareQuote className="w-3.5 h-3.5 text-amber-300" /> };
 
   return (
     <div className="rounded-xl bg-white/[0.03] border border-white/10 p-4">
@@ -714,7 +717,7 @@ const ThemeCard: React.FC<{ theme: Theme; total: number }> = ({ theme, total }) 
         </span>
       </div>
       <div className="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden">
-        <div className={`h-full ${tone.bar}`} style={{ width: `${Math.min(100, (theme.count / total) * 100)}%` }} />
+        <div className="h-full bg-[#b38a54]" style={{ width: `${Math.min(100, (theme.count / total) * 100)}%` }} />
       </div>
       {theme.quotes.length > 0 && (
         <ul className="mt-3 space-y-2">
