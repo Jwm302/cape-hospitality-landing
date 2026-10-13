@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import type {
   PlaceSnapshot,
+  PlatformScores,
   ReviewAnalysis,
   ReviewsState,
   RiskCheck,
@@ -54,6 +55,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<SnapshotResponse | null>(null);
   const [reviews, setReviews] = useState<ReviewsState | null>(null);
+  const [scores, setScores] = useState<PlatformScores | 'loading' | null>(null);
   const [inputError, setInputError] = useState('');
   // Incremented on every search so stale polls stop updating the page.
   const searchId = useRef(0);
@@ -65,6 +67,17 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
   const requestBrief = (name: string) => {
     if (onRequestVirtualAuditForProperty) onRequestVirtualAuditForProperty(name);
     else onRequestFreeDataPackage();
+  };
+
+  const loadScores = async (placeId: string, id: number) => {
+    setScores('loading');
+    try {
+      const res = await fetch(`/api/platform-scores?placeId=${encodeURIComponent(placeId)}`);
+      const data: PlatformScores = res.ok ? await res.json() : { status: 'unavailable' };
+      if (searchId.current === id) setScores(data);
+    } catch {
+      if (searchId.current === id) setScores({ status: 'unavailable' });
+    }
   };
 
   const pollReviews = async (jobId: string, placeId: string, id: number) => {
@@ -105,6 +118,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
     setIsLoading(true);
     setResult(null);
     setReviews(null);
+    setScores(null);
 
     try {
       const res = await fetch('/api/hotel-snapshot', {
@@ -122,6 +136,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
       setResult(snapshot);
       if (snapshot.status === 'ok') {
         setReviews(snapshot.reviews);
+        loadScores(snapshot.place.placeId, id);
         if (snapshot.reviews.status === 'pending') {
           pollReviews(snapshot.reviews.jobId, snapshot.place.placeId, id);
         }
@@ -239,6 +254,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
           {!isLoading && result?.status === 'ok' && (
             <div className="rounded-2xl bg-[#0c182a] border border-white/15 shadow-2xl p-6 sm:p-8 text-left space-y-6">
               <PlaceHeader place={result.place} />
+              <PlatformScoresRow state={scores} />
               {result.alternatives && result.alternatives.length > 0 && (
                 <Alternatives
                   places={result.alternatives}
@@ -249,6 +265,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
               <BriefCta
                 place={result.place}
                 reviews={reviews}
+                scores={scores}
                 onBrief={() => requestBrief(result.place.name)}
                 onAudit={() => onSelectPropertyForInquiry(result.place.name)}
               />
@@ -338,6 +355,64 @@ const PlaceHeader: React.FC<{ place: PlaceSnapshot }> = ({ place }) => (
     </div>
   </div>
 );
+
+const formatScore = (s: { value: number; max?: number }) =>
+  s.max === 100 ? `${Math.round(s.value)}%` : `${Number.isInteger(s.value) ? s.value : s.value.toFixed(1)}${s.max ? `/${s.max}` : ''}`;
+
+const PlatformScoresRow: React.FC<{ state: PlatformScores | 'loading' | null }> = ({ state }) => {
+  if (!state || (typeof state === 'object' && state.status === 'unavailable')) return null;
+  if (state === 'loading') {
+    return (
+      <p className="text-[11px] text-zinc-400 flex items-center gap-2 -mt-2">
+        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#d9bd8b]" /> Checking scores on other booking sites...
+      </p>
+    );
+  }
+  if (state.status === 'none') {
+    return (
+      <p className="text-[11px] text-zinc-500 -mt-2">
+        No scores from other booking sites are listed for this property on Google Hotels.
+      </p>
+    );
+  }
+  return (
+    <div className="-mt-2">
+      <h4 className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">Scores across platforms</h4>
+      <ul className="mt-2 flex flex-wrap gap-2">
+        {state.scores.map((s) => {
+          const body = (
+            <>
+              <span className="text-zinc-300">{s.site}</span>
+              <span className="font-bold text-white">{formatScore(s)}</span>
+              {typeof s.votes === 'number' && <span className="text-zinc-500">({formatCount(s.votes)})</span>}
+            </>
+          );
+          return (
+            <li key={s.site}>
+              {s.url ? (
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.04] border border-white/10 hover:border-[#d9bd8b]/50 px-3 py-1.5 text-xs"
+                >
+                  {body}
+                </a>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.04] border border-white/10 px-3 py-1.5 text-xs">
+                  {body}
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+      <p className="mt-1.5 text-[10px] text-zinc-500">
+        As listed on Google Hotels under “Reviews from the web”. Each site uses its own scale.
+      </p>
+    </div>
+  );
+};
 
 const Alternatives: React.FC<{ places: PlaceSnapshot[]; onPick: (p: PlaceSnapshot) => void }> = ({
   places,
@@ -628,7 +703,7 @@ function sourceNames(a: ReviewAnalysis): string {
 }
 
 // Plain-text summary of what the visitor saw, sent with their snapshot request.
-function snapshotText(place: PlaceSnapshot, reviews: ReviewsState | null): string {
+function snapshotText(place: PlaceSnapshot, reviews: ReviewsState | null, scores?: PlatformScores | 'loading' | null): string {
   const lines = [
     `Hotel: ${place.name}`,
     place.address && `Address: ${place.address}`,
@@ -651,15 +726,19 @@ function snapshotText(place: PlaceSnapshot, reviews: ReviewsState | null): strin
       a.risks && `Risk checklist: ${a.risks.map((r) => `${r.label} ${r.count}`).join('; ')}`,
     );
   }
+  if (scores && scores !== 'loading' && scores.status === 'ok') {
+    lines.push(`Other platforms (Google Hotels): ${scores.scores.map((s) => `${s.site} ${formatScore(s)}`).join('; ')}`);
+  }
   return lines.filter(Boolean).join('\n');
 }
 
 const BriefCta: React.FC<{
   place: PlaceSnapshot;
   reviews: ReviewsState | null;
+  scores: PlatformScores | 'loading' | null;
   onBrief: () => void;
   onAudit: () => void;
-}> = ({ place, reviews, onBrief, onAudit }) => {
+}> = ({ place, reviews, scores, onBrief, onAudit }) => {
   const [email, setEmail] = useState('');
   const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [fallbackHref, setFallbackHref] = useState('');
@@ -674,7 +753,7 @@ const BriefCta: React.FC<{
     }
     setState('sending');
     const subject = `Desk Brief request — ${place.name}`;
-    const fields = { Email: address, Hotel: place.name, Snapshot: snapshotText(place, reviews) };
+    const fields = { Email: address, Hotel: place.name, Snapshot: snapshotText(place, reviews, scores) };
     try {
       await sendInquiry(subject, fields, address);
       setState('sent');

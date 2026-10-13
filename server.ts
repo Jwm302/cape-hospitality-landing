@@ -4,7 +4,7 @@ import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { handleReviewPoll, handleSnapshot } from './api/_lib/handlers.ts';
+import { handlePlatformScores, handleReviewPoll, handleSnapshot } from './api/_lib/handlers.ts';
 
 dotenv.config();
 
@@ -24,6 +24,11 @@ app.post('/api/hotel-snapshot', async (req: Request, res: Response) => {
 
 app.get('/api/hotel-reviews', async (req: Request, res: Response) => {
   const result = await handleReviewPoll(req.query.jobId, req.query.placeId);
+  res.status(result.status).json(result.body);
+});
+
+app.get('/api/platform-scores', async (req: Request, res: Response) => {
+  const result = await handlePlatformScores(req.query.placeId);
   res.status(result.status).json(result.body);
 });
 
