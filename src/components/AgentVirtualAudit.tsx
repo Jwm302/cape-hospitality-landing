@@ -154,7 +154,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
 
           <p className="mt-3 text-sm sm:text-base text-zinc-300 font-light leading-relaxed max-w-2xl mx-auto">
             Two parts. First an <strong className="text-white font-medium">instant snapshot</strong>: the hotel&rsquo;s
-            live Google rating and what the latest 100 guests talk about, counted, dated and sourced. Then, on request,
+            live Google rating and what recent guests say on Google and Tripadvisor, counted, dated and sourced. Then, on request,
             the <strong className="text-white font-medium">free 24-hour Desk Brief</strong>: what German-speaking guests
             say, checked by our team and emailed to you.
           </p>
@@ -425,7 +425,7 @@ const ReviewsPanel: React.FC<{ state: ReviewsState | null; overallRating?: numbe
       <div className="rounded-xl bg-white/[0.03] border border-white/10 p-5 flex items-center gap-3">
         <Loader2 className="w-5 h-5 animate-spin text-[#d9bd8b] shrink-0" />
         <div>
-          <p className="text-sm text-white">Reading the latest 100 guest reviews...</p>
+          <p className="text-sm text-white">Reading the latest Google and Tripadvisor reviews...</p>
           <p className="text-[11px] text-zinc-400">This usually takes about a minute. The Google rating above is already live.</p>
         </div>
       </div>
@@ -463,7 +463,7 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
       <div>
         <h4 className="text-base font-bold text-white font-serif">What recent guests say</h4>
         <p className="text-[11px] font-mono text-zinc-400 mt-0.5">
-          Based on the latest {n} {analysis.sourceLabel} ({written} with written comments)
+          Based on the latest {sampleText(analysis)} ({written} with written comments)
           {range}
         </p>
       </div>
@@ -507,7 +507,24 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
 
       <p className="text-[10px] text-zinc-500 leading-relaxed">
         Themes are grouped by AI from the review text. Counts show how many written reviews in this sample mention each
-        theme, and quotes are copied word for word. The average includes star-only ratings. Review data: Google.
+        theme, and quotes are copied word for word. The average includes star-only ratings. Review data:{' '}
+        {sourceNames(analysis)}.
+        {analysis.sources
+          ?.filter((s) => s.source !== 'Google' && s.name)
+          .map((s) => (
+            <span key={s.source}>
+              {' '}
+              {s.source} listing:{' '}
+              {s.url ? (
+                <a href={s.url} target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-300">
+                  {s.name}
+                </a>
+              ) : (
+                s.name
+              )}
+              .
+            </span>
+          ))}
       </p>
     </div>
   );
@@ -541,7 +558,9 @@ const RiskChecklist: React.FC<{ risks: RiskCheck[]; total: number }> = ({ risks,
             {r.quote && (
               <p className="mt-1 text-[11px] text-zinc-400 leading-relaxed">
                 <span className="italic">“{r.quote.text}”</span>
-                {r.quote.date && <span className="text-zinc-500"> — {formatMonth(r.quote.date)}</span>}
+                {(r.quote.date || r.quote.source) && (
+                  <span className="text-zinc-500"> — {[formatMonth(r.quote.date), r.quote.source].filter(Boolean).join(', ')}</span>
+                )}
               </p>
             )}
           </li>
@@ -588,7 +607,7 @@ const ThemeCard: React.FC<{ theme: Theme; total: number }> = ({ theme, total }) 
               <span className="italic">“{q.text}”</span>
               <span className="text-zinc-500">
                 {' '}
-                — {[formatMonth(q.date), typeof q.rating === 'number' ? `${q.rating}★` : ''].filter(Boolean).join(', ')}
+                — {[formatMonth(q.date), typeof q.rating === 'number' ? `${q.rating}★` : '', q.source].filter(Boolean).join(', ')}
               </span>
             </li>
           ))}
@@ -597,6 +616,16 @@ const ThemeCard: React.FC<{ theme: Theme; total: number }> = ({ theme, total }) 
     </div>
   );
 };
+
+// "100 Google + 50 Tripadvisor reviews", or "100 Google reviews" for older or Google-only results.
+function sampleText(a: ReviewAnalysis): string {
+  if (!a.sources?.length) return `${a.sampleSize} ${a.sourceLabel}`;
+  return `${a.sources.map((s) => `${s.count} ${s.source}`).join(' + ')} reviews`;
+}
+
+function sourceNames(a: ReviewAnalysis): string {
+  return a.sources?.length ? a.sources.map((s) => s.source).join(' and ') : 'Google';
+}
 
 // Plain-text summary of what the visitor saw, sent with their snapshot request.
 function snapshotText(place: PlaceSnapshot, reviews: ReviewsState | null): string {
@@ -611,7 +640,10 @@ function snapshotText(place: PlaceSnapshot, reviews: ReviewsState | null): strin
     const a = reviews.analysis;
     const w = a.writtenCount ?? a.sampleSize;
     lines.push(
-      `Sample: latest ${a.sampleSize} Google reviews (${w} written), ${formatMonth(a.dateFrom)} – ${formatMonth(a.dateTo)}`,
+      `Sample: latest ${sampleText(a)} (${w} written), ${formatMonth(a.dateFrom)} – ${formatMonth(a.dateTo)}`,
+      ...(a.sources ?? [])
+        .filter((s) => s.source !== 'Google' && s.name)
+        .map((s) => `${s.source} listing: ${s.name}${s.url ? ` (${s.url})` : ''}`),
       typeof a.averageRating === 'number' && `Recent average: ${a.averageRating}`,
       typeof a.lastYearCount === 'number' && `Reviews in last 12 months: ${a.lastYearCount}`,
       typeof a.germanCount === 'number' && `Written in German: ${a.germanCount} of ${w}`,

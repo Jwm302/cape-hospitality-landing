@@ -74,7 +74,7 @@ async function startReviews(place: PlaceSnapshot): Promise<ReviewsState> {
       await cacheSet(jobKey, job.jobId, JOB_TTL);
       return { status: 'pending', jobId: job.jobId };
     }
-    const analysis = await analyzeReviews(job.reviews, source.label, source.reportsLanguage);
+    const analysis = await analyzeReviews(job.batch, source.reportsLanguage);
     await cacheSet(analysisKey, analysis, ANALYSIS_TTL);
     return { status: 'ready', analysis };
   } catch (err: any) {
@@ -95,9 +95,9 @@ export async function handleReviewPoll(jobId: unknown, placeId: unknown): Promis
   if (cached) return ok({ status: 'ready', analysis: cached } satisfies ReviewsState);
 
   try {
-    const reviews = await source.poll(jobId);
-    if (!reviews) return ok({ status: 'pending', jobId } satisfies ReviewsState);
-    const analysis = await analyzeReviews(reviews, source.label, source.reportsLanguage);
+    const batch = await source.poll(jobId);
+    if (!batch) return ok({ status: 'pending', jobId } satisfies ReviewsState);
+    const analysis = await analyzeReviews(batch, source.reportsLanguage);
     await cacheSet(analysisKey, analysis, ANALYSIS_TTL);
     return ok({ status: 'ready', analysis } satisfies ReviewsState);
   } catch (err: any) {

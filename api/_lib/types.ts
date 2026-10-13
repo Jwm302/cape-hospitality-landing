@@ -18,15 +18,29 @@ export interface PlaceSnapshot {
 
 export interface Review {
   id: string;
+  source?: string; // e.g. "Google", "Tripadvisor"
   date?: string; // ISO 8601
   rating?: number; // 1-5
   text: string;
   language?: string; // original language code, when the source reports it
 }
 
+// Where a batch of reviews came from, shown to visitors for transparency.
+export interface SourceListing {
+  source: string; // e.g. "Tripadvisor"
+  name?: string; // listing title on that site
+  url?: string;
+  total?: number; // all reviews on that listing
+}
+
+export interface ReviewBatch {
+  reviews: Review[];
+  listings: SourceListing[];
+}
+
 export type ReviewJob =
   | { kind: 'pending'; jobId: string }
-  | { kind: 'ready'; reviews: Review[] };
+  | { kind: 'ready'; batch: ReviewBatch };
 
 // A source of recent reviews for a place. Implementations can be synchronous
 // (return 'ready' from start) or asynchronous (return a job id to poll), so a
@@ -36,12 +50,13 @@ export interface ReviewSource {
   label: string; // shown to visitors, e.g. "Google reviews"
   isConfigured(): boolean;
   start(place: PlaceSnapshot, limit: number): Promise<ReviewJob>;
-  poll(jobId: string): Promise<Review[] | null>; // null = still running
+  poll(jobId: string): Promise<ReviewBatch | null>; // null = still running
   reportsLanguage: boolean; // whether `language` is populated
 }
 
 export interface ThemeQuote {
   text: string;
+  source?: string;
   date?: string;
   rating?: number;
 }
@@ -62,8 +77,13 @@ export interface RiskCheck {
   quote?: ThemeQuote;
 }
 
+export interface SourceCount extends SourceListing {
+  count: number; // reviews from this source in the sample
+}
+
 export interface ReviewAnalysis {
   sourceLabel: string;
+  sources?: SourceCount[];
   sampleSize: number; // all reviews fetched, including star-only ones
   writtenCount: number; // reviews with a written comment
   lastYearCount: number; // reviews from the last 12 months
