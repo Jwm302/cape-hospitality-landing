@@ -102,6 +102,20 @@ export type ReviewsState =
   | { status: 'ready'; analysis: ReviewAnalysis }
   | { status: 'error' };
 
+// A score from another booking or review site, as listed on Google Hotels.
+export interface PlatformScore {
+  site: string; // e.g. "Booking.com"
+  value: number;
+  max?: number; // scale, e.g. 10 or 5; 100 for percentages
+  votes?: number;
+  url?: string;
+}
+
+export type PlatformScores =
+  | { status: 'ok'; listing?: string; scores: PlatformScore[] }
+  | { status: 'none'; listing?: string } // not on Google Hotels, or no other sites listed
+  | { status: 'unavailable' };
+
 export type SnapshotResponse =
   | { status: 'ok'; place: PlaceSnapshot; alternatives?: PlaceSnapshot[]; reviews: ReviewsState }
   | { status: 'not_found' }
