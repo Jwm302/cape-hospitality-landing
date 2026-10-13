@@ -4,7 +4,7 @@ import { tripadvisor } from './tripadvisor.js';
 
 // Google reviews plus Tripadvisor reviews, analysed as one sample. Google is
 // required; Tripadvisor is added when it finds the same hotel in time.
-const TRIPADVISOR_WAIT_MS = 100_000;
+const TRIPADVISOR_WAIT_MS = 60_000; // after this, results show with Google reviews alone
 
 // Job id: "<googleTaskId>_t<tripadvisorTaskId>_s<startedEpochSeconds>".
 // DataForSEO task ids use only hex digits and hyphens, so "_" is a safe separator.

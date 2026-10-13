@@ -1,4 +1,4 @@
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, ThinkingLevel } from '@google/genai';
 import { Review, ReviewAnalysis, ReviewBatch, RiskCheck, SourceCount, Theme, ThemeQuote } from './types.js';
 
 const MODEL = 'gemini-3.8-flash';
@@ -71,41 +71,76 @@ interface ModelRisk {
   complaints?: { review?: unknown; quote?: unknown }[];
 }
 
+// Two smaller requests run side by side (themes, and the risk checklist), with
+// minimal model "thinking": the task is sorting and copying, not reasoning.
+// If the faster setting is ever rejected, the request is repeated with defaults.
+async function askJson(ai: GoogleGenAI, prompt: string, label: string): Promise<any> {
+  const config = { responseMimeType: 'application/json', temperature: 0 };
+  const started = Date.now();
+  try {
+    const fast = await ai.models.generateContent({
+      model: MODEL,
+      contents: prompt,
+      config: { ...config, thinkingConfig: { thinkingLevel: ThinkingLevel.MINIMAL } },
+    });
+    const parsed = JSON.parse(fast.text || '{}');
+    console.info(`Gemini ${label}: ${Date.now() - started} ms`);
+    return parsed;
+  } catch (err: any) {
+    console.warn(`Gemini ${label} with minimal thinking failed (${err?.message}); retrying with defaults`);
+    const slow = await ai.models.generateContent({ model: MODEL, contents: prompt, config });
+    console.info(`Gemini ${label} (default thinking): ${Date.now() - started} ms`);
+    return JSON.parse(slow.text || '{}');
+  }
+}
+
 async function groupReviews(reviews: Review[]): Promise<{ themes: Theme[]; risks?: RiskCheck[] }> {
   if (!process.env.GEMINI_API_KEY || reviews.length === 0) return { themes: [] };
 
   const numbered = reviews.map((r, i) => ({ n: i, rating: r.rating, text: r.text.slice(0, MAX_REVIEW_CHARS) }));
-  const prompt = `You group hotel guest reviews by topic for a hotel quality report.
+  const intro = `You analyse hotel guest reviews for a hotel quality report.
 
 Reviews (JSON, "n" is the review number):
 ${JSON.stringify(numbered)}
-
-Return JSON: {"themes":[{"label":string,"sentiment":"positive"|"negative"|"mixed","reviews":number[],"quotes":[{"review":number,"text":string}]}],
-"risks":{${RISK_CHECKS.map((r) => `"${r.key}":{"complaints":[{"review":number,"quote":string}]}`).join(',')}}}
+`;
+  const themesPrompt = `${intro}
+Return JSON: {"themes":[{"label":string,"sentiment":"positive"|"negative"|"mixed","reviews":number[],"quotes":[{"review":number,"text":string}]}]}
 
 Rules:
 - Up to ${MAX_THEMES} themes that matter to travellers (e.g. cleanliness, noise, breakfast, staff, location, value, hot water, Wi-Fi).
 - "label": 2-5 plain English words, e.g. "Noise at night", "Friendly staff".
 - "reviews": every review number that clearly mentions the theme. Only include a theme mentioned by at least ${MIN_REVIEWS_PER_THEME} reviews.
 - "quotes": up to 2 short phrases copied EXACTLY, word for word, from the review text (no edits, no ellipses).
-- "risks": for each key, list ONLY the reviews that COMPLAIN about that problem at this property (praise such as "quiet" or "very secure" does not count), one entry per review, with "quote" = the complaint copied EXACTLY, word for word, from that review (one sentence or phrase). Use [] when no review complains.
+- Use only what the reviews say. Do not add facts, scores or advice.`;
+  const risksPrompt = `${intro}
+Return JSON: {"risks":{${RISK_CHECKS.map((r) => `"${r.key}":{"complaints":[{"review":number,"quote":string}]}`).join(',')}}}
+
+Rules:
+- For each key, list ONLY the reviews that COMPLAIN about that problem at this property (praise such as "quiet" or "very secure" does not count), one entry per review, with "quote" = the complaint copied EXACTLY, word for word, from that review (one sentence or phrase). Use [] when no review complains.
 ${RISK_CHECKS.map((r) => `  - ${r.key}: ${r.hint}`).join('\n')}
 - Use only what the reviews say. Do not add facts, scores or advice.`;
 
   const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-  const response = await ai.models.generateContent({
-    model: MODEL,
-    contents: prompt,
-    config: { responseMimeType: 'application/json', temperature: 0 },
-  });
+  const [themesResult, risksResult] = await Promise.allSettled([
+    askJson(ai, themesPrompt, 'themes'),
+    askJson(ai, risksPrompt, 'risks'),
+  ]);
 
-  const parsed = JSON.parse(response.text || '{}');
-  const raw: ModelTheme[] = Array.isArray(parsed.themes) ? parsed.themes : [];
-  const themes = raw.map((t) => verifyTheme(t, reviews)).filter((t): t is Theme => t !== null).slice(0, MAX_THEMES);
-  const risks =
-    parsed.risks && typeof parsed.risks === 'object'
-      ? RISK_CHECKS.map((r) => verifyRisk(r, parsed.risks[r.key], reviews))
-      : undefined;
+  let themes: Theme[] = [];
+  if (themesResult.status === 'fulfilled') {
+    const raw: ModelTheme[] = Array.isArray(themesResult.value.themes) ? themesResult.value.themes : [];
+    themes = raw.map((t) => verifyTheme(t, reviews)).filter((t): t is Theme => t !== null).slice(0, MAX_THEMES);
+  } else {
+    console.warn('Theme grouping unavailable:', themesResult.reason?.message);
+  }
+
+  let risks: RiskCheck[] | undefined;
+  const parsedRisks = risksResult.status === 'fulfilled' ? risksResult.value.risks : undefined;
+  if (parsedRisks && typeof parsedRisks === 'object') {
+    risks = RISK_CHECKS.map((r) => verifyRisk(r, parsedRisks[r.key], reviews));
+  } else if (risksResult.status === 'rejected') {
+    console.warn('Risk checklist unavailable:', risksResult.reason?.message);
+  }
   return { themes, risks };
 }
 
