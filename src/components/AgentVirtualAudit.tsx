@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
+  ChevronDown,
   Accessibility,
   AlertTriangle,
   ArrowRight,
@@ -616,9 +617,9 @@ const RiskChecklist: React.FC<{ risks: RiskCheck[]; total: number }> = ({ risks,
   <div className="rounded-xl bg-white/[0.03] border border-white/10 p-4">
     <h5 className="text-sm font-bold text-white">Risk checklist</h5>
     <p className="text-[11px] text-zinc-400 mt-0.5">
-      Complaints in the {total} written reviews about the issues European guests notice most.
+      Complaints in the {total} written reviews about the issues European guests notice most. Click a line to read them.
     </p>
-    <ul className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+    <ul className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 items-start">
       {risks.map((r) => {
         const icon =
           r.count === 0 ? (
@@ -626,24 +627,57 @@ const RiskChecklist: React.FC<{ risks: RiskCheck[]; total: number }> = ({ risks,
           ) : (
             <AlertTriangle className={`w-4 h-4 shrink-0 ${r.count >= 3 ? 'text-rose-400' : 'text-amber-300'}`} />
           );
+        const count = (
+          <span className="text-[11px] font-mono text-zinc-300 whitespace-nowrap">
+            {r.count === 0 ? 'No complaints' : `${r.count} complaint${r.count === 1 ? '' : 's'}`}
+          </span>
+        );
+        const title = (
+          <span className="flex items-center gap-2 text-xs font-semibold text-white">
+            {icon}
+            {r.label}
+          </span>
+        );
+        const mentions = r.mentions ?? [];
         return (
           <li key={r.key} className="rounded-lg bg-white/[0.03] border border-white/5 px-3 py-2">
-            <div className="flex items-center justify-between gap-2">
-              <span className="flex items-center gap-2 text-xs font-semibold text-white">
-                {icon}
-                {r.label}
-              </span>
-              <span className="text-[11px] font-mono text-zinc-300 whitespace-nowrap">
-                {r.count === 0 ? 'No complaints' : `${r.count} complaint${r.count === 1 ? '' : 's'}`}
-              </span>
-            </div>
-            {r.quote && (
-              <p className="mt-1 text-[11px] text-zinc-400 leading-relaxed">
-                <span className="italic">“{r.quote.text}”</span>
-                {(r.quote.date || r.quote.source) && (
-                  <span className="text-zinc-500"> — {[formatMonth(r.quote.date), r.quote.source].filter(Boolean).join(', ')}</span>
+            {mentions.length > 0 ? (
+              // Click to read every complaint behind the count.
+              <details className="group">
+                <summary className="flex items-center justify-between gap-2 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  {title}
+                  <span className="flex items-center gap-1.5">
+                    {count}
+                    <ChevronDown className="w-3.5 h-3.5 text-zinc-400 transition-transform group-open:rotate-180" />
+                  </span>
+                </summary>
+                <ul className="mt-2 space-y-2 border-t border-white/5 pt-2">
+                  {mentions.map((m, i) => (
+                    <li key={i} className="text-[11px] text-zinc-300 leading-relaxed">
+                      <span className="italic">“{m.text}”</span>
+                      <span className="text-zinc-500">
+                        {' '}
+                        — {[formatMonth(m.date), typeof m.rating === 'number' ? `${m.rating}★` : '', m.source].filter(Boolean).join(', ')}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ) : (
+              <>
+                <div className="flex items-center justify-between gap-2">
+                  {title}
+                  {count}
+                </div>
+                {r.quote && (
+                  <p className="mt-1 text-[11px] text-zinc-400 leading-relaxed">
+                    <span className="italic">“{r.quote.text}”</span>
+                    {(r.quote.date || r.quote.source) && (
+                      <span className="text-zinc-500"> — {[formatMonth(r.quote.date), r.quote.source].filter(Boolean).join(', ')}</span>
+                    )}
+                  </p>
                 )}
-              </p>
+              </>
             )}
           </li>
         );

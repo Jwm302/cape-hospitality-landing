@@ -68,8 +68,7 @@ interface ModelTheme {
 }
 
 interface ModelRisk {
-  reviews?: unknown;
-  quote?: { review?: unknown; text?: unknown } | null;
+  complaints?: { review?: unknown; quote?: unknown }[];
 }
 
 async function groupReviews(reviews: Review[]): Promise<{ themes: Theme[]; risks?: RiskCheck[] }> {
@@ -82,14 +81,14 @@ Reviews (JSON, "n" is the review number):
 ${JSON.stringify(numbered)}
 
 Return JSON: {"themes":[{"label":string,"sentiment":"positive"|"negative"|"mixed","reviews":number[],"quotes":[{"review":number,"text":string}]}],
-"risks":{${RISK_CHECKS.map((r) => `"${r.key}":{"reviews":number[],"quote":{"review":number,"text":string}|null}`).join(',')}}}
+"risks":{${RISK_CHECKS.map((r) => `"${r.key}":{"complaints":[{"review":number,"quote":string}]}`).join(',')}}}
 
 Rules:
 - Up to ${MAX_THEMES} themes that matter to travellers (e.g. cleanliness, noise, breakfast, staff, location, value, hot water, Wi-Fi).
 - "label": 2-5 plain English words, e.g. "Noise at night", "Friendly staff".
 - "reviews": every review number that clearly mentions the theme. Only include a theme mentioned by at least ${MIN_REVIEWS_PER_THEME} reviews.
 - "quotes": up to 2 short phrases copied EXACTLY, word for word, from the review text (no edits, no ellipses).
-- "risks": for each key, list ONLY the reviews that COMPLAIN about that problem at this property (praise such as "quiet" or "very secure" does not count). Use [] and null when no review complains.
+- "risks": for each key, list ONLY the reviews that COMPLAIN about that problem at this property (praise such as "quiet" or "very secure" does not count), one entry per review, with "quote" = the complaint copied EXACTLY, word for word, from that review (one sentence or phrase). Use [] when no review complains.
 ${RISK_CHECKS.map((r) => `  - ${r.key}: ${r.hint}`).join('\n')}
 - Use only what the reviews say. Do not add facts, scores or advice.`;
 
@@ -113,28 +112,31 @@ ${RISK_CHECKS.map((r) => `  - ${r.key}: ${r.hint}`).join('\n')}
 const validIndexes = (ids: unknown, max: number) =>
   [...new Set((Array.isArray(ids) ? ids : []).filter((n): n is number => Number.isInteger(n) && n >= 0 && n < max))];
 
-// Same checks as themes: known review numbers only, quote word for word.
+const clip = (text: string) => (text.length > MAX_QUOTE_CHARS ? `${text.slice(0, MAX_QUOTE_CHARS).trimEnd()}…` : text);
+
+// Same checks as themes: known review numbers only, each review counted once.
+// Each complaint keeps the model's quote only if it is word for word in that
+// review; otherwise the opening of the review itself is shown.
 export function verifyRisk(
   check: { key: string; label: string },
   raw: ModelRisk | undefined,
   reviews: Review[],
 ): RiskCheck {
-  const valid = validIndexes(raw?.reviews, reviews.length);
-  const result: RiskCheck = { key: check.key, label: check.label, count: valid.length };
-  const n = raw?.quote?.review;
-  const text = typeof raw?.quote?.text === 'string' ? raw.quote.text.trim() : '';
-  if (Number.isInteger(n) && valid.includes(n as number) && text.length >= 8) {
+  const seen = new Set<number>();
+  const mentions: ThemeQuote[] = [];
+  for (const c of Array.isArray(raw?.complaints) ? raw.complaints : []) {
+    const n = c?.review;
+    if (!Number.isInteger(n) || (n as number) < 0 || (n as number) >= reviews.length || seen.has(n as number)) continue;
+    seen.add(n as number);
     const review = reviews[n as number];
-    if (squash(review.text).includes(squash(text))) {
-      result.quote = {
-        text: text.length > MAX_QUOTE_CHARS ? `${text.slice(0, MAX_QUOTE_CHARS).trimEnd()}…` : text,
-        date: review.date,
-        rating: review.rating,
-        source: review.source,
-      };
-    }
+    const quote = typeof c.quote === 'string' ? c.quote.trim() : '';
+    const verified = quote.length >= 8 && squash(review.text).includes(squash(quote));
+    const text = verified ? quote : review.text.trim();
+    if (!text) continue;
+    mentions.push({ text: clip(text), date: review.date, rating: review.rating, source: review.source });
   }
-  return result;
+  mentions.sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''));
+  return { key: check.key, label: check.label, count: seen.size, quote: mentions[0], mentions };
 }
 
 // Rejects anything the reviews don't support: unknown review numbers, too few
