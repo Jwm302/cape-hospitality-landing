@@ -1,5 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
-import { Review, ReviewAnalysis, RiskCheck, Theme, ThemeQuote } from './types.js';
+import { Review, ReviewAnalysis, ReviewBatch, RiskCheck, SourceCount, Theme, ThemeQuote } from './types.js';
 
 const MODEL = 'gemini-3.8-flash';
 const MIN_REVIEWS_PER_THEME = 3;
@@ -22,11 +22,9 @@ const squash = (s: string) => s.replace(/\s+/g, ' ').trim().toLowerCase();
 // Counts, dates, averages and language share are computed here from the
 // review data itself. The model is only asked which reviews mention which
 // topic; its answer is checked before anything is shown.
-export async function analyzeReviews(
-  reviews: Review[],
-  sourceLabel: string,
-  reportsLanguage: boolean,
-): Promise<ReviewAnalysis> {
+export async function analyzeReviews(batch: ReviewBatch, reportsLanguage: boolean): Promise<ReviewAnalysis> {
+  const reviews = batch.reviews;
+  const sources = countSources(batch);
   const dates = reviews.map((r) => r.date).filter((d): d is string => Boolean(d)).sort();
   const ratings = reviews.map((r) => r.rating).filter((n): n is number => typeof n === 'number');
   const written = reviews.filter((r) => r.text.length > 0);
@@ -37,7 +35,8 @@ export async function analyzeReviews(
   });
 
   return {
-    sourceLabel,
+    sourceLabel: `${sources.map((s) => s.source).join(' & ') || 'Google'} reviews`,
+    sources,
     sampleSize: reviews.length,
     writtenCount: written.length,
     lastYearCount: dates.filter((d) => Date.parse(d) >= yearAgo).length,
@@ -51,6 +50,13 @@ export async function analyzeReviews(
     risks: grouped.risks,
     generatedAt: new Date().toISOString(),
   };
+}
+
+// Reviews per source, in the order the sources were fetched.
+export function countSources(batch: ReviewBatch): SourceCount[] {
+  const counts = new Map<string, number>();
+  for (const r of batch.reviews) counts.set(r.source ?? 'Google', (counts.get(r.source ?? 'Google') ?? 0) + 1);
+  return [...counts].map(([source, count]) => ({ ...batch.listings.find((l) => l.source === source), source, count }));
 }
 
 interface ModelTheme {
@@ -123,6 +129,7 @@ export function verifyRisk(
         text: text.length > MAX_QUOTE_CHARS ? `${text.slice(0, MAX_QUOTE_CHARS).trimEnd()}…` : text,
         date: review.date,
         rating: review.rating,
+        source: review.source,
       };
     }
   }
@@ -149,6 +156,7 @@ export function verifyTheme(t: ModelTheme, reviews: Review[]): Theme | null {
       text: text.length > MAX_QUOTE_CHARS ? `${text.slice(0, MAX_QUOTE_CHARS).trimEnd()}…` : text,
       date: review.date,
       rating: review.rating,
+      source: review.source,
     });
     if (quotes.length === 2) break;
   }

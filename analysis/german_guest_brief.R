@@ -33,7 +33,7 @@ if (length(args) >= 4) REFRESH     <- tolower(args[4]) %in% c("true", "1", "yes"
 
 APIFY_TOKEN  <- Sys.getenv("CAPE_HOTEL_APIFY_KEY")
 GEMINI_TOKEN <- Sys.getenv("CAPE_HOTEL_AUDIT_KEY")
-GEMINI_MODEL <- Sys.getenv("CAPE_GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_MODEL <- Sys.getenv("CAPE_GEMINI_MODEL", "gemini-3.8-flash")
 ACTOR_ID     <- Sys.getenv("CAPE_APIFY_ACTOR", "solidcode~booking-reviews-scraper")
 APIFY_BASE   <- Sys.getenv("CAPE_APIFY_BASE", "https://api.apify.com")
 GEMINI_BASE  <- Sys.getenv("CAPE_GEMINI_BASE", "https://generativelanguage.googleapis.com")
@@ -232,7 +232,7 @@ gemini_batch <- function(batch) {
   body <- list(contents = list(list(parts = list(list(text = prompt)))),
                generationConfig = list(temperature = 0, responseMimeType = "application/json"))
   url <- paste0(GEMINI_BASE, "/v1beta/models/", GEMINI_MODEL, ":generateContent")
-  for (attempt in 1:4) {
+  for (attempt in 1:6) {
     res <- tryCatch(POST(url, add_headers(`x-goog-api-key` = GEMINI_TOKEN), body = body, encode = "json", timeout(90)),
                     error = function(e) NULL)
     if (!is.null(res) && status_code(res) == 200) {
@@ -241,12 +241,18 @@ gemini_batch <- function(batch) {
       out <- tryCatch(fromJSON(txt, simplifyVector = FALSE)$reviews, error = function(e) NULL)
       if (!is.null(out)) return(out)
     }
-    wait <- if (!is.null(res) && status_code(res) == 429) 10 * attempt else 2 * attempt
+    if (!is.null(res) && status_code(res) %in% c(400, 401, 403, 404)) {
+      warning("Gemini rejected the request (", status_code(res), "): check CAPE_HOTEL_AUDIT_KEY and CAPE_GEMINI_MODEL. ",
+              content(res, as = "text", encoding = "UTF-8"))
+      break
+    }
+    retry_after <- if (!is.null(res)) suppressWarnings(as.numeric(headers(res)[["retry-after"]])) else NA
+    wait <- if (!is.null(res) && status_code(res) == 429) (if (length(retry_after) && !is.na(retry_after)) retry_after else 60) else 5 * attempt
     message("  Gemini retry in ", wait, "s (", if (is.null(res)) "network" else status_code(res), ")")
     Sys.sleep(wait)
   }
   warning("Gemini failed for a batch of ", nrow(batch), " reviews; they are left untagged.")
-  list()
+  NULL
 }
 
 # Keep a tag only if the topic is allowed and the quote really appears in the right text.
@@ -294,11 +300,19 @@ if (GEMINI_TOKEN != "") {
   method <- paste0("Gemini (", GEMINI_MODEL, ") topic tags, each backed by a verbatim quote")
   batches <- split(to_tag, ceiling(seq_len(nrow(to_tag)) / 25))
   message("Tagging ", nrow(to_tag), " written reviews with Gemini in ", length(batches), " batches ...")
-  tags <- bind_rows(imap(batches, function(b, i) { message("  batch ", i, "/", length(batches)); verify_tags(gemini_batch(b), b) }))
+  untagged_ids <- integer()
+  tags <- bind_rows(imap(batches, function(b, i) {
+    message("  batch ", i, "/", length(batches))
+    if (i > 1) Sys.sleep(8)  # stay under per-minute limits
+    out <- gemini_batch(b)
+    if (is.null(out)) { untagged_ids <<- c(untagged_ids, b$id); return(NULL) }
+    verify_tags(out, b)
+  }))
 } else {
   method <- "Keyword matching on 'disliked' text (no Gemini key set): complaints only, rougher than AI tagging"
   message("No Gemini key: using keyword method.")
   tags <- keyword_tags(to_tag)
+  untagged_ids <- integer()
 }
 if (nrow(tags) == 0) tags <- tibble(id = integer(), kind = character(), topic = character(), quote = character())
 tags <- tags %>% distinct(id, kind, topic, .keep_all = TRUE)
@@ -356,6 +370,7 @@ summary_out <- list(
   rating_german = mean(ger$rating, na.rm = TRUE), rating_other = mean(oth$rating, na.rm = TRUE),
   rating_difference_p_value = rating_test,
   german_last12 = last12, german_prev12 = prev12,
+  untagged_reviews = length(untagged_ids), untagged_german = sum(untagged_ids %in% ger$id),
   complaints = complaints %>% filter(n_ger > 0) %>% select(topic, n_ger, pct_ger, n_oth, pct_oth),
   praise = praise %>% filter(n_ger > 0) %>% select(topic, n_ger, pct_ger, n_oth, pct_oth)
 )
@@ -376,7 +391,7 @@ quote_html <- function(q) if (!nrow(q)) "" else paste0(
 
 topic_rows <- function(tbl, kind_wanted, top = 6) {
   rows <- tbl %>% filter(n_ger > 0) %>% arrange(desc(n_ger)) %>% head(top)
-  if (!nrow(rows)) return("<p class='muted'>None mentioned by German-speaking guests in this sample.</p>")
+  if (!nrow(rows)) return(if (any(untagged_ids %in% ger$id)) "<p class='muted'>Not available: some German-guest reviews could not be tagged (see warning above).</p>" else "<p class='muted'>None mentioned by German-speaking guests in this sample.</p>")
   paste0(vapply(seq_len(nrow(rows)), function(i) paste0(
     "<div class='topic'><b>", esc(rows$label[i]), "</b> &mdash; ", rows$n_ger[i], " of ", nrow(ger_w),
     " German reviews (", fmt(rows$pct_ger[i], 0), "%; other guests ", fmt(rows$pct_oth[i], 0), "%)",
@@ -408,6 +423,9 @@ trend_txt <- if (last12$n >= 5 && prev12$n >= 5)
 diff_note <- if (is.na(rating_test)) "Too few reviews in one group to test the difference." else
   if (rating_test < 0.05) "The difference is unlikely to be chance (p < 0.05)." else "The difference may be chance (not statistically significant)."
 
+untagged_box <- if (length(untagged_ids)) paste0("<div class='warn-box'><b>Incomplete:</b> Gemini could not tag ", length(untagged_ids),
+  " written reviews (", sum(untagged_ids %in% ger$id), " from German-speaking guests). Topic counts below are too low. Re-run the script; the cached scrape is reused at no Apify cost.</div>") else ""
+
 small_sample <- if (nrow(ger_w) < 20) paste0("<div class='warn-box'>Only ", nrow(ger_w),
   " written reviews from German-speaking guests: treat counts as indicative, not representative.</div>") else ""
 
@@ -425,7 +443,7 @@ tr.ok td:first-child:before{content:"\\2714  ";color:#16a34a}tr.warn td:first-ch
 <h1>Desk Brief: ', esc(HOTEL_NAME), '</h1>
 <div class="meta">What German-speaking guests say on Booking.com &middot; ', nrow(reviews), ' latest reviews (',
   esc(summary_out$date_from), ' to ', esc(summary_out$date_to), ') &middot; prepared ', format(Sys.Date(), "%d %b %Y"), ' by Cape Hospitality Advisors</div>
-', small_sample, '
+', untagged_box, small_sample, '
 <div class="kpis">
  <div class="kpi"><b>', nrow(ger), ' of ', nrow(reviews), '</b>reviews from German-speaking guests (', fmt(pct(nrow(ger), nrow(reviews)), 0), '%)</div>
  <div class="kpi"><b>', fmt(summary_out$rating_german), ' / ', scale_max, '</b>German guests&rsquo; average vs ', fmt(summary_out$rating_other), ' from other guests</div>
@@ -451,5 +469,6 @@ tr.ok td:first-child:before{content:"\\2714  ";color:#16a34a}tr.warn td:first-ch
 
 writeLines(enc2utf8(html), file.path(out_dir, "brief_draft.html"), useBytes = TRUE)
 
+if (length(untagged_ids)) message("WARNING: ", length(untagged_ids), " reviews left untagged by Gemini; re-run to complete.")
 message("\nDone: ", nrow(reviews), " reviews (", nrow(ger), " German-speaking, ", nrow(ger_w), " written).")
 message("Files in ", normalizePath(out_dir), ": brief_draft.html, reviews_tagged.csv, summary.json")
