@@ -413,7 +413,7 @@ const PlatformScoresRow: React.FC<{ state: PlatformScores | 'loading' | null }> 
         })}
       </ul>
       <p className="mt-1.5 text-[10px] text-zinc-500">
-        As listed on Google Hotels under “Reviews from the web”. Each site uses its own scale.
+        As listed on Google Hotels under “Reviews from the web”, with the number of reviews behind each score.
       </p>
     </div>
   );
@@ -533,9 +533,9 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
   if (typeof analysis.averageRating === 'number' && typeof overallRating === 'number') {
     const diff = analysis.averageRating - overallRating;
     comparison =
-      diff >= 0.2 ? `above the overall ${overallRating.toFixed(1)}`
-      : diff <= -0.2 ? `below the overall ${overallRating.toFixed(1)}`
-      : `in line with the overall ${overallRating.toFixed(1)}`;
+      diff >= 0.2 ? `above Google's overall ${overallRating.toFixed(1)}`
+      : diff <= -0.2 ? `below Google's overall ${overallRating.toFixed(1)}`
+      : `in line with Google's overall ${overallRating.toFixed(1)}`;
   }
 
   return (
@@ -559,8 +559,8 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
         {typeof analysis.lastYearCount === 'number' && (
           <Stat
             label="Last 12 months"
-            value={`${analysis.lastYearCount} review${analysis.lastYearCount === 1 ? '' : 's'}`}
-            note={analysis.dateTo ? `most recent: ${formatMonth(analysis.dateTo)}` : undefined}
+            value={`${analysis.lastYearCount} of ${n}`}
+            note={`reviews in this sample${analysis.dateTo ? ` · newest ${formatMonth(analysis.dateTo)}` : ''}`}
           />
         )}
         {typeof analysis.germanCount === 'number' && written > 0 && (
@@ -569,7 +569,9 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
         <Stat
           label="Reviews analysed"
           value={String(n)}
-          note={written < 20 ? `only ${written} with comments` : `${written} with comments`}
+          note={`${analysis.sources && analysis.sources.length > 1 ? `${analysis.sources.map((s) => `${s.count} ${s.source}`).join(' + ')} · ` : ''}${
+            written < 20 ? `only ${written}` : written
+          } with comments`}
         />
       </div>
 
@@ -725,7 +727,7 @@ function snapshotText(place: PlaceSnapshot, reviews: ReviewsState | null, scores
         .filter((s) => s.source !== 'Google' && s.name)
         .map((s) => `${s.source} listing: ${s.name}${s.url ? ` (${s.url})` : ''}`),
       typeof a.averageRating === 'number' && `Recent average: ${a.averageRating}`,
-      typeof a.lastYearCount === 'number' && `Reviews in last 12 months: ${a.lastYearCount}`,
+      typeof a.lastYearCount === 'number' && `Last 12 months: ${a.lastYearCount} of the ${a.sampleSize} reviews in the sample`,
       typeof a.germanCount === 'number' && `Written in German: ${a.germanCount} of ${w}`,
       a.themes.length > 0 && `Themes: ${a.themes.map((t) => `${t.label} (${t.count}/${w})`).join('; ')}`,
       a.risks && `Risk checklist: ${a.risks.map((r) => `${r.label} ${r.count}`).join('; ')}`,
