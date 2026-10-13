@@ -1,5 +1,5 @@
 import { analyzeReviews } from './analysis.js';
-import { cacheConfigured, cacheGet, cacheSet, countToday } from './cache.js';
+import { cacheClaim, cacheConfigured, cacheDelete, cacheGet, cacheSet, countToday } from './cache.js';
 import { fetchPlatformScores } from './platform-scores.js';
 import { findPlaces, placesConfigured } from './places.js';
 import { dataForSeoConfigured } from './reviews/dataforseo-client.js';
@@ -12,6 +12,7 @@ import { PlaceSnapshot, PlatformScores, ReviewAnalysis, ReviewsState, SnapshotRe
 const REVIEW_LIMIT = 100;
 const ANALYSIS_TTL = 30 * 24 * 3600; // reuse a hotel's analysis for 30 days
 const JOB_TTL = 15 * 60;
+const ANALYSIS_LOCK_TTL = 240; // longer than one analysis, shorter than the browser's polling
 const MAX_REVIEW_LOOKUPS_PER_DAY = Number(process.env.MAX_REVIEW_LOOKUPS_PER_DAY) || 200;
 const MAX_SCORE_LOOKUPS_PER_DAY = Number(process.env.MAX_SCORE_LOOKUPS_PER_DAY) || 200;
 const PLACE_TTL = 24 * 3600;
@@ -101,15 +102,22 @@ export async function handleReviewPoll(jobId: unknown, placeId: unknown): Promis
   const cached = await cacheGet<ReviewAnalysis>(analysisKey);
   if (cached) return ok({ status: 'ready', analysis: cached } satisfies ReviewsState);
 
+  // One analysis per hotel at a time: later polls wait for it instead of repeating it.
+  const lockKey = `analyzing:${source.id}:${placeId}`;
+  let locked = false;
   try {
     const batch = await source.poll(jobId);
     if (!batch) return ok({ status: 'pending', jobId } satisfies ReviewsState);
+    if (!(await cacheClaim(lockKey, ANALYSIS_LOCK_TTL))) return ok({ status: 'pending', jobId } satisfies ReviewsState);
+    locked = true;
     const analysis = await analyzeReviews(batch, source.reportsLanguage);
     await cacheSet(analysisKey, analysis, ANALYSIS_TTL);
     return ok({ status: 'ready', analysis } satisfies ReviewsState);
   } catch (err: any) {
     console.warn('Review poll failed:', err?.message);
     return ok({ status: 'error' } satisfies ReviewsState);
+  } finally {
+    if (locked) await cacheDelete(lockKey);
   }
 }
 

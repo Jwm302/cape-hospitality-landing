@@ -5,6 +5,7 @@ const MODEL = 'gemini-3.8-flash';
 const MIN_REVIEWS_PER_THEME = 3;
 const MAX_THEMES = 6;
 const MAX_QUOTE_CHARS = 220;
+const MAX_REVIEW_CHARS = 800; // long reviews are trimmed before grouping, to keep it quick
 
 // Checked on every hotel, so operators can compare like with like.
 export const RISK_CHECKS = [
@@ -74,7 +75,7 @@ interface ModelRisk {
 async function groupReviews(reviews: Review[]): Promise<{ themes: Theme[]; risks?: RiskCheck[] }> {
   if (!process.env.GEMINI_API_KEY || reviews.length === 0) return { themes: [] };
 
-  const numbered = reviews.map((r, i) => ({ n: i, rating: r.rating, text: r.text.slice(0, 1200) }));
+  const numbered = reviews.map((r, i) => ({ n: i, rating: r.rating, text: r.text.slice(0, MAX_REVIEW_CHARS) }));
   const prompt = `You group hotel guest reviews by topic for a hotel quality report.
 
 Reviews (JSON, "n" is the review number):
