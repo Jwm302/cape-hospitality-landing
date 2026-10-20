@@ -6,12 +6,12 @@ interface ServicesSectionProps {
   onSelectTier: (tier: string) => void;
 }
 
-// Each card shows a short summary; "Check now" opens the full tier details.
+// Each card shows a short summary; "Check now" opens the full details of that
+// tier only, and closes any other open card.
 export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectTier }) => {
-  const [openTiers, setOpenTiers] = useState<string[]>([]);
+  const [openTier, setOpenTier] = useState<string | null>(null);
 
-  const toggle = (key: string) =>
-    setOpenTiers((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
+  const toggle = (key: string) => setOpenTier((prev) => (prev === key ? null : key));
 
   return (
     <section id="services" className="scroll-mt-20 bg-[#f5f5f3] py-14 sm:py-16 border-t border-zinc-200">
@@ -23,7 +23,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectTier }
 
         <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 items-start text-left">
           {SERVICE_TIERS.map((tier) => {
-            const isOpen = openTiers.includes(tier.key);
+            const isOpen = openTier === tier.key;
 
             return (
               <div
