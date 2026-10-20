@@ -45,6 +45,14 @@ export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => (
         <p className="mt-6 text-2xl sm:text-4xl font-light leading-snug drop-shadow-md max-w-3xl mx-auto">
           Know what your guests will find, before they arrive.
         </p>
+        <figure className="mt-6 max-w-2xl mx-auto drop-shadow-md">
+          <blockquote className="font-[Georgia,serif] italic text-base sm:text-lg text-white/90 leading-relaxed">
+            “A five-star hotel does not automatically guarantee a five-star guest experience.”
+          </blockquote>
+          <figcaption className="mt-1.5 text-xs sm:text-sm text-white/75">
+            — A. Gutman Milne, Library Hotel Collection, New York
+          </figcaption>
+        </figure>
       </div>
     </section>
 
