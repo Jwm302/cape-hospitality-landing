@@ -1,118 +1,72 @@
 import React, { useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { RealityGapSection } from './components/RealityGapSection';
+import { ServicesSection } from './components/ServicesSection';
 import { AgentVirtualAudit } from './components/AgentVirtualAudit';
-import { PhysicalAuditDossier } from './components/PhysicalAuditDossier';
-import { UspSection } from './components/UspSection';
-import { PricingSection } from './components/PricingSection';
+import { SampleAuditReport } from './components/SampleAuditReport';
 import { LeadCaptureFooter } from './components/LeadCaptureFooter';
-import { BriefingModal } from './components/BriefingModal';
 import { PrivacyNotice } from './components/PrivacyNotice';
+import { useLang } from './i18n';
 
 export default function App() {
-  const [isBriefingModalOpen, setIsBriefingModalOpen] = useState(false);
   const [selectedTier, setSelectedTier] = useState<string>('PHYSICAL_AUDIT');
   const [targetProperty, setTargetProperty] = useState<string>('');
+  const { lang } = useLang();
 
-  const handleScrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+  const scrollToContact = () => {
+    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleSelectPricingTier = (tier: string) => {
+  const handleSelectTier = (tier: string) => {
     setSelectedTier(tier);
-    handleScrollToSection('contact');
+    scrollToContact();
   };
 
-  const handleRequestFreeDataPackage = () => {
-    setSelectedTier('VIRTUAL_AUDIT');
-    handleScrollToSection('contact');
-  };
+  const handleRequestFreeDataPackage = () => handleSelectTier('VIRTUAL_AUDIT');
 
-  const handleRequestVirtualAuditForProperty = (propertyName: string) => {
+  const handleSelectPropertyForInquiry = (propertyName: string, tier: string) => {
     setTargetProperty(propertyName);
-    setSelectedTier('VIRTUAL_AUDIT');
-    handleScrollToSection('contact');
+    handleSelectTier(tier);
   };
 
-  const handleSelectPropertyForInquiry = (propertyName: string) => {
-    setTargetProperty(propertyName);
-    setSelectedTier('PHYSICAL_AUDIT');
-    handleScrollToSection('contact');
-  };
-
-  // Single extra page; vercel.json already serves index.html for every path.
-  if (window.location.pathname.replace(/\/+$/, '') === '/privacy') {
+  // vercel.json serves index.html for every path, so extra pages are routed here.
+  const path = window.location.pathname.replace(/\/+$/, '');
+  if (path === '/privacy') {
     return <PrivacyNotice />;
   }
 
-  return (
-    <div className="min-h-screen bg-[#fbfbfa] text-zinc-900 selection:bg-[#10213a] selection:text-white font-sans antialiased">
-      {/* Global Navigation */}
-      <Navbar
-        onScheduleBriefing={() => setIsBriefingModalOpen(true)}
-        onContactClick={() => handleScrollToSection('contact')}
-        onRequestFreeDataPackage={handleRequestFreeDataPackage}
-      />
-
-      {/* Main Flow: Executive, Cohesive Journey */}
-      <main>
-        {/* 1. Hero Section: Core Statement & Problem Solving */}
-        <Hero
-          onScheduleBriefing={() => setIsBriefingModalOpen(true)}
-          onViewPricing={() => handleScrollToSection('pricing')}
-          onExploreVirtualAudit={() => handleScrollToSection('virtual-audit')}
-          onRequestFreeDataPackage={handleRequestFreeDataPackage}
-        />
-
-        {/* 2. The Reality Gap: We Observe, We Assess Risk, We Recommend */}
-        <RealityGapSection
-          onExploreVirtualAudit={() => handleScrollToSection('virtual-audit')}
-          onRequestFreeDataPackage={handleRequestFreeDataPackage}
-        />
-
-        {/* 3. The Centerpiece: Agent Virtual Audit Tool */}
-        <AgentVirtualAudit
-          onSelectPropertyForInquiry={handleSelectPropertyForInquiry}
-          onRequestVirtualAuditForProperty={handleRequestVirtualAuditForProperty}
-          onRequestFreeDataPackage={handleRequestFreeDataPackage}
-        />
-
-        {/* 4. The Workflow & Actual On-Site Physical Audit Case Study */}
-        <PhysicalAuditDossier
-          onCommissionAudit={() => {
-            setSelectedTier('PHYSICAL_AUDIT');
-            handleScrollToSection('contact');
-          }}
-          onRequestFreeDataPackage={handleRequestFreeDataPackage}
-        />
-
-        {/* 5. Why Partner With Us: The Institutional Edge & Comparison Matrix */}
-        <UspSection />
-
-        {/* 6. Clear, Simplified Services & Pricing */}
-        <PricingSection
-          onSelectTier={handleSelectPricingTier}
-          onRequestFreeDataPackage={handleRequestFreeDataPackage}
-        />
-
-        {/* 7. Lead Capture & Free Data Package Form */}
-        <LeadCaptureFooter
-          onScheduleBriefing={() => setIsBriefingModalOpen(true)}
-          selectedTier={selectedTier}
-          targetProperty={targetProperty}
+  const page =
+    path === '/sample-report' ? (
+      <main className="bg-[#f5f5f3]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+          <a href="/" className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#9c753e] hover:text-[#10213a]">
+            <ArrowLeft className="w-3.5 h-3.5" />
+            {lang === 'de' ? 'Zurück zur Website' : 'Back to the website'}
+          </a>
+        </div>
+        <SampleAuditReport
+          onCommissionAudit={() => (window.location.href = '/#contact')}
+          onRequestFreeDataPackage={() => (window.location.href = '/#contact')}
         />
       </main>
+    ) : (
+      <main>
+        <Hero onRequestFreeDataPackage={handleRequestFreeDataPackage} />
+        <AgentVirtualAudit
+          onSelectPropertyForInquiry={(name) => handleSelectPropertyForInquiry(name, 'PHYSICAL_AUDIT')}
+          onRequestVirtualAuditForProperty={(name) => handleSelectPropertyForInquiry(name, 'VIRTUAL_AUDIT')}
+          onRequestFreeDataPackage={handleRequestFreeDataPackage}
+        />
+        <ServicesSection onSelectTier={handleSelectTier} />
+        <LeadCaptureFooter selectedTier={selectedTier} targetProperty={targetProperty} />
+      </main>
+    );
 
-      {/* Direct Scheduling Briefing Modal */}
-      <BriefingModal
-        isOpen={isBriefingModalOpen}
-        onClose={() => setIsBriefingModalOpen(false)}
-        selectedTier={selectedTier}
-      />
+  return (
+    <div className="min-h-screen bg-white text-zinc-900 selection:bg-[#10213a] selection:text-white font-sans antialiased">
+      <Navbar />
+      {page}
     </div>
   );
 }

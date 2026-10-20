@@ -2,6 +2,7 @@ import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
+import { LanguageProvider } from './i18n.tsx';
 import '@fontsource/cinzel/400.css';
 import '@fontsource/cinzel/500.css';
 import '@fontsource/cinzel/600.css';
@@ -18,7 +19,9 @@ import './index.css';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
-      <App />
+      <LanguageProvider>
+        <App />
+      </LanguageProvider>
     </ErrorBoundary>
   </StrictMode>,
 );

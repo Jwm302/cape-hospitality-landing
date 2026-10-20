@@ -68,7 +68,7 @@ export const CapeLogo: React.FC<CapeLogoProps> = ({
         />
       </div>
       <div className="flex flex-col justify-center leading-none">
-        <span className="font-serif tracking-[0.22em] text-[#10213a] font-bold text-sm sm:text-base">
+        <span className="font-serif whitespace-nowrap tracking-[0.12em] sm:tracking-[0.22em] text-[#10213a] font-bold text-xs sm:text-base">
           CAPE HOSPITALITY
         </span>
         <span className="text-[9px] sm:text-[10px] tracking-[0.26em] uppercase text-[#b48c58] font-semibold mt-0.5">

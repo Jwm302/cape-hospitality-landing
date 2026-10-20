@@ -1,7 +1,8 @@
-import { ServiceTier, UspItem } from '../types';
+import { ServiceTier } from '../types';
+import type { Lang } from '../i18n';
 
-// Single source of truth for the service ladder. The pricing cards, the
-// inquiry form and the briefing modal all read from this list.
+// Single source of truth for the service ladder. The service cards and the
+// inquiry form read from these lists; emails to the team use the English one.
 export const SERVICE_TIERS: ServiceTier[] = [
   {
     key: 'VIRTUAL_AUDIT',
@@ -42,7 +43,8 @@ export const SERVICE_TIERS: ServiceTier[] = [
       'Night-time noise and morning hot-water checks',
       'Dated photos, timings & indicative readings',
       'Factual record to answer disputed guest claims',
-      'Management report within 48 hours',
+      'Full report within 48 hours',
+      '30-minute Zoom call with your inspector for their personal feedback',
     ],
     questionAnswered: '“What would our guest experience if they arrived today?”',
   },
@@ -53,51 +55,83 @@ export const SERVICE_TIERS: ServiceTier[] = [
     badgeColor: 'bg-zinc-100 text-zinc-800 border-zinc-200',
     title: 'Portfolio Quality Partnership',
     shortLabel: 'Portfolio Quality Partnership',
-    tagline: 'Continuous oversight of your Western Cape hotels.',
-    description: 'Managers move on, chefs leave, maintenance slips. Regular unannounced inspections catch the decline before your guests do.',
+    tagline: 'Your own inspectors and year-round guest-sentiment tracking for your Western Cape hotels.',
+    description: 'Managers move on, chefs leave, maintenance slips. The same inspectors get to know your hotels and your team, and we track what guests say month by month, so you see a decline before your guests feel it.',
     priceDisplay: 'Seasonal retainer',
     ctaText: 'Discuss a Partnership',
     features: [
-      'Scheduled unannounced inspections',
-      'Comparable scores across every partner hotel',
-      'Early warning when standards slip',
+      'Dedicated inspectors who know your hotels and your team',
+      'Direct line to your inspectors, plus a quarterly review call',
+      'Ongoing review analysis: guest sentiment tracked month by month',
+      'Early warning when sentiment or standards slip',
+      'Scheduled unannounced inspections with comparable scores',
       'Pre-season checks before peak European arrivals',
-      'Direct line to your procurement team',
     ],
-    questionAnswered: '“Is our whole portfolio keeping its promise?”',
+    questionAnswered: '“Is our whole portfolio keeping its promise, month after month?”',
   },
 ];
 
 export const getServiceTier = (key: string): ServiceTier =>
   SERVICE_TIERS.find((t) => t.key === key) ?? SERVICE_TIERS[1];
 
-export const OUR_USPS: UspItem[] = [
-  {
-    key: 'INDEPENDENT',
-    title: 'PAID ONLY BY YOU',
-    tagline: 'We work for the travel company, never the hotel.',
-    description: 'No awards, plaques or consulting sold to hotels. Our only client is the company whose reputation is on the line.',
-    icon: 'ShieldCheck',
+const DE_TEXT: Record<ServiceTier['key'], Partial<ServiceTier>> = {
+  VIRTUAL_AUDIT: {
+    badge: 'KOSTENLOS',
+    title: 'Kostenloses Virtuelles Audit',
+    shortLabel: 'Kostenloses Virtuelles Audit (24h-Kurzbericht)',
+    tagline: 'Ein 24-Stunden-Check jedes Hotels in Ihrem Programm, vom Schreibtisch aus.',
+    description: 'Nennen Sie uns ein Hotel. Unser Team in Kapstadt prüft das Feedback europäischer Gäste anhand deutscher Katalogkriterien und sendet Ihnen innerhalb von 24 Stunden einen zweiseitigen Kurzbericht.',
+    priceDisplay: 'Kostenlos für Reiseveranstalter',
+    ctaText: 'Kostenloses Virtuelles Audit anfordern',
+    features: [
+      'Kurzbericht innerhalb von 24 Stunden in Ihrem Postfach',
+      'Speziell für das von Ihnen genannte Hotel',
+      'Geprüft nach den Erwartungen deutscher Reiseveranstalter (DRV)',
+      'Zeigt Risiken bei Lärm, Badhygiene und Serviceabläufen',
+      'Liefert die Checkliste für ein anschließendes Audit vor Ort',
+    ],
+    questionAnswered: '„Hält dieses Hotel, was wir verkaufen?“',
   },
-  {
-    key: 'HYPOTHESIS-DRIVEN',
-    title: 'TARGETED, NOT GENERIC',
-    tagline: 'Every stay is briefed by the Virtual Audit.',
-    description: 'Before arrival, the Virtual Audit tells our inspectors what guests complain about at that specific hotel, so the stay tests the real weak points.',
-    icon: 'BarChart3',
+  PHYSICAL_AUDIT: {
+    badge: 'KERNLEISTUNG',
+    title: 'Mystery-Audit vor Ort',
+    shortLabel: 'Mystery-Audit vor Ort',
+    tagline: 'Ein anonymer, unangekündigter Aufenthalt unserer Inspektoren.',
+    description: 'Ein 24- bis 48-stündiger Mystery-Aufenthalt zwischen Kapstadt und der Garden Route, durchgeführt von in Europa ausgebildeten Hotelfachleuten.',
+    priceDisplay: 'Angebot je Hotel',
+    ctaText: 'Audit vor Ort beauftragen',
+    features: [
+      '24–48 Stunden anonymer Mystery-Aufenthalt',
+      'Ankunft, Zimmer, Schlafkomfort und Badhygiene',
+      'Prüfung von Nachtlärm und Warmwasser am Morgen',
+      'Datierte Fotos, Zeitangaben und Richtwerte',
+      'Sachliche Dokumentation bei strittigen Gästebeschwerden',
+      'Vollständiger Bericht innerhalb von 48 Stunden',
+      '30-minütiges Zoom-Gespräch mit Ihrem Inspektor für persönliches Feedback',
+    ],
+    questionAnswered: '„Was würde unser Gast erleben, wenn er heute anreist?“',
   },
-  {
-    key: 'OBJECTIVE EVIDENCE',
-    title: 'FACTS, NOT REVIEWS',
-    tagline: 'Reviews show patterns. We document facts.',
-    description: 'Online reviews are anonymous and unverified, and carry little weight when a complaint is disputed. Our inspectors record dated, first-hand observations with photographs and timings, giving your customer-care and contracting teams a factual record to work from.',
-    icon: 'Zap',
+  PARTNERSHIP: {
+    badge: 'LAUFEND',
+    title: 'Portfolio-Qualitätspartnerschaft',
+    shortLabel: 'Portfolio-Qualitätspartnerschaft',
+    tagline: 'Feste Inspektoren und ganzjährige Auswertung der Gästestimmung für Ihre Hotels am Westkap.',
+    description: 'Manager wechseln, Köche gehen, die Instandhaltung lässt nach. Dieselben Inspektoren lernen Ihre Hotels und Ihr Team kennen, und wir verfolgen Monat für Monat, was Gäste sagen – so erkennen Sie einen Rückgang, bevor Ihre Gäste ihn spüren.',
+    priceDisplay: 'Saisonale Pauschale',
+    ctaText: 'Partnerschaft besprechen',
+    features: [
+      'Feste Inspektoren, die Ihre Hotels und Ihr Team kennen',
+      'Direkter Draht zu Ihren Inspektoren und ein vierteljährliches Gespräch',
+      'Laufende Bewertungsanalyse: Gästestimmung Monat für Monat',
+      'Frühwarnung, wenn Stimmung oder Standards nachlassen',
+      'Geplante, unangekündigte Inspektionen mit vergleichbaren Bewertungen',
+      'Checks vor der Saison, bevor die europäischen Gäste kommen',
+    ],
+    questionAnswered: '„Hält unser gesamtes Portfolio sein Versprechen – Monat für Monat?“',
   },
-  {
-    key: 'LOCAL',
-    title: 'ON THE GROUND, 48H REPORTS',
-    tagline: 'Based in Cape Town and the Western Cape.',
-    description: 'No flights to arrange and no remote guesswork. Full report with photographs within 48 hours of check-out.',
-    icon: 'MapPin',
-  },
-];
+};
+
+// German version: same keys, numbers and styling, German text.
+export const SERVICE_TIERS_DE: ServiceTier[] = SERVICE_TIERS.map((tier) => ({ ...tier, ...DE_TEXT[tier.key] }));
+
+export const tiersFor = (lang: Lang): ServiceTier[] => (lang === 'de' ? SERVICE_TIERS_DE : SERVICE_TIERS);

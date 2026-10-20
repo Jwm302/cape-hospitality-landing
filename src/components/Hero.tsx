@@ -1,119 +1,104 @@
 import React from 'react';
-import { ArrowRight, Sparkles, ShieldCheck, MapPin, CheckCircle2, ChevronRight, FileSpreadsheet } from 'lucide-react';
-import { CapeLogo } from './CapeLogo';
+import { ShieldCheck, Clock, MapPin } from 'lucide-react';
+import heroImg from '../assets/images/cape_luxury_hotel_1788963250076.jpg';
+import logoLightImg from '../assets/images/logo_light.webp';
+import { useLang } from '../i18n';
 
 interface HeroProps {
-  onScheduleBriefing: () => void;
-  onViewPricing: () => void;
-  onExploreVirtualAudit: () => void;
   onRequestFreeDataPackage: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({
-  onScheduleBriefing,
-  onViewPricing,
-  onExploreVirtualAudit,
-  onRequestFreeDataPackage,
-}) => {
+const COPY = {
+  en: {
+    tagline: 'Know what your guests will find, before they arrive.',
+    quote: '“A five-star hotel does not automatically guarantee a five-star guest experience.”',
+    introTitle: 'The Independent Choice',
+    intro1: 'We check hotels in Cape Town and the Western Cape for European travel companies, anonymously and unannounced.',
+    intro2: 'You see what your guests will actually experience, not what a star rating said years ago.',
+    cta: 'Request a free virtual audit',
+    highlights: [
+      { title: 'Independent', text: 'Paid only by the travel company, never by the hotel.' },
+      { title: 'Fast', text: 'A free desk brief within 24 hours, an on-site report within 48 hours.' },
+      { title: 'On the Ground', text: 'Inspectors based in the Western Cape, from Cape Town to the Garden Route.' },
+    ],
+  },
+  de: {
+    tagline: 'Wissen, was Ihre Gäste erwartet – bevor sie ankommen.',
+    quote: '„Ein Fünf-Sterne-Hotel garantiert nicht automatisch ein Fünf-Sterne-Gästeerlebnis.“',
+    introTitle: 'Die unabhängige Wahl',
+    intro1: 'Wir prüfen Hotels in Kapstadt und am Westkap für europäische Reiseveranstalter – anonym und unangekündigt.',
+    intro2: 'Sie sehen, was Ihre Gäste tatsächlich erleben, nicht was eine Sterne-Klassifizierung vor Jahren aussagte.',
+    cta: 'Kostenloses Virtuelles Audit anfordern',
+    highlights: [
+      { title: 'Unabhängig', text: 'Bezahlt ausschließlich vom Reiseveranstalter, nie vom Hotel.' },
+      { title: 'Schnell', text: 'Kostenloser Kurzbericht in 24 Stunden, Bericht vor Ort in 48 Stunden.' },
+      { title: 'Vor Ort', text: 'Inspektoren mit Sitz am Westkap, von Kapstadt bis zur Garden Route.' },
+    ],
+  },
+};
+
+const ICONS = [ShieldCheck, Clock, MapPin];
+
+export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
+  const c = COPY[useLang().lang];
   return (
-    <section className="relative pt-24 sm:pt-28 pb-16 sm:pb-20 overflow-hidden bg-[#fbfbfa]">
-      {/* Subtle radial glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[950px] h-[380px] bg-[radial-gradient(ellipse_at_top,rgba(179,138,84,0.09),transparent_70%)] pointer-events-none" />
-
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
-        {/* Brand Logo (the navbar already carries the full lockup) */}
-        <div className="w-full mx-auto mb-5 sm:mb-6">
-          <CapeLogo variant="prominent" showTagline={true} />
-        </div>
-
-        {/* Headline: what we do, for whom, where */}
-        <div className="max-w-4xl mx-auto space-y-4">
-          <div>
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 shadow-xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#b38a54]" />
-              <span className="tracking-widest uppercase font-serif text-[11px] font-semibold text-zinc-700">
-                Independent Hotel Quality Auditing • Western Cape
-              </span>
-            </span>
-          </div>
-
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-[#10213a] leading-tight tracking-tight">
-            Know what your guests will find, before they arrive.
+    <>
+      {/* Photo banner */}
+      <section
+        className="relative flex items-center justify-center min-h-[440px] sm:min-h-[560px] bg-cover bg-center"
+        style={{ backgroundImage: `url(${heroImg})` }}
+      >
+        <div className="absolute inset-0 bg-black/45" />
+        <div className="relative z-10 px-4 py-10 text-center text-white">
+          <h1>
+            <img
+              src={logoLightImg}
+              alt="Cape Hospitality Advisors"
+              className="mx-auto w-56 sm:w-80 h-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] select-none"
+              loading="eager"
+            />
           </h1>
-
-          <p className="text-base sm:text-lg text-zinc-600 leading-relaxed max-w-2xl mx-auto">
-            Independent, anonymous hotel inspections for European travel companies across Cape Town and the Western Cape.
-          </p>
+          <p className="mt-6 text-2xl sm:text-4xl font-light leading-snug drop-shadow-md max-w-3xl mx-auto">{c.tagline}</p>
+          <figure className="mt-6 max-w-2xl mx-auto drop-shadow-md">
+            <blockquote className="font-[Georgia,serif] italic text-base sm:text-lg text-white/90 leading-relaxed">
+              {c.quote}
+            </blockquote>
+            <figcaption className="mt-1.5 text-xs sm:text-sm text-white/75">
+              — A. Gutman Milne, Library Hotel Collection, New York
+            </figcaption>
+          </figure>
         </div>
+      </section>
 
-        {/* Action Buttons: 2 Clear, Focused Choices (Action vs Exploration) */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto">
-          {/* Primary Action: Request 24h Audit */}
+      {/* Intro + three reasons */}
+      <section className="bg-white py-14 sm:py-16">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-zinc-800">{c.introTitle}</h2>
+          <p className="mt-4 text-sm sm:text-base text-zinc-700 leading-relaxed max-w-3xl mx-auto">{c.intro1}</p>
+          <p className="mt-3 text-sm sm:text-base text-zinc-700 leading-relaxed max-w-3xl mx-auto">{c.intro2}</p>
+
           <button
             onClick={onRequestFreeDataPackage}
             id="hero-primary-cta"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 text-xs sm:text-sm font-bold rounded-full bg-[#10213a] text-white hover:bg-[#1a335a] active:scale-[0.98] transition-all shadow-md shadow-zinc-300/80 cursor-pointer"
+            className="mt-6 px-6 py-2.5 rounded-full bg-[#b38a54] hover:bg-[#9c753e] text-white text-sm font-semibold transition-colors"
           >
-            <Sparkles className="w-4 h-4 text-[#d9bd8b]" />
-            <span>Request Free Virtual Audit</span>
-            <ArrowRight className="w-4 h-4" />
+            {c.cta}
           </button>
 
-          {/* Secondary Exploration: Explore Demo & Case Study */}
-          <button
-            onClick={onExploreVirtualAudit}
-            id="hero-secondary-cta"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 text-xs sm:text-sm font-semibold rounded-full border border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-50 active:scale-[0.98] transition-all shadow-xs cursor-pointer"
-          >
-            <span>Try the Live Demo</span>
-            <ChevronRight className="w-4 h-4 text-zinc-400" />
-          </button>
-        </div>
-
-        {/* Attributed quote */}
-        <figure className="mt-10 max-w-2xl mx-auto">
-          <blockquote className="font-[Georgia,serif] italic text-base sm:text-lg text-zinc-600 leading-relaxed">
-            “A five-star hotel does not automatically guarantee a five-star guest experience.”
-          </blockquote>
-          <figcaption className="mt-1.5 text-[11px] sm:text-xs text-zinc-400">
-            — A. Gutman Milne, Library Hotel Collection, New York
-          </figcaption>
-        </figure>
-
-        {/* 3 Simple, Clear Highlights */}
-        <div className="mt-8 pt-8 border-t border-zinc-200/80 w-full max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
-          <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-zinc-200 shadow-xs">
-            <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-[#b38a54] shrink-0 mt-0.5">
-              <ShieldCheck className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="text-xs font-bold text-[#10213a]">Today’s Reality, Not Old Star Ratings</div>
-              <div className="text-[11px] text-zinc-500 leading-snug mt-0.5">What guests experience now, not when the rating was issued.</div>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-zinc-200 shadow-xs">
-            <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-[#b38a54] shrink-0 mt-0.5">
-              <MapPin className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="text-xs font-bold text-[#10213a]">German Travel Company Lens</div>
-              <div className="text-[11px] text-zinc-500 leading-snug mt-0.5">Judged on what European guests notice: noise, hygiene, punctuality, service.</div>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-zinc-200 shadow-xs">
-            <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-[#b38a54] shrink-0 mt-0.5">
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-            <div>
-              <div className="text-xs font-bold text-[#10213a]">On the Ground, Reports in 48h</div>
-              <div className="text-[11px] text-zinc-500 leading-snug mt-0.5">Inspectors based in the Western Cape, from Cape Town to the Garden Route.</div>
-            </div>
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-10">
+            {c.highlights.map(({ title, text }, i) => {
+              const Icon = ICONS[i];
+              return (
+                <div key={title} className="flex flex-col items-center">
+                  <Icon className="w-12 h-12 text-[#b38a54]" strokeWidth={1.25} />
+                  <h3 className="mt-4 text-xl font-light text-zinc-800">{title}</h3>
+                  <p className="mt-2 text-sm text-zinc-600 leading-relaxed max-w-xs">{text}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
-
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
