@@ -57,15 +57,15 @@ const formatRating = (n: number, lang: Lang = 'en') => {
 const COPY = {
   en: {
     title: 'Try It: Check Any Hotel',
-    intro: 'Type a hotel name to see its consolidated rating from Google and other booking sites, and what recent guests say, counted, dated and sourced.',
+    intro: 'Type a hotel name to see its consolidated rating across booking platforms and what recent guests say, counted, dated and sourced.',
     placeholder: 'Type a hotel name and town (e.g. Tintswalo Hout Bay)...',
     hotelName: 'Hotel name',
     enterName: 'Please enter a hotel name.',
     lookingUp: 'Looking up...',
     auditHotel: 'Audit Hotel',
-    liveData: 'Live data from Google. Adding the town gives the most precise match.',
+    liveData: 'Live data combined from several review platforms. Adding the town gives the most precise match.',
     finding: (q: string) => `Finding “${q}”...`,
-    notFoundTitle: (q: string) => `We couldn’t find “${q}” on Google Maps.`,
+    notFoundTitle: (q: string) => `We couldn’t find “${q}”.`,
     notFoundBody: 'Try the full hotel name plus the town, e.g. “Tintswalo Atlantic Hout Bay”.',
     unavailableTitle: 'Live hotel data is temporarily unavailable.',
     unavailableBody: 'Our team can still prepare the free 24-hour Desk Brief for this hotel.',
@@ -80,7 +80,7 @@ const COPY = {
     noScores: 'No scores from other booking sites are listed for this property on Google Hotels.',
     scoresTitle: 'Scores across platforms',
     scoresNote: 'As listed on Google Hotels under “Reviews from the web”, with the number of reviews behind each score.',
-    notRight: 'Not the right place? Other matches on Google:',
+    notRight: 'Not the right place? Other matches:',
     status: { OPERATIONAL: 'Operating', CLOSED_TEMPORARILY: 'Temporarily closed', CLOSED_PERMANENTLY: 'Permanently closed' },
     wheelchairYes: 'Wheelchair-accessible entrance',
     wheelchairNo: 'No wheelchair-accessible entrance',
@@ -117,7 +117,7 @@ const COPY = {
     risk: {} as Record<string, string>,
     briefTitle: 'Want the deeper picture? Get the 24-hour Desk Brief',
     briefBody: (hotel: string) =>
-      `This snapshot is instant and based on Google. The Desk Brief on ${hotel} goes further: what German-speaking guests say on Booking.com compared with other guests, a risk checklist with verbatim quotes, and what to check on site. Our team reviews it and emails it to you within 24 hours. Free for travel companies.`,
+      `This snapshot is instant and automated. The Desk Brief on ${hotel} goes further: what German-speaking guests say on Booking.com compared with other guests, a risk checklist with verbatim quotes, and what to check on site. Our team reviews it and emails it to you within 24 hours. Free for travel companies.`,
     briefSent: (hotel: string, email: React.ReactNode) => (
       <>Thank you. Our team is preparing the Desk Brief on {hotel} and will email it, with this snapshot, to {email} within 24 hours.</>
     ),
@@ -134,15 +134,15 @@ const COPY = {
   },
   de: {
     title: 'Testen Sie es: Prüfen Sie ein Hotel',
-    intro: 'Geben Sie einen Hotelnamen ein und sehen Sie die konsolidierte Bewertung von Google und anderen Buchungsportalen sowie was Gäste zuletzt sagen – gezählt, datiert und mit Quelle.',
+    intro: 'Geben Sie einen Hotelnamen ein und sehen Sie die konsolidierte Bewertung über alle Buchungsportale sowie was Gäste zuletzt sagen – gezählt, datiert und mit Quelle.',
     placeholder: 'Hotelname und Ort eingeben (z. B. Tintswalo Hout Bay)...',
     hotelName: 'Hotelname',
     enterName: 'Bitte geben Sie einen Hotelnamen ein.',
     lookingUp: 'Suche läuft...',
     auditHotel: 'Hotel prüfen',
-    liveData: 'Live-Daten von Google. Mit Ortsangabe wird das Ergebnis am genauesten.',
+    liveData: 'Live-Daten, zusammengeführt aus mehreren Bewertungsportalen. Mit Ortsangabe wird das Ergebnis am genauesten.',
     finding: (q: string) => `Suche nach „${q}“...`,
-    notFoundTitle: (q: string) => `„${q}“ wurde auf Google Maps nicht gefunden.`,
+    notFoundTitle: (q: string) => `„${q}“ wurde nicht gefunden.`,
     notFoundBody: 'Versuchen Sie den vollständigen Hotelnamen mit Ort, z. B. „Tintswalo Atlantic Hout Bay“.',
     unavailableTitle: 'Live-Hoteldaten sind vorübergehend nicht verfügbar.',
     unavailableBody: 'Unser Team kann den kostenlosen 24h-Kurzbericht für dieses Hotel trotzdem erstellen.',
@@ -157,7 +157,7 @@ const COPY = {
     noScores: 'Für dieses Hotel sind auf Google Hotels keine Bewertungen anderer Buchungsportale aufgeführt.',
     scoresTitle: 'Bewertungen auf anderen Portalen',
     scoresNote: 'Wie auf Google Hotels unter „Bewertungen aus dem Web“ angegeben, mit der Anzahl der Bewertungen hinter jedem Wert.',
-    notRight: 'Nicht das richtige Hotel? Weitere Treffer auf Google:',
+    notRight: 'Nicht das richtige Hotel? Weitere Treffer:',
     status: { OPERATIONAL: 'Geöffnet', CLOSED_TEMPORARILY: 'Vorübergehend geschlossen', CLOSED_PERMANENTLY: 'Dauerhaft geschlossen' },
     wheelchairYes: 'Rollstuhlgerechter Eingang',
     wheelchairNo: 'Kein rollstuhlgerechter Eingang',
@@ -201,7 +201,7 @@ const COPY = {
     } as Record<string, string>,
     briefTitle: 'Mehr Tiefe? Fordern Sie den 24h-Kurzbericht an',
     briefBody: (hotel: string) =>
-      `Diese Momentaufnahme ist sofort verfügbar und basiert auf Google. Der Kurzbericht zu ${hotel} geht weiter: was deutschsprachige Gäste auf Booking.com im Vergleich zu anderen Gästen sagen, eine Risiko-Checkliste mit wörtlichen Zitaten und was vor Ort zu prüfen ist. Unser Team prüft ihn und sendet ihn Ihnen innerhalb von 24 Stunden. Kostenlos für Reiseveranstalter.`,
+      `Diese Momentaufnahme ist sofort verfügbar und automatisch erstellt. Der Kurzbericht zu ${hotel} geht weiter: was deutschsprachige Gäste auf Booking.com im Vergleich zu anderen Gästen sagen, eine Risiko-Checkliste mit wörtlichen Zitaten und was vor Ort zu prüfen ist. Unser Team prüft ihn und sendet ihn Ihnen innerhalb von 24 Stunden. Kostenlos für Reiseveranstalter.`,
     briefSent: (hotel: string, email: React.ReactNode) => (
       <>Vielen Dank. Unser Team erstellt den Kurzbericht zu {hotel} und sendet ihn zusammen mit dieser Momentaufnahme innerhalb von 24 Stunden an {email}.</>
     ),
