@@ -30,6 +30,7 @@ import type {
   Theme,
 } from '../../api/_lib/types';
 import { CONTACT_EMAIL, mailtoLink, sendInquiry } from '../lib/sendInquiry';
+import { Lang, dateLocale, useLang } from '../i18n';
 
 interface AgentVirtualAuditProps {
   onSelectPropertyForInquiry: (propertyName: string) => void;
@@ -40,10 +41,187 @@ interface AgentVirtualAuditProps {
 const POLL_INTERVAL_MS = 5000;
 const MAX_POLLS = 36; // ~3 minutes
 
-const formatMonth = (iso?: string) =>
-  iso ? new Date(iso).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }) : '';
+const formatMonth = (iso?: string, lang: Lang = 'en') =>
+  iso ? new Date(iso).toLocaleDateString(dateLocale(lang), { month: 'short', year: 'numeric' }) : '';
 
-const formatCount = (n: number) => n.toLocaleString('en-US');
+const formatCount = (n: number, lang: Lang = 'en') => n.toLocaleString(lang === 'de' ? 'de-DE' : 'en-US');
+
+// One decimal place, with a decimal comma in German (4,7 rather than 4.7).
+const formatRating = (n: number, lang: Lang = 'en') => {
+  const text = n.toFixed(1);
+  return lang === 'de' ? text.replace('.', ',') : text;
+};
+
+// Visitor-facing text. Guest quotes stay word for word in their original language,
+// and emails to our team stay in English.
+const COPY = {
+  en: {
+    title: 'Try It: Check Any Hotel',
+    intro: 'Type a hotel name to see its live Google rating and what recent guests say, counted, dated and sourced.',
+    placeholder: 'Type a hotel name and town (e.g. Tintswalo Hout Bay)...',
+    hotelName: 'Hotel name',
+    enterName: 'Please enter a hotel name.',
+    lookingUp: 'Looking up...',
+    auditHotel: 'Audit Hotel',
+    liveData: 'Live data from Google. Adding the town gives the most precise match.',
+    finding: (q: string) => `Finding “${q}”...`,
+    notFoundTitle: (q: string) => `We couldn’t find “${q}” on Google Maps.`,
+    notFoundBody: 'Try the full hotel name plus the town, e.g. “Tintswalo Atlantic Hout Bay”.',
+    unavailableTitle: 'Live hotel data is temporarily unavailable.',
+    unavailableBody: 'Our team can still prepare the free 24-hour Desk Brief for this hotel.',
+    unavailableAction: 'Request the 24h Desk Brief',
+    sampleLink: 'See a sample on-site report',
+    viewMaps: 'View on Google Maps',
+    fromReviews: (n: string) => `from ${n} reviews`,
+    googleRating: 'Google rating',
+    noRating: 'No Google rating yet',
+    sourceMaps: 'Source: Google Maps',
+    collecting: 'Collecting scores from other booking sites...',
+    noScores: 'No scores from other booking sites are listed for this property on Google Hotels.',
+    scoresTitle: 'Scores across platforms',
+    scoresNote: 'As listed on Google Hotels under “Reviews from the web”, with the number of reviews behind each score.',
+    notRight: 'Not the right place? Other matches on Google:',
+    status: { OPERATIONAL: 'Operating', CLOSED_TEMPORARILY: 'Temporarily closed', CLOSED_PERMANENTLY: 'Permanently closed' },
+    wheelchairYes: 'Wheelchair-accessible entrance',
+    wheelchairNo: 'No wheelchair-accessible entrance',
+    parking: { 'Free parking': 'Free parking', 'Paid parking': 'Paid parking' } as Record<string, string>,
+    website: 'Website',
+    reviewsDisabled: 'A breakdown of recent guest reviews is included in the free 24-hour Desk Brief.',
+    pendingTitle: 'Aggregating and analysing recent guest reviews from several platforms...',
+    pendingBody: 'We combine the reviews, remove duplicates, count every complaint and check each quote. This usually takes about a minute.',
+    reviewsError: 'The recent-review breakdown couldn’t be loaded right now.',
+    noReviews: 'No recent written reviews were found for this hotel.',
+    above: (r: string) => `above Google's overall ${r}`,
+    below: (r: string) => `below Google's overall ${r}`,
+    inLine: (r: string) => `in line with Google's overall ${r}`,
+    whatGuestsSay: 'What recent guests say',
+    basedOn: (sample: string, written: number) => `Based on the latest ${sample} (${written} with written comments)`,
+    reviews: 'reviews',
+    recentAverage: 'Recent average',
+    last12: 'Last 12 months',
+    of: (a: number, b: number) => `${a} of ${b}`,
+    inSample: (newest: string) => `reviews in this sample${newest ? ` · newest ${newest}` : ''}`,
+    writtenGerman: 'Written in German',
+    writtenReviews: 'written reviews',
+    analysed: 'Reviews analysed',
+    withComments: (n: string) => `${n} with comments`,
+    only: (n: number) => `only ${n}`,
+    noThemes: 'A theme breakdown isn’t available for this hotel.',
+    footnote: 'Themes are grouped by AI from the review text. Counts show how many written reviews in this sample mention each theme, and quotes are copied word for word. The average includes star-only ratings. Review data:',
+    and: ' and ',
+    listing: (source: string) => `${source} listing:`,
+    riskTitle: 'Risk checklist',
+    riskIntro: (n: number) => `Complaints in the ${n} written reviews about the issues European guests notice most. Click a line to read them.`,
+    noComplaints: 'No complaints',
+    complaints: (n: number) => `${n} complaint${n === 1 ? '' : 's'}`,
+    risk: {} as Record<string, string>,
+    briefTitle: 'Want the deeper picture? Get the 24-hour Desk Brief',
+    briefBody: (hotel: string) =>
+      `This snapshot is instant and based on Google. The Desk Brief on ${hotel} goes further: what German-speaking guests say on Booking.com compared with other guests, a risk checklist with verbatim quotes, and what to check on site. Our team reviews it and emails it to you within 24 hours. Free for travel companies.`,
+    briefSent: (hotel: string, email: React.ReactNode) => (
+      <>Thank you. Our team is preparing the Desk Brief on {hotel} and will email it, with this snapshot, to {email} within 24 hours.</>
+    ),
+    workEmail: 'Your work email',
+    sending: 'Sending...',
+    sendBrief: 'Send me the 24h Desk Brief',
+    emailOnly: 'We use your email only to send this brief.',
+    privacy: 'Privacy notice',
+    sendFailed: `This couldn’t be sent right now. Please email us at ${CONTACT_EMAIL} —`,
+    openEmail: 'open a pre-filled email',
+    invalidEmail: 'Please enter a valid email address.',
+    commission: 'Commission On-Site Audit',
+    fullForm: 'or use the full enquiry form',
+  },
+  de: {
+    title: 'Testen Sie es: Prüfen Sie ein Hotel',
+    intro: 'Geben Sie einen Hotelnamen ein und sehen Sie die aktuelle Google-Bewertung und was Gäste zuletzt sagen – gezählt, datiert und mit Quelle.',
+    placeholder: 'Hotelname und Ort eingeben (z. B. Tintswalo Hout Bay)...',
+    hotelName: 'Hotelname',
+    enterName: 'Bitte geben Sie einen Hotelnamen ein.',
+    lookingUp: 'Suche läuft...',
+    auditHotel: 'Hotel prüfen',
+    liveData: 'Live-Daten von Google. Mit Ortsangabe wird das Ergebnis am genauesten.',
+    finding: (q: string) => `Suche nach „${q}“...`,
+    notFoundTitle: (q: string) => `„${q}“ wurde auf Google Maps nicht gefunden.`,
+    notFoundBody: 'Versuchen Sie den vollständigen Hotelnamen mit Ort, z. B. „Tintswalo Atlantic Hout Bay“.',
+    unavailableTitle: 'Live-Hoteldaten sind vorübergehend nicht verfügbar.',
+    unavailableBody: 'Unser Team kann den kostenlosen 24h-Kurzbericht für dieses Hotel trotzdem erstellen.',
+    unavailableAction: '24h-Kurzbericht anfordern',
+    sampleLink: 'Beispielbericht eines Audits vor Ort ansehen',
+    viewMaps: 'Auf Google Maps ansehen',
+    fromReviews: (n: string) => `aus ${n} Bewertungen`,
+    googleRating: 'Google-Bewertung',
+    noRating: 'Noch keine Google-Bewertung',
+    sourceMaps: 'Quelle: Google Maps',
+    collecting: 'Bewertungen anderer Buchungsportale werden gesammelt...',
+    noScores: 'Für dieses Hotel sind auf Google Hotels keine Bewertungen anderer Buchungsportale aufgeführt.',
+    scoresTitle: 'Bewertungen auf anderen Portalen',
+    scoresNote: 'Wie auf Google Hotels unter „Bewertungen aus dem Web“ angegeben, mit der Anzahl der Bewertungen hinter jedem Wert.',
+    notRight: 'Nicht das richtige Hotel? Weitere Treffer auf Google:',
+    status: { OPERATIONAL: 'Geöffnet', CLOSED_TEMPORARILY: 'Vorübergehend geschlossen', CLOSED_PERMANENTLY: 'Dauerhaft geschlossen' },
+    wheelchairYes: 'Rollstuhlgerechter Eingang',
+    wheelchairNo: 'Kein rollstuhlgerechter Eingang',
+    parking: { 'Free parking': 'Kostenlose Parkplätze', 'Paid parking': 'Kostenpflichtige Parkplätze' } as Record<string, string>,
+    website: 'Website',
+    reviewsDisabled: 'Eine Auswertung der aktuellen Gästebewertungen ist im kostenlosen 24h-Kurzbericht enthalten.',
+    pendingTitle: 'Aktuelle Gästebewertungen mehrerer Portale werden zusammengeführt und ausgewertet...',
+    pendingBody: 'Wir führen die Bewertungen zusammen, entfernen Doppelte, zählen jede Beschwerde und prüfen jedes Zitat. Das dauert meist etwa eine Minute.',
+    reviewsError: 'Die Auswertung der aktuellen Bewertungen konnte gerade nicht geladen werden.',
+    noReviews: 'Für dieses Hotel wurden keine aktuellen schriftlichen Bewertungen gefunden.',
+    above: (r: string) => `über dem Google-Gesamtwert von ${r}`,
+    below: (r: string) => `unter dem Google-Gesamtwert von ${r}`,
+    inLine: (r: string) => `im Einklang mit dem Google-Gesamtwert von ${r}`,
+    whatGuestsSay: 'Was Gäste zuletzt sagen',
+    basedOn: (sample: string, written: number) => `Basierend auf den neuesten ${sample} (${written} mit schriftlichem Kommentar)`,
+    reviews: 'Bewertungen',
+    recentAverage: 'Aktueller Schnitt',
+    last12: 'Letzte 12 Monate',
+    of: (a: number, b: number) => `${a} von ${b}`,
+    inSample: (newest: string) => `Bewertungen in dieser Stichprobe${newest ? ` · neueste ${newest}` : ''}`,
+    writtenGerman: 'Auf Deutsch verfasst',
+    writtenReviews: 'schriftliche Bewertungen',
+    analysed: 'Ausgewertete Bewertungen',
+    withComments: (n: string) => `${n} mit Kommentar`,
+    only: (n: number) => `nur ${n}`,
+    noThemes: 'Für dieses Hotel ist keine Auswertung nach Themen verfügbar.',
+    footnote: 'Die Themen werden per KI aus dem Bewertungstext gruppiert (Themennamen auf Englisch). Die Zahlen zeigen, wie viele schriftliche Bewertungen dieser Stichprobe ein Thema erwähnen; Zitate sind wörtlich übernommen. Der Durchschnitt enthält auch reine Sterne-Bewertungen. Bewertungsdaten:',
+    and: ' und ',
+    listing: (source: string) => `${source}-Eintrag:`,
+    riskTitle: 'Risiko-Checkliste',
+    riskIntro: (n: number) => `Beschwerden in den ${n} schriftlichen Bewertungen zu den Punkten, die europäischen Gästen am meisten auffallen. Klicken Sie auf eine Zeile, um sie zu lesen.`,
+    noComplaints: 'Keine Beschwerden',
+    complaints: (n: number) => `${n} ${n === 1 ? 'Beschwerde' : 'Beschwerden'}`,
+    risk: {
+      noise: 'Lärm',
+      hot_water: 'Warmwasser & Duschen',
+      cleanliness: 'Sauberkeit',
+      wifi: 'WLAN',
+      safety: 'Sicherheit',
+      power: 'Stromausfälle',
+    } as Record<string, string>,
+    briefTitle: 'Mehr Tiefe? Fordern Sie den 24h-Kurzbericht an',
+    briefBody: (hotel: string) =>
+      `Diese Momentaufnahme ist sofort verfügbar und basiert auf Google. Der Kurzbericht zu ${hotel} geht weiter: was deutschsprachige Gäste auf Booking.com im Vergleich zu anderen Gästen sagen, eine Risiko-Checkliste mit wörtlichen Zitaten und was vor Ort zu prüfen ist. Unser Team prüft ihn und sendet ihn Ihnen innerhalb von 24 Stunden. Kostenlos für Reiseveranstalter.`,
+    briefSent: (hotel: string, email: React.ReactNode) => (
+      <>Vielen Dank. Unser Team erstellt den Kurzbericht zu {hotel} und sendet ihn zusammen mit dieser Momentaufnahme innerhalb von 24 Stunden an {email}.</>
+    ),
+    workEmail: 'Ihre geschäftliche E-Mail',
+    sending: 'Wird gesendet...',
+    sendBrief: '24h-Kurzbericht anfordern',
+    emailOnly: 'Wir verwenden Ihre E-Mail nur für den Versand dieses Berichts.',
+    privacy: 'Datenschutzhinweise',
+    sendFailed: `Das konnte gerade nicht gesendet werden. Bitte schreiben Sie uns an ${CONTACT_EMAIL} –`,
+    openEmail: 'vorausgefüllte E-Mail öffnen',
+    invalidEmail: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.',
+    commission: 'Audit vor Ort beauftragen',
+    fullForm: 'oder das vollständige Anfrageformular nutzen',
+  },
+};
+
+const useCopy = () => {
+  const { lang } = useLang();
+  return { lang, c: COPY[lang] };
+};
 
 export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
   onSelectPropertyForInquiry,
@@ -57,6 +235,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
   const [reviews, setReviews] = useState<ReviewsState | null>(null);
   const [scores, setScores] = useState<PlatformScores | 'loading' | null>(null);
   const [inputError, setInputError] = useState('');
+  const { c } = useCopy();
   // Incremented on every search so stale polls stop updating the page.
   const searchId = useRef(0);
 
@@ -108,7 +287,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
 
   const runSearch = async (query: string) => {
     if (query.length < 2) {
-      setInputError('Please enter a hotel name.');
+      setInputError(c.enterName);
       return;
     }
     const id = ++searchId.current;
@@ -129,7 +308,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
       const data = await res.json();
       if (searchId.current !== id) return;
       if (res.status === 400) {
-        setInputError(data.error || 'Please enter a hotel name.');
+        setInputError(c.enterName);
         return;
       }
       const snapshot: SnapshotResponse = res.ok ? data : { status: 'unavailable' };
@@ -157,11 +336,11 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-white">
-            Try It: Check Any Hotel
+            {c.title}
           </h2>
 
           <p className="mt-3 text-sm sm:text-base text-zinc-300 leading-relaxed">
-            Type a hotel name to see its live Google rating and what recent guests say, counted, dated and sourced.
+            {c.intro}
           </p>
         </div>
 
@@ -177,9 +356,9 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Type a hotel name and town (e.g. Tintswalo Hout Bay)..."
+                placeholder={c.placeholder}
                 maxLength={120}
-                aria-label="Hotel name"
+                aria-label={c.hotelName}
                 className="w-full bg-transparent text-white placeholder-zinc-400 text-sm focus:outline-hidden py-2.5 font-sans"
               />
             </div>
@@ -191,11 +370,11 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
               {isLoading ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
-                  <span>Looking up...</span>
+                  <span>{c.lookingUp}</span>
                 </>
               ) : (
                 <>
-                  <span>Audit Hotel</span>
+                  <span>{c.auditHotel}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </>
               )}
@@ -204,7 +383,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
           {inputError && <p className="mt-2 text-center text-xs text-rose-300">{inputError}</p>}
           <p className="mt-3 text-center text-[11px] text-zinc-400 flex items-center justify-center gap-1.5">
             <Compass className="w-3.5 h-3.5 text-[#d9bd8b]" />
-            Live data from Google. Adding the town gives the most precise match.
+            {c.liveData}
           </p>
         </div>
 
@@ -213,22 +392,22 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
           {isLoading && (
             <div className="rounded-2xl bg-[#0c182a]/90 border border-[#d9bd8b]/30 p-8 text-center">
               <Loader2 className="w-7 h-7 animate-spin text-[#d9bd8b] mx-auto mb-3" />
-              <p className="text-sm text-zinc-200">Finding “{submittedQuery}”...</p>
+              <p className="text-sm text-zinc-200">{c.finding(submittedQuery)}</p>
             </div>
           )}
 
           {!isLoading && result?.status === 'not_found' && (
             <Notice
-              title={`We couldn’t find “${submittedQuery}” on Google Maps.`}
-              body="Try the full hotel name plus the town, e.g. “Tintswalo Atlantic Hout Bay”."
+              title={c.notFoundTitle(submittedQuery)}
+              body={c.notFoundBody}
             />
           )}
 
           {!isLoading && result?.status === 'unavailable' && (
             <Notice
-              title="Live hotel data is temporarily unavailable."
-              body="Our team can still prepare the free 24-hour Desk Brief for this hotel."
-              actionLabel="Request the 24h Desk Brief"
+              title={c.unavailableTitle}
+              body={c.unavailableBody}
+              actionLabel={c.unavailableAction}
               onAction={() => requestBrief(submittedQuery)}
             />
           )}
@@ -261,7 +440,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
             href="/sample-report"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 text-xs text-zinc-300 hover:text-white transition-all cursor-pointer shadow-xs"
           >
-            <span>See a sample on-site report</span>
+            <span>{c.sampleLink}</span>
             <ArrowRight className="w-3 h-3 text-[#d9bd8b]" />
           </a>
         </div>
@@ -292,7 +471,9 @@ const Notice: React.FC<{ title: string; body: string; actionLabel?: string; onAc
   </div>
 );
 
-const PlaceHeader: React.FC<{ place: PlaceSnapshot }> = ({ place }) => (
+const PlaceHeader: React.FC<{ place: PlaceSnapshot }> = ({ place }) => {
+  const { lang, c } = useCopy();
+  return (
   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
     <div className="min-w-0">
       {place.type && (
@@ -313,7 +494,7 @@ const PlaceHeader: React.FC<{ place: PlaceSnapshot }> = ({ place }) => (
           rel="noopener noreferrer"
           className="mt-2 inline-flex items-center gap-1 text-[11px] text-[#d9bd8b] hover:text-white"
         >
-          View on Google Maps <ExternalLink className="w-3 h-3" />
+          {c.viewMaps} <ExternalLink className="w-3 h-3" />
         </a>
       )}
     </div>
@@ -323,54 +504,56 @@ const PlaceHeader: React.FC<{ place: PlaceSnapshot }> = ({ place }) => (
         <>
           <div className="flex items-center justify-center gap-1.5">
             <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
-            <span className="text-3xl font-bold text-white">{place.rating.toFixed(1)}</span>
+            <span className="text-3xl font-bold text-white">{formatRating(place.rating, lang)}</span>
           </div>
           <div className="text-[11px] text-zinc-300 mt-1">
-            {place.ratingCount ? `from ${formatCount(place.ratingCount)} reviews` : 'Google rating'}
+            {place.ratingCount ? c.fromReviews(formatCount(place.ratingCount, lang)) : c.googleRating}
           </div>
         </>
       ) : (
-        <div className="text-xs text-zinc-300">No Google rating yet</div>
+        <div className="text-xs text-zinc-300">{c.noRating}</div>
       )}
-      <div className="text-[10px] font-mono text-zinc-500 mt-2">Source: Google Maps</div>
+      <div className="text-[10px] font-mono text-zinc-500 mt-2">{c.sourceMaps}</div>
     </div>
   </div>
-);
+  );
+};
 
 // Google Hotels sends site scores on a 5-point scale, often without saying so.
-const formatScore = (s: { value: number; max?: number }) => {
+const formatScore = (s: { value: number; max?: number }, lang: Lang = 'en') => {
   if (s.max === 100) return `${Math.round(s.value)}%`;
   const max = s.max ?? (s.value <= 5 ? 5 : s.value <= 10 ? 10 : undefined);
   const value = Math.round(s.value * 10) / 10;
-  return `${Number.isInteger(value) ? value : value.toFixed(1)}${max ? `/${max}` : ''}`;
+  return `${Number.isInteger(value) ? value : formatRating(value, lang)}${max ? `/${max}` : ''}`;
 };
 
 const PlatformScoresRow: React.FC<{ state: PlatformScores | 'loading' | null }> = ({ state }) => {
+  const { lang, c } = useCopy();
   if (!state || (typeof state === 'object' && state.status === 'unavailable')) return null;
   if (state === 'loading') {
     return (
       <p className="text-[11px] text-zinc-400 flex items-center gap-2 -mt-2">
-        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#d9bd8b]" /> Collecting scores from other booking sites...
+        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#d9bd8b]" /> {c.collecting}
       </p>
     );
   }
   if (state.status === 'none') {
     return (
       <p className="text-[11px] text-zinc-500 -mt-2">
-        No scores from other booking sites are listed for this property on Google Hotels.
+        {c.noScores}
       </p>
     );
   }
   return (
     <div className="-mt-2">
-      <h4 className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">Scores across platforms</h4>
+      <h4 className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">{c.scoresTitle}</h4>
       <ul className="mt-2 flex flex-wrap gap-2">
         {state.scores.map((s) => {
           const body = (
             <>
               <span className="text-zinc-300">{s.site}</span>
-              <span className="font-bold text-white">{formatScore(s)}</span>
-              {typeof s.votes === 'number' && <span className="text-zinc-500">({formatCount(s.votes)})</span>}
+              <span className="font-bold text-white">{formatScore(s, lang)}</span>
+              {typeof s.votes === 'number' && <span className="text-zinc-500">({formatCount(s.votes, lang)})</span>}
             </>
           );
           return (
@@ -394,7 +577,7 @@ const PlatformScoresRow: React.FC<{ state: PlatformScores | 'loading' | null }> 
         })}
       </ul>
       <p className="mt-1.5 text-[10px] text-zinc-500">
-        As listed on Google Hotels under “Reviews from the web”, with the number of reviews behind each score.
+        {c.scoresNote}
       </p>
     </div>
   );
@@ -403,9 +586,11 @@ const PlatformScoresRow: React.FC<{ state: PlatformScores | 'loading' | null }> 
 const Alternatives: React.FC<{ places: PlaceSnapshot[]; onPick: (p: PlaceSnapshot) => void }> = ({
   places,
   onPick,
-}) => (
+}) => {
+  const { lang, c } = useCopy();
+  return (
   <div className="-mt-2">
-    <p className="text-[11px] text-zinc-400 mb-2">Not the right place? Other matches on Google:</p>
+    <p className="text-[11px] text-zinc-400 mb-2">{c.notRight}</p>
     <div className="flex flex-wrap gap-2">
       {places.map((p) => (
         <button
@@ -418,19 +603,20 @@ const Alternatives: React.FC<{ places: PlaceSnapshot[]; onPick: (p: PlaceSnapsho
           {typeof p.rating === 'number' && (
             <span className="text-zinc-400">
               {' '}
-              · {p.rating.toFixed(1)}★{p.ratingCount ? ` (${formatCount(p.ratingCount)})` : ''}
+              · {formatRating(p.rating, lang)}★{p.ratingCount ? ` (${formatCount(p.ratingCount, lang)})` : ''}
             </span>
           )}
         </button>
       ))}
     </div>
   </div>
-);
+  );
+};
 
-const STATUS_LABEL: Record<NonNullable<PlaceSnapshot['status']>, { text: string; tone: string }> = {
-  OPERATIONAL: { text: 'Operating', tone: 'text-emerald-300 border-emerald-500/30 bg-emerald-500/10' },
-  CLOSED_TEMPORARILY: { text: 'Temporarily closed', tone: 'text-rose-300 border-rose-500/40 bg-rose-500/15' },
-  CLOSED_PERMANENTLY: { text: 'Permanently closed', tone: 'text-rose-300 border-rose-500/40 bg-rose-500/15' },
+const STATUS_TONE: Record<NonNullable<PlaceSnapshot['status']>, string> = {
+  OPERATIONAL: 'text-emerald-300 border-emerald-500/30 bg-emerald-500/10',
+  CLOSED_TEMPORARILY: 'text-rose-300 border-rose-500/40 bg-rose-500/15',
+  CLOSED_PERMANENTLY: 'text-rose-300 border-rose-500/40 bg-rose-500/15',
 };
 
 const chip = 'inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[10.5px]';
@@ -438,7 +624,8 @@ const plainChip = `${chip} text-zinc-300 border-white/10 bg-white/5`;
 
 // Facts straight from the Google listing; anything Google doesn't report is left out.
 const PlaceFacts: React.FC<{ place: PlaceSnapshot }> = ({ place }) => {
-  const status = place.status ? STATUS_LABEL[place.status] : null;
+  const { c } = useCopy();
+  const status = place.status ? { text: c.status[place.status], tone: STATUS_TONE[place.status] } : null;
   const hasFacts =
     status || place.wheelchairEntrance !== undefined || place.parking || place.website || place.phone;
   if (!hasFacts) return null;
@@ -448,19 +635,19 @@ const PlaceFacts: React.FC<{ place: PlaceSnapshot }> = ({ place }) => {
       {place.wheelchairEntrance !== undefined && (
         <span className={plainChip}>
           <Accessibility className="w-3 h-3" />
-          {place.wheelchairEntrance ? 'Wheelchair-accessible entrance' : 'No wheelchair-accessible entrance'}
+          {place.wheelchairEntrance ? c.wheelchairYes : c.wheelchairNo}
         </span>
       )}
       {place.parking && (
         <span className={plainChip}>
           <Car className="w-3 h-3" />
-          {place.parking}
+          {c.parking[place.parking] ?? place.parking}
         </span>
       )}
       {place.website && (
         <a href={place.website} target="_blank" rel="noopener noreferrer" className={`${plainChip} hover:text-white`}>
           <Globe className="w-3 h-3" />
-          Website
+          {c.website}
         </a>
       )}
       {place.phone && (
@@ -474,10 +661,11 @@ const PlaceFacts: React.FC<{ place: PlaceSnapshot }> = ({ place }) => {
 };
 
 const ReviewsPanel: React.FC<{ state: ReviewsState | null; overallRating?: number }> = ({ state, overallRating }) => {
+  const { c } = useCopy();
   if (!state || state.status === 'disabled') {
     return (
       <p className="text-xs text-zinc-400">
-        A breakdown of recent guest reviews is included in the free 24-hour Desk Brief.
+        {c.reviewsDisabled}
       </p>
     );
   }
@@ -486,48 +674,46 @@ const ReviewsPanel: React.FC<{ state: ReviewsState | null; overallRating?: numbe
       <div className="rounded-xl bg-white/[0.03] border border-white/10 p-5 flex items-center gap-3">
         <Loader2 className="w-5 h-5 animate-spin text-[#d9bd8b] shrink-0" />
         <div>
-          <p className="text-sm text-white">Aggregating and analysing recent guest reviews from several platforms...</p>
-          <p className="text-[11px] text-zinc-400">
-            We combine the reviews, remove duplicates, count every complaint and check each quote. This usually takes about a
-            minute.
-          </p>
+          <p className="text-sm text-white">{c.pendingTitle}</p>
+          <p className="text-[11px] text-zinc-400">{c.pendingBody}</p>
         </div>
       </div>
     );
   }
   if (state.status === 'error') {
-    return <p className="text-xs text-zinc-400">The recent-review breakdown couldn’t be loaded right now.</p>;
+    return <p className="text-xs text-zinc-400">{c.reviewsError}</p>;
   }
   return <AnalysisView analysis={state.analysis} overallRating={overallRating} />;
 };
 
 const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number }> = ({ analysis, overallRating }) => {
+  const { lang, c } = useCopy();
   const n = analysis.sampleSize;
   const written = analysis.writtenCount ?? n;
   if (n === 0) {
-    return <p className="text-xs text-zinc-400">No recent written reviews were found for this hotel.</p>;
+    return <p className="text-xs text-zinc-400">{c.noReviews}</p>;
   }
 
   const range =
     analysis.dateFrom && analysis.dateTo
-      ? ` · ${formatMonth(analysis.dateFrom)} – ${formatMonth(analysis.dateTo)}`
+      ? ` · ${formatMonth(analysis.dateFrom, lang)} – ${formatMonth(analysis.dateTo, lang)}`
       : '';
 
   let comparison = '';
   if (typeof analysis.averageRating === 'number' && typeof overallRating === 'number') {
     const diff = analysis.averageRating - overallRating;
     comparison =
-      diff >= 0.2 ? `above Google's overall ${overallRating.toFixed(1)}`
-      : diff <= -0.2 ? `below Google's overall ${overallRating.toFixed(1)}`
-      : `in line with Google's overall ${overallRating.toFixed(1)}`;
+      diff >= 0.2 ? c.above(formatRating(overallRating, lang))
+      : diff <= -0.2 ? c.below(formatRating(overallRating, lang))
+      : c.inLine(formatRating(overallRating, lang));
   }
 
   return (
     <div className="space-y-4">
       <div>
-        <h4 className="text-base font-bold text-white font-serif">What recent guests say</h4>
+        <h4 className="text-base font-bold text-white font-serif">{c.whatGuestsSay}</h4>
         <p className="text-[11px] font-mono text-zinc-400 mt-0.5">
-          Based on the latest {sampleText(analysis)} ({written} with written comments)
+          {c.basedOn(sampleText(analysis, c.reviews), written)}
           {range}
         </p>
       </div>
@@ -535,27 +721,27 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {typeof analysis.averageRating === 'number' && (
           <Stat
-            label="Recent average"
-            value={`${analysis.averageRating.toFixed(1)} ★`}
+            label={c.recentAverage}
+            value={`${formatRating(analysis.averageRating, lang)} ★`}
             note={comparison}
           />
         )}
         {typeof analysis.lastYearCount === 'number' && (
           <Stat
-            label="Last 12 months"
-            value={`${analysis.lastYearCount} of ${n}`}
-            note={`reviews in this sample${analysis.dateTo ? ` · newest ${formatMonth(analysis.dateTo)}` : ''}`}
+            label={c.last12}
+            value={c.of(analysis.lastYearCount, n)}
+            note={c.inSample(formatMonth(analysis.dateTo, lang))}
           />
         )}
         {typeof analysis.germanCount === 'number' && written > 0 && (
-          <Stat label="Written in German" value={`${analysis.germanCount} of ${written}`} note="written reviews" />
+          <Stat label={c.writtenGerman} value={c.of(analysis.germanCount, written)} note={c.writtenReviews} />
         )}
         <Stat
-          label="Reviews analysed"
+          label={c.analysed}
           value={String(n)}
-          note={`${analysis.sources && analysis.sources.length > 1 ? `${analysis.sources.map((s) => `${s.count} ${s.source}`).join(' + ')} · ` : ''}${
-            written < 20 ? `only ${written}` : written
-          } with comments`}
+          note={`${analysis.sources && analysis.sources.length > 1 ? `${analysis.sources.map((s) => `${s.count} ${s.source}`).join(' + ')} · ` : ''}${c.withComments(
+            written < 20 ? c.only(written) : String(written),
+          )}`}
         />
       </div>
 
@@ -568,19 +754,17 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
           ))}
         </div>
       ) : (
-        <p className="text-xs text-zinc-400">A theme breakdown isn’t available for this hotel.</p>
+        <p className="text-xs text-zinc-400">{c.noThemes}</p>
       )}
 
       <p className="text-[10px] text-zinc-500 leading-relaxed">
-        Themes are grouped by AI from the review text. Counts show how many written reviews in this sample mention each
-        theme, and quotes are copied word for word. The average includes star-only ratings. Review data:{' '}
-        {sourceNames(analysis)}.
+        {c.footnote} {sourceNames(analysis, c.and)}.
         {analysis.sources
           ?.filter((s) => s.source !== 'Google' && s.name)
           .map((s) => (
             <span key={s.source}>
               {' '}
-              {s.source} listing:{' '}
+              {c.listing(s.source)}{' '}
               {s.url ? (
                 <a href={s.url} target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-300">
                   {s.name}
@@ -596,12 +780,12 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
   );
 };
 
-const RiskChecklist: React.FC<{ risks: RiskCheck[]; total: number }> = ({ risks, total }) => (
+const RiskChecklist: React.FC<{ risks: RiskCheck[]; total: number }> = ({ risks, total }) => {
+  const { lang, c } = useCopy();
+  return (
   <div className="rounded-xl bg-white/[0.03] border border-white/10 p-4">
-    <h5 className="text-sm font-bold text-white">Risk checklist</h5>
-    <p className="text-[11px] text-zinc-400 mt-0.5">
-      Complaints in the {total} written reviews about the issues European guests notice most. Click a line to read them.
-    </p>
+    <h5 className="text-sm font-bold text-white">{c.riskTitle}</h5>
+    <p className="text-[11px] text-zinc-400 mt-0.5">{c.riskIntro(total)}</p>
     <ul className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 items-start">
       {risks.map((r) => {
         const icon =
@@ -612,13 +796,13 @@ const RiskChecklist: React.FC<{ risks: RiskCheck[]; total: number }> = ({ risks,
           );
         const count = (
           <span className="text-[11px] font-mono text-zinc-300 whitespace-nowrap">
-            {r.count === 0 ? 'No complaints' : `${r.count} complaint${r.count === 1 ? '' : 's'}`}
+            {r.count === 0 ? c.noComplaints : c.complaints(r.count)}
           </span>
         );
         const title = (
           <span className="flex items-center gap-2 text-xs font-semibold text-white">
             {icon}
-            {r.label}
+            {c.risk[r.key] ?? r.label}
           </span>
         );
         const mentions = r.mentions ?? [];
@@ -640,7 +824,7 @@ const RiskChecklist: React.FC<{ risks: RiskCheck[]; total: number }> = ({ risks,
                       <span className="italic">“{m.text}”</span>
                       <span className="text-zinc-500">
                         {' '}
-                        — {[formatMonth(m.date), typeof m.rating === 'number' ? `${m.rating}★` : '', m.source].filter(Boolean).join(', ')}
+                        — {[formatMonth(m.date, lang), typeof m.rating === 'number' ? `${m.rating}★` : '', m.source].filter(Boolean).join(', ')}
                       </span>
                     </li>
                   ))}
@@ -656,7 +840,7 @@ const RiskChecklist: React.FC<{ risks: RiskCheck[]; total: number }> = ({ risks,
                   <p className="mt-1 text-[11px] text-zinc-400 leading-relaxed">
                     <span className="italic">“{r.quote.text}”</span>
                     {(r.quote.date || r.quote.source) && (
-                      <span className="text-zinc-500"> — {[formatMonth(r.quote.date), r.quote.source].filter(Boolean).join(', ')}</span>
+                      <span className="text-zinc-500"> — {[formatMonth(r.quote.date, lang), r.quote.source].filter(Boolean).join(', ')}</span>
                     )}
                   </p>
                 )}
@@ -667,7 +851,8 @@ const RiskChecklist: React.FC<{ risks: RiskCheck[]; total: number }> = ({ risks,
       })}
     </ul>
   </div>
-);
+  );
+};
 
 const Stat: React.FC<{ label: string; value: string; note?: string }> = ({ label, value, note }) => (
   <div className="rounded-xl bg-white/[0.04] border border-white/10 p-3.5">
@@ -678,6 +863,7 @@ const Stat: React.FC<{ label: string; value: string; note?: string }> = ({ label
 );
 
 const ThemeCard: React.FC<{ theme: Theme; total: number }> = ({ theme, total }) => {
+  const { lang, c } = useCopy();
   const tone =
     theme.sentiment === 'positive'
       ? { icon: <ThumbsUp className="w-3.5 h-3.5 text-emerald-400" /> }
@@ -693,7 +879,7 @@ const ThemeCard: React.FC<{ theme: Theme; total: number }> = ({ theme, total }) 
           <span>{theme.label}</span>
         </div>
         <span className="text-[11px] font-mono text-zinc-300 whitespace-nowrap">
-          {theme.count} of {total}
+          {c.of(theme.count, total)}
         </span>
       </div>
       <div className="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden">
@@ -706,7 +892,7 @@ const ThemeCard: React.FC<{ theme: Theme; total: number }> = ({ theme, total }) 
               <span className="italic">“{q.text}”</span>
               <span className="text-zinc-500">
                 {' '}
-                — {[formatMonth(q.date), typeof q.rating === 'number' ? `${q.rating}★` : '', q.source].filter(Boolean).join(', ')}
+                — {[formatMonth(q.date, lang), typeof q.rating === 'number' ? `${q.rating}★` : '', q.source].filter(Boolean).join(', ')}
               </span>
             </li>
           ))}
@@ -717,13 +903,13 @@ const ThemeCard: React.FC<{ theme: Theme; total: number }> = ({ theme, total }) 
 };
 
 // "100 Google + 50 Tripadvisor reviews", or "100 Google reviews" for older or Google-only results.
-function sampleText(a: ReviewAnalysis): string {
-  if (!a.sources?.length) return `${a.sampleSize} ${a.sourceLabel}`;
-  return `${a.sources.map((s) => `${s.count} ${s.source}`).join(' + ')} reviews`;
+function sampleText(a: ReviewAnalysis, reviews = 'reviews'): string {
+  if (!a.sources?.length) return reviews === 'reviews' ? `${a.sampleSize} ${a.sourceLabel}` : `${a.sampleSize} ${reviews}`;
+  return `${a.sources.map((s) => `${s.count} ${s.source}`).join(' + ')} ${reviews}`;
 }
 
-function sourceNames(a: ReviewAnalysis): string {
-  return a.sources?.length ? a.sources.map((s) => s.source).join(' and ') : 'Google';
+function sourceNames(a: ReviewAnalysis, and = ' and '): string {
+  return a.sources?.length ? a.sources.map((s) => s.source).join(and) : 'Google';
 }
 
 // Plain-text summary of what the visitor saw, sent with their snapshot request.
@@ -766,6 +952,7 @@ const BriefCta: React.FC<{
   const [email, setEmail] = useState('');
   const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [fallbackHref, setFallbackHref] = useState('');
+  const { lang, c } = useCopy();
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -777,7 +964,12 @@ const BriefCta: React.FC<{
     }
     setState('sending');
     const subject = `Desk Brief request — ${place.name}`;
-    const fields = { Email: address, Hotel: place.name, Snapshot: snapshotText(place, reviews, scores) };
+    const fields = {
+      Email: address,
+      Hotel: place.name,
+      ...(lang === 'de' ? { Language: 'German (Deutsch): please reply in German' } : {}),
+      Snapshot: snapshotText(place, reviews, scores),
+    };
     try {
       await sendInquiry(subject, fields, address);
       setState('sent');
@@ -791,23 +983,15 @@ const BriefCta: React.FC<{
     <div className="rounded-2xl border border-[#d9bd8b]/40 bg-[#b38a54]/10 p-5 sm:p-6 space-y-4">
       <div>
         <h4 className="text-base sm:text-lg font-bold text-white font-serif">
-          Want the deeper picture? Get the 24-hour Desk Brief
+          {c.briefTitle}
         </h4>
-        <p className="text-xs text-zinc-300 mt-1 leading-relaxed">
-          This snapshot is instant and based on Google. The Desk Brief on {place.name} goes further: what
-          German-speaking guests say on Booking.com compared with other guests, a risk checklist with verbatim quotes,
-          and what to check on site. Our team reviews it and emails it to you within 24 hours. Free for travel
-          companies.
-        </p>
+        <p className="text-xs text-zinc-300 mt-1 leading-relaxed">{c.briefBody(place.name)}</p>
       </div>
 
       {state === 'sent' ? (
         <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-3 text-xs text-emerald-200 flex items-start gap-2">
           <CheckCircle2 className="w-4 h-4 shrink-0 mt-px" />
-          <span>
-            Thank you. Our team is preparing the Desk Brief on {place.name} and will email it, with this
-            snapshot, to <strong>{email.trim()}</strong> within 24 hours.
-          </span>
+          <span>{c.briefSent(place.name, <strong>{email.trim()}</strong>)}</span>
         </div>
       ) : (
         <form onSubmit={submit} className="flex flex-col sm:flex-row gap-2">
@@ -818,8 +1002,8 @@ const BriefCta: React.FC<{
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Your work email"
-              aria-label="Your work email"
+              placeholder={c.workEmail}
+              aria-label={c.workEmail}
               className="w-full bg-transparent text-white placeholder-zinc-400 text-sm py-2.5 focus:outline-hidden"
             />
           </div>
@@ -829,16 +1013,16 @@ const BriefCta: React.FC<{
             className="px-5 py-2.5 rounded-xl bg-[#b38a54] hover:bg-[#c59b63] disabled:opacity-60 text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
           >
             <FileText className="w-3.5 h-3.5" />
-            <span>{state === 'sending' ? 'Sending...' : 'Send me the 24h Desk Brief'}</span>
+            <span>{state === 'sending' ? c.sending : c.sendBrief}</span>
           </button>
         </form>
       )}
 
       {state !== 'sent' && (
         <p className="text-[10px] text-zinc-400">
-          We use your email only to send this brief.{' '}
+          {c.emailOnly}{' '}
           <a href="/privacy" className="underline hover:text-white">
-            Privacy notice
+            {c.privacy}
           </a>
         </p>
       )}
@@ -847,14 +1031,14 @@ const BriefCta: React.FC<{
         <p className="text-[11px] text-rose-300">
           {fallbackHref ? (
             <>
-              This couldn’t be sent right now. Please email us at {CONTACT_EMAIL} —{' '}
+              {c.sendFailed}{' '}
               <a href={fallbackHref} className="underline font-semibold">
-                open a pre-filled email
+                {c.openEmail}
               </a>
               .
             </>
           ) : (
-            'Please enter a valid email address.'
+            c.invalidEmail
           )}
         </p>
       )}
@@ -865,11 +1049,11 @@ const BriefCta: React.FC<{
           onClick={onAudit}
           className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-zinc-200 hover:text-white text-[11px] font-semibold flex items-center justify-center gap-2 cursor-pointer"
         >
-          <span>Commission On-Site Audit</span>
+          <span>{c.commission}</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
         <button type="button" onClick={onBrief} className="text-[11px] text-zinc-400 hover:text-white underline cursor-pointer">
-          or use the full enquiry form
+          {c.fullForm}
         </button>
       </div>
     </div>

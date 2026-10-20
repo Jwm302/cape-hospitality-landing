@@ -7,10 +7,12 @@ import { AgentVirtualAudit } from './components/AgentVirtualAudit';
 import { SampleAuditReport } from './components/SampleAuditReport';
 import { LeadCaptureFooter } from './components/LeadCaptureFooter';
 import { PrivacyNotice } from './components/PrivacyNotice';
+import { useLang } from './i18n';
 
 export default function App() {
   const [selectedTier, setSelectedTier] = useState<string>('PHYSICAL_AUDIT');
   const [targetProperty, setTargetProperty] = useState<string>('');
+  const { lang } = useLang();
 
   const scrollToContact = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
@@ -40,7 +42,7 @@ export default function App() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
           <a href="/" className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#9c753e] hover:text-[#10213a]">
             <ArrowLeft className="w-3.5 h-3.5" />
-            Back to the website
+            {lang === 'de' ? 'Zurück zur Website' : 'Back to the website'}
           </a>
         </div>
         <SampleAuditReport

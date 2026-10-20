@@ -1,7 +1,8 @@
 import { ServiceTier } from '../types';
+import type { Lang } from '../i18n';
 
-// Single source of truth for the service ladder. The pricing cards, the
-// inquiry form and the briefing modal all read from this list.
+// Single source of truth for the service ladder. The service cards and the
+// inquiry form read from these lists; emails to the team use the English one.
 export const SERVICE_TIERS: ServiceTier[] = [
   {
     key: 'VIRTUAL_AUDIT',
@@ -72,3 +73,65 @@ export const SERVICE_TIERS: ServiceTier[] = [
 
 export const getServiceTier = (key: string): ServiceTier =>
   SERVICE_TIERS.find((t) => t.key === key) ?? SERVICE_TIERS[1];
+
+const DE_TEXT: Record<ServiceTier['key'], Partial<ServiceTier>> = {
+  VIRTUAL_AUDIT: {
+    badge: 'KOSTENLOS',
+    title: 'Kostenloses Virtuelles Audit',
+    shortLabel: 'Kostenloses Virtuelles Audit (24h-Kurzbericht)',
+    tagline: 'Ein 24-Stunden-Check jedes Hotels in Ihrem Programm, vom Schreibtisch aus.',
+    description: 'Nennen Sie uns ein Hotel. Unser Team in Kapstadt prüft das Feedback europäischer Gäste anhand deutscher Katalogkriterien und sendet Ihnen innerhalb von 24 Stunden einen zweiseitigen Kurzbericht.',
+    priceDisplay: 'Kostenlos für Reiseveranstalter',
+    ctaText: 'Kostenloses Virtuelles Audit anfordern',
+    features: [
+      'Kurzbericht innerhalb von 24 Stunden in Ihrem Postfach',
+      'Speziell für das von Ihnen genannte Hotel',
+      'Geprüft nach den Erwartungen deutscher Reiseveranstalter (DRV)',
+      'Zeigt Risiken bei Lärm, Badhygiene und Serviceabläufen',
+      'Liefert die Checkliste für ein anschließendes Audit vor Ort',
+    ],
+    questionAnswered: '„Hält dieses Hotel, was wir verkaufen?“',
+  },
+  PHYSICAL_AUDIT: {
+    badge: 'KERNLEISTUNG',
+    title: 'Mystery-Audit vor Ort',
+    shortLabel: 'Mystery-Audit vor Ort',
+    tagline: 'Ein anonymer, unangekündigter Aufenthalt unserer Inspektoren.',
+    description: 'Ein 24- bis 48-stündiger Mystery-Aufenthalt zwischen Kapstadt und der Garden Route, durchgeführt von in Europa ausgebildeten Hotelfachleuten.',
+    priceDisplay: 'Angebot je Hotel',
+    ctaText: 'Audit vor Ort beauftragen',
+    features: [
+      '24–48 Stunden anonymer Mystery-Aufenthalt',
+      'Ankunft, Zimmer, Schlafkomfort und Badhygiene',
+      'Prüfung von Nachtlärm und Warmwasser am Morgen',
+      'Datierte Fotos, Zeitangaben und Richtwerte',
+      'Sachliche Dokumentation bei strittigen Gästebeschwerden',
+      'Vollständiger Bericht innerhalb von 48 Stunden',
+      '30-minütiges Zoom-Gespräch mit Ihrem Inspektor für persönliches Feedback',
+    ],
+    questionAnswered: '„Was würde unser Gast erleben, wenn er heute anreist?“',
+  },
+  PARTNERSHIP: {
+    badge: 'LAUFEND',
+    title: 'Portfolio-Qualitätspartnerschaft',
+    shortLabel: 'Portfolio-Qualitätspartnerschaft',
+    tagline: 'Feste Inspektoren und ganzjährige Auswertung der Gästestimmung für Ihre Hotels am Westkap.',
+    description: 'Manager wechseln, Köche gehen, die Instandhaltung lässt nach. Dieselben Inspektoren lernen Ihre Hotels und Ihr Team kennen, und wir verfolgen Monat für Monat, was Gäste sagen – so erkennen Sie einen Rückgang, bevor Ihre Gäste ihn spüren.',
+    priceDisplay: 'Saisonale Pauschale',
+    ctaText: 'Partnerschaft besprechen',
+    features: [
+      'Feste Inspektoren, die Ihre Hotels und Ihr Team kennen',
+      'Direkter Draht zu Ihren Inspektoren und ein vierteljährliches Gespräch',
+      'Laufende Bewertungsanalyse: Gästestimmung Monat für Monat',
+      'Frühwarnung, wenn Stimmung oder Standards nachlassen',
+      'Geplante, unangekündigte Inspektionen mit vergleichbaren Bewertungen',
+      'Checks vor der Saison, bevor die europäischen Gäste kommen',
+    ],
+    questionAnswered: '„Hält unser gesamtes Portfolio sein Versprechen – Monat für Monat?“',
+  },
+};
+
+// German version: same keys, numbers and styling, German text.
+export const SERVICE_TIERS_DE: ServiceTier[] = SERVICE_TIERS.map((tier) => ({ ...tier, ...DE_TEXT[tier.key] }));
+
+export const tiersFor = (lang: Lang): ServiceTier[] => (lang === 'de' ? SERVICE_TIERS_DE : SERVICE_TIERS);
