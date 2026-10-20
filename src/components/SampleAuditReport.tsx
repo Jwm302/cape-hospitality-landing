@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   Clock,
   Coffee,
+  DoorOpen,
   FileCheck2,
   Lock,
   ShieldCheck,
@@ -18,9 +19,13 @@ import {
   Volume2,
   Wrench,
 } from 'lucide-react';
-import loungeImg from '../assets/images/sample-report/lounge.jpg';
-import terraceImg from '../assets/images/sample-report/terrace.jpg';
-import roomImg from '../assets/images/sample-report/room.jpg';
+import receptionImg from '../assets/images/sample-report/reception.jpg';
+import bedroomImg from '../assets/images/sample-report/bedroom.jpg';
+import bedImg from '../assets/images/sample-report/bed.jpg';
+import bathroomImg from '../assets/images/sample-report/bathroom.jpg';
+import restaurantImg from '../assets/images/sample-report/restaurant.jpg';
+import breakfastImg from '../assets/images/sample-report/breakfast.jpg';
+import barImg from '../assets/images/sample-report/bar.jpg';
 
 interface SampleAuditReportProps {
   onCommissionAudit: () => void;
@@ -170,6 +175,15 @@ const LineChart: React.FC<{
 const SummarySlide: React.FC = () => (
   <>
     <SlideHeader index={0} title="Executive summary" subtitle="On-site mystery audit · what your guests will experience" />
+
+    <div className="relative mb-5 h-36 sm:h-44 rounded-xl overflow-hidden">
+      <img src={restaurantImg} alt="Restaurant of the audited hotel" className="absolute inset-0 w-full h-full object-cover object-[50%_30%]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#10213a]/90 via-[#10213a]/50 to-transparent" />
+      <div className="relative h-full flex flex-col justify-end p-4 sm:p-5 text-white max-w-md">
+        <div className="text-lg sm:text-xl font-semibold">{REPORT.hotel}</div>
+        <div className="text-[11px] sm:text-xs text-zinc-200">{REPORT.archetype}</div>
+      </div>
+    </div>
 
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
       <div className="lg:col-span-2 rounded-xl bg-[#10213a] text-white p-5 flex flex-col">
@@ -328,8 +342,10 @@ const TimelineSlide: React.FC = () => (
   </>
 );
 
-const PhotoTile: React.FC<{ src?: string; label: string; stamp: string; icon?: React.ElementType; finding: string; className?: string; tone?: 'ok' | 'bad' }> = ({
+// A photo, or for a problem without a photo, the measured reading itself.
+const PhotoTile: React.FC<{ src?: string; reading?: string; label: string; stamp: string; icon?: React.ElementType; finding: string; className?: string; tone?: keyof typeof toneStyles }> = ({
   src,
+  reading,
   label,
   stamp,
   icon: Icon,
@@ -341,13 +357,14 @@ const PhotoTile: React.FC<{ src?: string; label: string; stamp: string; icon?: R
     {src ? (
       <img src={src} alt={label} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
     ) : (
-      <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,#1f3a5f,#0c182a)]">
-        {Icon && <Icon className="w-10 h-10 text-[#d9bd8b]/70" strokeWidth={1.25} />}
+      <div className="absolute inset-0 flex items-center justify-center gap-2 pb-8 bg-[radial-gradient(circle_at_30%_20%,#1f3a5f,#0c182a)]">
+        {Icon && <Icon className={`${reading ? 'w-6 h-6' : 'w-10 h-10'} text-[#d9bd8b]/80`} strokeWidth={1.5} />}
+        {reading && <span className="text-2xl sm:text-3xl font-semibold text-rose-400 tabular-nums">{reading}</span>}
       </div>
     )}
     <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
     <span className="absolute top-2 left-2 whitespace-nowrap font-mono text-[9px] text-white/80 bg-black/40 px-1.5 py-0.5 rounded">{stamp}</span>
-    <span className={`absolute top-2 right-2 w-2 h-2 rounded-full ${tone === 'bad' ? 'bg-rose-500' : 'bg-emerald-500'}`} />
+    <span className={`absolute top-2 right-2 w-2 h-2 rounded-full ${toneStyles[tone]}`} />
     <figcaption className="absolute bottom-0 inset-x-0 p-2.5">
       <div className="text-[11px] font-semibold text-white">{label}</div>
       <div className="text-[10px] text-zinc-300 leading-snug">{finding}</div>
@@ -360,14 +377,17 @@ const EvidenceSlide: React.FC = () => (
     <SlideHeader index={3} title="Evidence" subtitle="Photographs and measurements from the stay · 64 photos in the full appendix" />
 
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-      {/* Collage */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 auto-rows-[150px] sm:auto-rows-[minmax(120px,1fr)] gap-1.5">
-        <PhotoTile src={loungeImg} label="Public lounge" stamp="IMG_0112 · 14:58" finding="Spotless, fresh flowers, staffed" className="sm:col-span-2" />
-        <PhotoTile icon={Building2} label="Front desk" stamp="IMG_0118 · 15:09" finding="1 of 3 desks open, 12-min queue" tone="bad" />
-        <PhotoTile src={roomImg} label="Room 214" stamp="IMG_0131 · 15:44" finding="Styling and lighting to standard" />
-        <PhotoTile icon={Thermometer} label="Shower, room 214" stamp="IMG_0207 · 07:19" finding="Probe reads 38 °C after 4 min" tone="bad" className="sm:col-span-2" />
-        <PhotoTile src={terraceImg} label="Terrace & view" stamp="IMG_0156 · 18:12" finding="Immaculate, sea view as sold" className="sm:col-span-2" />
-        <PhotoTile icon={Coffee} label="Breakfast" stamp="IMG_0231 · 08:34" finding="Fresh, local, well stocked" />
+      {/* Collage: photos for what we saw, measured readings for the problems */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 auto-rows-[150px] sm:auto-rows-[130px] gap-1.5">
+        <PhotoTile src={receptionImg} label="Arrival & check-in" stamp="IMG_0118 · 15:15" finding="Warm and accurate once served; 12-min wait first" tone="warn" className="sm:col-span-2" />
+        <PhotoTile icon={Thermometer} reading="38.0 °C" label="Shower, room 214" stamp="IMG_0207 · 07:19" finding="Peak after 4 min; comfortable is 40–45 °C" tone="bad" />
+        <PhotoTile src={bedImg} label="Bed & linen" stamp="IMG_0133 · 15:46" finding="Crisp linen, excellent mattress" />
+        <PhotoTile src={bedroomImg} label="Room 214, heritage wing" stamp="IMG_0131 · 15:44" finding="Handsome and well kept; sash window does not seal" tone="warn" className="sm:col-span-2" />
+        <PhotoTile src={restaurantImg} label="Dinner" stamp="IMG_0174 · 19:34" finding="Attentive, recommends local dishes" className="sm:col-span-2" />
+        <PhotoTile icon={Volume2} reading="47 dB" label="AC rattle, room 214" stamp="REC_0012 · 02:31" finding="Every 3–4 min at the pillow" tone="bad" />
+        <PhotoTile src={breakfastImg} label="Breakfast buffet" stamp="IMG_0231 · 08:34" finding="Fresh and local; eggs took 17 min" tone="warn" />
+        <PhotoTile src={barImg} label="Bar" stamp="IMG_0188 · 21:10" finding="Cocktail served in 6 min" />
+        <PhotoTile icon={DoorOpen} label="Fire door, floor 2" stamp="IMG_0249 · 10:12" finding="Wedged open with a doorstop" tone="warn" className="col-span-2 sm:col-span-1" />
       </div>
 
       {/* Measurements */}
