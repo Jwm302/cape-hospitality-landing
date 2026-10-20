@@ -19,7 +19,10 @@ import {
   Volume2,
   Wrench,
 } from 'lucide-react';
-import receptionImg from '../assets/images/sample-report/reception.jpg';
+import queueImg from '../assets/images/sample-report/queue.jpg';
+import luggageImg from '../assets/images/sample-report/luggage.jpg';
+import conciergeImg from '../assets/images/sample-report/concierge.jpg';
+import buffetEmptyImg from '../assets/images/sample-report/buffet-empty.jpg';
 import bedroomImg from '../assets/images/sample-report/bedroom.jpg';
 import bedImg from '../assets/images/sample-report/bed.jpg';
 import bathroomImg from '../assets/images/sample-report/bathroom.jpg';
@@ -48,11 +51,11 @@ const REPORT = {
 };
 
 const DEPARTMENTS: { name: string; weight: number; score: number; icon: React.ElementType; note: string }[] = [
-  { name: 'Arrival & front office', weight: 12, score: 76, icon: Building2, note: '12-min queue at a coach arrival; warm, accurate check-in once served' },
+  { name: 'Arrival & front office', weight: 12, score: 76, icon: Building2, note: '12-min queue at a coach arrival, concierge unstaffed, luggage left 25 min; warm check-in once served' },
   { name: 'Room & sleep comfort', weight: 20, score: 72, icon: BedDouble, note: 'Excellent bed; AC rattle and 05:45 street noise in the heritage wing' },
   { name: 'Bathroom & hot water', weight: 15, score: 64, icon: ShowerHead, note: 'Shower peaked at 38 °C during the 07:15 rush; spotless otherwise' },
   { name: 'Housekeeping & cleanliness', weight: 15, score: 90, icon: Sparkles, note: 'No dust or hair at 14 hidden check-points; turndown on time' },
-  { name: 'Breakfast & dining', weight: 13, score: 88, icon: Coffee, note: 'Fresh, local, attentive; cooked egg order took 17 minutes' },
+  { name: 'Breakfast & dining', weight: 13, score: 88, icon: Coffee, note: 'Fresh, local, attentive; hot buffet empty 11 min, eggs took 17 min' },
   { name: 'Public areas, pool & spa', weight: 10, score: 93, icon: Camera, note: 'Immaculate lounge and terrace; pool towels restocked hourly' },
   { name: 'Staff & service recovery', weight: 10, score: 92, icon: Wrench, note: 'Shower complaint fixed with a room offer within 25 minutes' },
   { name: 'Safety & security', weight: 5, score: 86, icon: ShieldCheck, note: 'Key cards checked at lifts; one fire door wedged open on floor 2' },
@@ -61,14 +64,14 @@ const DEPARTMENTS: { name: string; weight: number; score: number; icon: React.El
 const OVERALL = Math.round(DEPARTMENTS.reduce((sum, d) => sum + d.weight * d.score, 0) / 100);
 
 const TIMELINE: { time: string; title: string; text: string; tone: 'ok' | 'warn' | 'bad' }[] = [
-  { time: '15:03', title: 'Arrival with a coach group', text: 'One receptionist on duty as 28 guests arrive. Inspector waits 12 min standing; no seating or drink offered.', tone: 'warn' },
+  { time: '15:03', title: 'Arrival with a coach group', text: 'One receptionist and no concierge as 28 guests arrive. 12-min queue, no drink offered; group luggage left unattended for 25 min.', tone: 'warn' },
   { time: '15:41', title: 'Room 214, heritage wing', text: 'Handsome room, excellent mattress. Sash window does not seal; AC unit marked for service in May.', tone: 'warn' },
   { time: '19:30', title: 'Dinner, à la carte', text: 'Starter in 11 min, main in 24 min. Wine served at the right temperature. Waiter recommends local dishes in German.', tone: 'ok' },
   { time: '02:30', title: 'Night noise', text: 'AC rattles every 3–4 min, peaks of 47 dB at the pillow. Inspector wakes twice.', tone: 'bad' },
   { time: '05:45', title: 'Street cleaning', text: 'Municipal sweeper under the window for 9 min, 52 dB inside the room.', tone: 'bad' },
   { time: '07:15', title: 'Morning shower test', text: '4 min to warm up, peaks at 38 °C. Same test in garden-wing room 508: 42 °C after 40 seconds.', tone: 'bad' },
   { time: '07:40', title: 'Service recovery test', text: 'Inspector reports the shower. Duty manager calls back in 6 min, engineer arrives in 25 min, room move offered.', tone: 'ok' },
-  { time: '08:30', title: 'Breakfast', text: 'Fresh breads, local fruit, good coffee. Cooked eggs take 17 min on a full morning.', tone: 'ok' },
+  { time: '08:30', title: 'Breakfast', text: 'Fresh breads, local fruit, good coffee. Hot buffet empty for 11 min; cooked eggs take 17 min.', tone: 'ok' },
   { time: '11:00', title: 'Check-out', text: 'Bill correct, 4 min. Concierge books a taxi and checks the flight time unprompted.', tone: 'ok' },
 ];
 
@@ -380,17 +383,20 @@ const EvidenceSlide: React.FC = () => (
 
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
       {/* Collage: photos for what we saw, measured readings for the problems */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 auto-rows-[150px] sm:auto-rows-[130px] gap-1.5">
-        <PhotoTile src={receptionImg} label="Arrival & check-in" stamp="IMG_0118 · 15:15" finding="Warm and accurate once served; 12-min wait first" tone="warn" className="sm:col-span-2" />
+      <div className="grid grid-cols-2 sm:grid-cols-3 auto-rows-[150px] sm:auto-rows-[120px] gap-1.5">
+        <PhotoTile src={queueImg} label="Coach arrival" stamp="IMG_0116 · 15:09" finding="28 guests, one receptionist: 12-min queue" tone="bad" className="sm:col-span-2" />
         <PhotoTile icon={Thermometer} reading="38.0 °C" label="Shower, room 214" stamp="IMG_0207 · 07:19" finding="Peak after 4 min; comfortable is 40–45 °C" tone="bad" />
-        <PhotoTile src={bedImg} label="Bed & linen" stamp="IMG_0133 · 15:46" finding="Crisp linen, excellent mattress" />
+        <PhotoTile src={luggageImg} label="Group luggage" stamp="IMG_0121 · 15:22" finding="Left in the lobby, unattended for 25 min" tone="warn" />
         <PhotoTile src={bedroomImg} label="Room 214, heritage wing" stamp="IMG_0131 · 15:44" finding="Handsome and well kept; sash window does not seal" tone="warn" className="sm:col-span-2" />
         <PhotoTile src={restaurantImg} label="Dinner" stamp="IMG_0174 · 19:34" finding="Attentive, recommends local dishes" className="sm:col-span-2" />
         <PhotoTile icon={Volume2} reading="47 dB" label="AC rattle, room 214" stamp="REC_0012 · 02:31" finding="Every 3–4 min at the pillow" tone="bad" />
-        <PhotoTile src={breakfastImg} label="Breakfast buffet" stamp="IMG_0231 · 08:34" finding="Fresh and local; eggs took 17 min" tone="warn" />
+        <PhotoTile src={breakfastImg} label="Breakfast buffet" stamp="IMG_0229 · 08:22" finding="Fresh, local, well presented" />
+        <PhotoTile src={buffetEmptyImg} label="Hot buffet" stamp="IMG_0234 · 08:41" finding="Empty for 11 min; eggs took 17 min" tone="warn" />
         <PhotoTile src={barImg} label="Bar" stamp="IMG_0188 · 21:10" finding="Cocktail served in 6 min" />
+        <PhotoTile src={bedImg} label="Bed & linen" stamp="IMG_0133 · 15:46" finding="Crisp linen, excellent mattress" />
         <PhotoTile icon={DoorOpen} label="Fire door, floor 2" stamp="IMG_0249 · 10:12" finding="Wedged open with a doorstop" tone="warn" />
         <PhotoTile src={spaImg} label="Spa" stamp="IMG_0168 · 17:40" finding="Quiet; treatment started on time" />
+        <PhotoTile src={conciergeImg} label="Concierge" stamp="IMG_0119 · 15:12" finding="Desk unstaffed during the arrival rush" tone="warn" className="col-span-2 sm:col-span-1" />
         <PhotoTile src={poolImg} label="Pool deck" stamp="IMG_0162 · 17:05" finding="Immaculate; towels restocked hourly" className="col-span-2" />
       </div>
 
