@@ -5,6 +5,7 @@ import { CapeLogo } from './CapeLogo';
 // Links start with "/" so they also work from the sample report page.
 const NAV_ITEMS: { label: string; href: string; children?: { label: string; href: string }[] }[] = [
   { label: 'Home', href: '/' },
+  { label: 'Try the Demo', href: '/#virtual-audit' },
   {
     label: 'Services',
     href: '/#services',
@@ -14,7 +15,6 @@ const NAV_ITEMS: { label: string; href: string; children?: { label: string; href
       { label: 'Portfolio Partnership', href: '/#services' },
     ],
   },
-  { label: 'Try the Demo', href: '/#virtual-audit' },
   { label: 'Sample Report', href: '/sample-report' },
   { label: 'Contact', href: '/#contact' },
 ];

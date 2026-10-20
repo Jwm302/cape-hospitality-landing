@@ -51,12 +51,12 @@ export default function App() {
     ) : (
       <main>
         <Hero onRequestFreeDataPackage={handleRequestFreeDataPackage} />
-        <ServicesSection onSelectTier={handleSelectTier} />
         <AgentVirtualAudit
           onSelectPropertyForInquiry={(name) => handleSelectPropertyForInquiry(name, 'PHYSICAL_AUDIT')}
           onRequestVirtualAuditForProperty={(name) => handleSelectPropertyForInquiry(name, 'VIRTUAL_AUDIT')}
           onRequestFreeDataPackage={handleRequestFreeDataPackage}
         />
+        <ServicesSection onSelectTier={handleSelectTier} />
         <LeadCaptureFooter selectedTier={selectedTier} targetProperty={targetProperty} />
       </main>
     );
