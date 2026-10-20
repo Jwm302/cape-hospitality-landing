@@ -57,7 +57,7 @@ const formatRating = (n: number, lang: Lang = 'en') => {
 const COPY = {
   en: {
     title: 'Try It: Check Any Hotel',
-    intro: 'Type a hotel name to see its live Google rating and what recent guests say, counted, dated and sourced.',
+    intro: 'Type a hotel name to see its consolidated rating from Google and other booking sites, and what recent guests say, counted, dated and sourced.',
     placeholder: 'Type a hotel name and town (e.g. Tintswalo Hout Bay)...',
     hotelName: 'Hotel name',
     enterName: 'Please enter a hotel name.',
@@ -134,7 +134,7 @@ const COPY = {
   },
   de: {
     title: 'Testen Sie es: Prüfen Sie ein Hotel',
-    intro: 'Geben Sie einen Hotelnamen ein und sehen Sie die aktuelle Google-Bewertung und was Gäste zuletzt sagen – gezählt, datiert und mit Quelle.',
+    intro: 'Geben Sie einen Hotelnamen ein und sehen Sie die konsolidierte Bewertung von Google und anderen Buchungsportalen sowie was Gäste zuletzt sagen – gezählt, datiert und mit Quelle.',
     placeholder: 'Hotelname und Ort eingeben (z. B. Tintswalo Hout Bay)...',
     hotelName: 'Hotelname',
     enterName: 'Bitte geben Sie einen Hotelnamen ein.',
