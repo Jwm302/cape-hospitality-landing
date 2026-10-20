@@ -26,6 +26,8 @@ import bathroomImg from '../assets/images/sample-report/bathroom.jpg';
 import restaurantImg from '../assets/images/sample-report/restaurant.jpg';
 import breakfastImg from '../assets/images/sample-report/breakfast.jpg';
 import barImg from '../assets/images/sample-report/bar.jpg';
+import poolImg from '../assets/images/sample-report/pool.jpg';
+import spaImg from '../assets/images/sample-report/spa.jpg';
 
 interface SampleAuditReportProps {
   onCommissionAudit: () => void;
@@ -387,7 +389,9 @@ const EvidenceSlide: React.FC = () => (
         <PhotoTile icon={Volume2} reading="47 dB" label="AC rattle, room 214" stamp="REC_0012 · 02:31" finding="Every 3–4 min at the pillow" tone="bad" />
         <PhotoTile src={breakfastImg} label="Breakfast buffet" stamp="IMG_0231 · 08:34" finding="Fresh and local; eggs took 17 min" tone="warn" />
         <PhotoTile src={barImg} label="Bar" stamp="IMG_0188 · 21:10" finding="Cocktail served in 6 min" />
-        <PhotoTile icon={DoorOpen} label="Fire door, floor 2" stamp="IMG_0249 · 10:12" finding="Wedged open with a doorstop" tone="warn" className="col-span-2 sm:col-span-1" />
+        <PhotoTile icon={DoorOpen} label="Fire door, floor 2" stamp="IMG_0249 · 10:12" finding="Wedged open with a doorstop" tone="warn" />
+        <PhotoTile src={spaImg} label="Spa" stamp="IMG_0168 · 17:40" finding="Quiet; treatment started on time" />
+        <PhotoTile src={poolImg} label="Pool deck" stamp="IMG_0162 · 17:05" finding="Immaculate; towels restocked hourly" className="col-span-2" />
       </div>
 
       {/* Measurements */}
