@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, ChevronDown, ChevronRight, HelpCircle } from 'lucide-react';
+import { Check, ChevronDown, ChevronRight, HelpCircle, Sparkles } from 'lucide-react';
 import { SERVICE_TIERS } from '../data/landingData';
 
 interface ServicesSectionProps {
@@ -21,17 +21,24 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectTier }
           Start with a free desk check, verify on site, or keep watch over your whole portfolio.
         </p>
 
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 items-start text-left">
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 items-start text-left">
           {SERVICE_TIERS.map((tier) => {
             const isOpen = openTier === tier.key;
 
             return (
               <div
                 key={tier.key}
-                className={`flex flex-col bg-white p-6 ${
+                className={`relative flex flex-col bg-white p-6 ${
                   tier.isPopular ? 'border-2 border-[#b38a54]' : 'border border-zinc-200'
                 }`}
               >
+                {tier.isPopular && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-[#10213a] text-white text-[10px] font-bold tracking-widest uppercase shadow-md flex items-center gap-1.5 whitespace-nowrap">
+                    <Sparkles className="w-3 h-3 text-[#d9bd8b]" />
+                    <span>Most Popular</span>
+                  </div>
+                )}
+
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-mono text-xs font-bold tracking-widest text-zinc-400">TIER {tier.tierNumber}</span>
                   <span className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-md border ${tier.badgeColor}`}>
