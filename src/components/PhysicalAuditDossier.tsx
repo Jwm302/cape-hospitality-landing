@@ -30,7 +30,7 @@ export const PhysicalAuditDossier: React.FC<PhysicalAuditDossierProps> = ({
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-200 bg-white text-xs font-semibold text-zinc-700 shadow-xs mb-3">
             <span className="w-1.5 h-1.5 rounded-full bg-[#b38a54]" />
             <span className="tracking-widest uppercase font-mono text-[11px]">
-              STAGE 02 • SAMPLE ON-SITE AUDIT
+              SAMPLE ON-SITE AUDIT
             </span>
           </div>
 

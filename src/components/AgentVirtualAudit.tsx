@@ -11,7 +11,6 @@ import {
   Mail,
   Phone,
   ExternalLink,
-  Eye,
   FileText,
   Loader2,
   MapPin,
@@ -150,38 +149,20 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
   };
 
   return (
-    <section id="virtual-audit" className="py-16 sm:py-20 bg-[#10213a] text-white relative overflow-hidden">
+    <section id="virtual-audit" className="scroll-mt-20 py-16 sm:py-20 bg-[#10213a] text-white relative overflow-hidden">
       {/* Background glow */}
       <div className="absolute top-0 right-1/4 w-[600px] h-[350px] bg-[radial-gradient(ellipse_at_top,rgba(179,138,84,0.12),transparent_70%)] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-8">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#d9bd8b]/30 bg-white/5 text-xs font-semibold text-[#d9bd8b] shadow-xs mb-3">
-            <Eye className="w-3.5 h-3.5 text-[#d9bd8b]" />
-            <span className="tracking-widest uppercase font-mono text-[11px]">
-              STAGE 01 • FREE VIRTUAL AUDIT — LIVE DEMO
-            </span>
-          </div>
-
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight font-serif leading-tight">
-            See What Guests Really Say About Any Hotel
+        <div className="text-center max-w-2xl mx-auto mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">
+            Try It: Check Any Hotel
           </h2>
 
-          <p className="mt-3 text-sm sm:text-base text-zinc-300 font-light leading-relaxed max-w-2xl mx-auto">
-            Two parts. First an <strong className="text-white font-medium">instant snapshot</strong>: the hotel&rsquo;s
-            live Google rating and what recent guests say on Google and Tripadvisor, counted, dated and sourced. Then, on request,
-            the <strong className="text-white font-medium">free 24-hour Desk Brief</strong>: what German-speaking guests
-            say, checked by our team and emailed to you.
+          <p className="mt-3 text-sm sm:text-base text-zinc-300 leading-relaxed">
+            Type a hotel name to see its live Google rating and what recent guests say, counted, dated and sourced.
           </p>
-
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[11px] font-mono text-zinc-300">
-            <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[#d9bd8b]">01 Free Virtual Audit</span>
-            <span className="text-zinc-500">→</span>
-            <span className="px-2.5 py-1 rounded-md bg-[#b38a54]/20 border border-[#b38a54]/40 text-amber-300 font-bold">02 On-Site Mystery Audit</span>
-            <span className="text-zinc-500">→</span>
-            <span className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-zinc-300">03 Portfolio Partnership</span>
-          </div>
         </div>
 
         {/* Search */}
@@ -274,14 +255,13 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
           )}
         </div>
 
-        {/* Link to Stage 02 */}
+        {/* Link to the sample on-site report */}
         <div className="text-center">
           <a
-            href="#sample-audit"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-mono text-zinc-300 hover:text-white transition-all cursor-pointer shadow-xs"
+            href="/sample-report"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 text-xs text-zinc-300 hover:text-white transition-all cursor-pointer shadow-xs"
           >
-            <span className="text-[#d9bd8b] font-bold">STAGE 02 ↓</span>
-            <span>See how we verify a hotel on site</span>
+            <span>See a sample on-site report</span>
             <ArrowRight className="w-3 h-3 text-[#d9bd8b]" />
           </a>
         </div>

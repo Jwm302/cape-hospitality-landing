@@ -7,21 +7,17 @@ import {
   Building,
   User,
   MapPin,
-  Sparkles,
-  FileSpreadsheet
 } from 'lucide-react';
 import { LeadFormData } from '../types';
 import { SERVICE_TIERS, getServiceTier } from '../data/landingData';
 import { CONTACT_EMAIL, sendInquiry, mailtoLink } from '../lib/sendInquiry';
 
 interface LeadCaptureFooterProps {
-  onScheduleBriefing: () => void;
   selectedTier?: string;
   targetProperty?: string;
 }
 
 export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
-  onScheduleBriefing,
   selectedTier = 'PHYSICAL_AUDIT',
   targetProperty = '',
 }) => {
@@ -88,26 +84,20 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
   };
 
   return (
-    <footer id="contact" className="bg-[#fbfbfa] border-t border-zinc-200/80 pt-16 sm:pt-20 pb-12">
+    <>
+    <section id="contact" className="bg-white border-t border-zinc-200 py-14 sm:py-16 scroll-mt-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Contact Form Card */}
-        <div className="max-w-3xl mx-auto rounded-3xl bg-white border border-zinc-200 p-8 sm:p-10 shadow-sm text-left mb-16">
+        {/* Contact Form */}
+        <div className="max-w-3xl mx-auto text-left">
           
           {/* Header */}
           <div className="text-center max-w-xl mx-auto mb-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-200 bg-zinc-50 text-xs font-semibold text-zinc-700 shadow-xs mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#b38a54]" />
-              <span className="tracking-wider uppercase font-mono text-[11px]">
-                Travel Company Inquiries
-              </span>
-            </div>
-            
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-[#10213a] tracking-tight font-serif">
-              Ensure Your Customers Receive the Experience You Sold Them
-            </h3>
+            <h2 className="text-2xl sm:text-3xl font-bold text-zinc-800">
+              Contact Us
+            </h2>
 
-            <p className="mt-2 text-xs sm:text-sm text-zinc-600 font-normal leading-relaxed">
+            <p className="mt-3 text-sm sm:text-base text-zinc-700 leading-relaxed">
               Tell us which hotel concerns you. We reply within 4 hours on business days.
             </p>
           </div>
@@ -282,22 +272,29 @@ export const LeadCaptureFooter: React.FC<LeadCaptureFooterProps> = ({
           )}
         </div>
 
-        {/* Clean Footer Info */}
-        <div className="pt-8 border-t border-zinc-200 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 gap-4 text-center sm:text-left">
-          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
-            <span className="font-bold text-[#10213a]">Cape Hospitality Advisors</span>
-            <span className="hidden sm:inline text-zinc-300">|</span>
-            <span>Cape Town & Garden Route, South Africa</span>
-            <span className="hidden sm:inline text-zinc-300">|</span>
-            <a href={`mailto:${CONTACT_EMAIL}`} className="font-mono text-[#b38a54] hover:underline">{CONTACT_EMAIL}</a>
-          </div>
+      </div>
+    </section>
+
+    {/* Footer */}
+    <footer className="bg-zinc-500 text-white text-sm">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row justify-between gap-6">
+        <div>
+          <p className="font-semibold">Cape Hospitality Advisors</p>
+          <p className="mt-1 text-zinc-100">Independent hotel inspections for travel companies</p>
+        </div>
+        <div className="space-y-1">
+          <p className="font-semibold">Contact</p>
           <p>
-            © {new Date().getFullYear()} Cape Hospitality Advisors. All rights reserved. ·{' '}
-            <a href="/privacy" className="underline hover:text-zinc-800">Privacy notice</a>
+            E-mail: <a href={`mailto:${CONTACT_EMAIL}`} className="hover:underline">{CONTACT_EMAIL}</a>
+          </p>
+          <p>Cape Town &amp; Garden Route, South Africa</p>
+          <p className="pt-2 text-zinc-100">
+            © {new Date().getFullYear()} Cape Hospitality Advisors ·{' '}
+            <a href="/privacy" className="underline">Privacy notice</a>
           </p>
         </div>
-
       </div>
     </footer>
+    </>
   );
 };

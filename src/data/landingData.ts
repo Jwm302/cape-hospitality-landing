@@ -1,4 +1,4 @@
-import { ServiceTier, UspItem } from '../types';
+import { ServiceTier } from '../types';
 
 // Single source of truth for the service ladder. The pricing cards, the
 // inquiry form and the briefing modal all read from this list.
@@ -70,34 +70,3 @@ export const SERVICE_TIERS: ServiceTier[] = [
 
 export const getServiceTier = (key: string): ServiceTier =>
   SERVICE_TIERS.find((t) => t.key === key) ?? SERVICE_TIERS[1];
-
-export const OUR_USPS: UspItem[] = [
-  {
-    key: 'INDEPENDENT',
-    title: 'PAID ONLY BY YOU',
-    tagline: 'We work for the travel company, never the hotel.',
-    description: 'No awards, plaques or consulting sold to hotels. Our only client is the company whose reputation is on the line.',
-    icon: 'ShieldCheck',
-  },
-  {
-    key: 'HYPOTHESIS-DRIVEN',
-    title: 'TARGETED, NOT GENERIC',
-    tagline: 'Every stay is briefed by the Virtual Audit.',
-    description: 'Before arrival, the Virtual Audit tells our inspectors what guests complain about at that specific hotel, so the stay tests the real weak points.',
-    icon: 'BarChart3',
-  },
-  {
-    key: 'OBJECTIVE EVIDENCE',
-    title: 'FACTS, NOT REVIEWS',
-    tagline: 'Reviews show patterns. We document facts.',
-    description: 'Online reviews are anonymous and unverified, and carry little weight when a complaint is disputed. Our inspectors record dated, first-hand observations with photographs and timings, giving your customer-care and contracting teams a factual record to work from.',
-    icon: 'Zap',
-  },
-  {
-    key: 'LOCAL',
-    title: 'ON THE GROUND, 48H REPORTS',
-    tagline: 'Based in Cape Town and the Western Cape.',
-    description: 'No flights to arrange and no remote guesswork. Full report with photographs within 48 hours of check-out.',
-    icon: 'MapPin',
-  },
-];

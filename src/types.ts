@@ -17,14 +17,6 @@ export interface ServiceTier {
   questionAnswered: string;
 }
 
-export interface UspItem {
-  key: string;
-  title: string;
-  description: string;
-  icon: string;
-  tagline: string;
-}
-
 export interface LeadFormData {
   name: string;
   company: string;
