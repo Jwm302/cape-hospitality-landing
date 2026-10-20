@@ -1,6 +1,7 @@
 import React from 'react';
 import { ShieldCheck, Clock, MapPin } from 'lucide-react';
 import heroImg from '../assets/images/cape_luxury_hotel_1788963250076.jpg';
+import logoLightImg from '../assets/images/logo_light.webp';
 
 interface HeroProps {
   onRequestFreeDataPackage: () => void;
@@ -28,13 +29,20 @@ export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => (
   <>
     {/* Photo banner */}
     <section
-      className="relative flex items-center justify-center min-h-[380px] sm:min-h-[480px] bg-cover bg-center"
+      className="relative flex items-center justify-center min-h-[440px] sm:min-h-[560px] bg-cover bg-center"
       style={{ backgroundImage: `url(${heroImg})` }}
     >
-      <div className="absolute inset-0 bg-black/40" />
-      <div className="relative z-10 px-4 text-center text-white">
-        <h1 className="text-4xl sm:text-6xl font-light tracking-tight drop-shadow-md">Hotel Inspections</h1>
-        <p className="mt-4 text-2xl sm:text-4xl font-light leading-snug drop-shadow-md max-w-3xl mx-auto">
+      <div className="absolute inset-0 bg-black/45" />
+      <div className="relative z-10 px-4 py-10 text-center text-white">
+        <h1>
+          <img
+            src={logoLightImg}
+            alt="Cape Hospitality Advisors"
+            className="mx-auto w-56 sm:w-80 h-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] select-none"
+            loading="eager"
+          />
+        </h1>
+        <p className="mt-6 text-2xl sm:text-4xl font-light leading-snug drop-shadow-md max-w-3xl mx-auto">
           Know what your guests will find, before they arrive.
         </p>
       </div>
