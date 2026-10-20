@@ -4,7 +4,7 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { ServicesSection } from './components/ServicesSection';
 import { AgentVirtualAudit } from './components/AgentVirtualAudit';
-import { PhysicalAuditDossier } from './components/PhysicalAuditDossier';
+import { SampleAuditReport } from './components/SampleAuditReport';
 import { LeadCaptureFooter } from './components/LeadCaptureFooter';
 import { PrivacyNotice } from './components/PrivacyNotice';
 
@@ -43,7 +43,7 @@ export default function App() {
             Back to the website
           </a>
         </div>
-        <PhysicalAuditDossier
+        <SampleAuditReport
           onCommissionAudit={() => (window.location.href = '/#contact')}
           onRequestFreeDataPackage={() => (window.location.href = '/#contact')}
         />
