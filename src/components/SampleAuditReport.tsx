@@ -113,6 +113,7 @@ const TEXT = {
     stay: 'Tue 14 – Wed 15 Oct 2026 · 1 night, 22 hours on property',
     inspector: 'Senior inspector, 14 years in European luxury hotel operations',
     delivered: 'Thu 16 Oct 2026, 10:00 (36 hours after check-out)',
+    call: 'Fri 17 Oct 2026, 14:00, 30 minutes on Zoom',
     confidential: 'Confidential',
     slides: ['Summary', 'Scorecard', '24 hours', 'Evidence', 'Recommendations'],
     departments: [
@@ -177,6 +178,7 @@ const TEXT = {
       stay: 'Stay',
       inspector: 'Inspector',
       delivered: 'Delivered',
+      call: 'Call with the inspector',
       why: 'Why we went',
       whyText: (
         <>
@@ -215,11 +217,11 @@ const TEXT = {
       ok: 'as expected',
       warn: 'below standard',
       bad: 'likely complaint',
-      count: '41 timed observations in the full report',
+      count: 'All times as recorded by the inspector',
     },
     evidence: {
       title: 'Evidence',
-      subtitle: 'Photographs and measurements from the stay · 64 photos in the full appendix',
+      subtitle: 'Photographs and measurements from the stay',
       shower: 'Shower temperature, first 4 minutes',
       showerBand: 'comfortable 40–45 °C',
       heritage: 'Heritage wing, room 214',
@@ -241,7 +243,7 @@ const TEXT = {
     },
     viewer: {
       title: 'Sample On-Site Audit Report',
-      intro: 'What your team receives within 48 hours of an unannounced stay. Five pages from a 22-page report.',
+      intro: 'What your team receives within 48 hours of an unannounced stay: a concise five-page report, followed by a 30-minute Zoom call with your inspector.',
       note: `“${HOTEL}” is an archetype; findings are representative. Client reports are confidential and never published.`,
       pages: 'Report pages',
       previous: 'Previous',
@@ -253,6 +255,7 @@ const TEXT = {
     stay: 'Di 14. – Mi 15. Okt. 2026 · 1 Nacht, 22 Stunden im Hotel',
     inspector: 'Senior-Inspektor, 14 Jahre in der europäischen Luxushotellerie',
     delivered: 'Do 16. Okt. 2026, 10:00 Uhr (36 Stunden nach der Abreise)',
+    call: 'Fr 17. Okt. 2026, 14:00 Uhr, 30 Minuten per Zoom',
     confidential: 'Vertraulich',
     slides: ['Zusammenfassung', 'Bewertung', '24 Stunden', 'Belege', 'Empfehlungen'],
     departments: [
@@ -317,6 +320,7 @@ const TEXT = {
       stay: 'Aufenthalt',
       inspector: 'Inspektor',
       delivered: 'Geliefert',
+      call: 'Gespräch mit dem Inspektor',
       why: 'Anlass der Prüfung',
       whyText: (
         <>
@@ -355,11 +359,11 @@ const TEXT = {
       ok: 'wie erwartet',
       warn: 'unter Standard',
       bad: 'wahrscheinliche Beschwerde',
-      count: '41 zeitlich erfasste Beobachtungen im vollständigen Bericht',
+      count: 'Alle Zeiten wie vom Inspektor erfasst',
     },
     evidence: {
       title: 'Belege',
-      subtitle: 'Fotos und Messwerte vom Aufenthalt · 64 Fotos im vollständigen Anhang',
+      subtitle: 'Fotos und Messwerte vom Aufenthalt',
       shower: 'Duschtemperatur, erste 4 Minuten',
       showerBand: 'angenehm 40–45 °C',
       heritage: 'Altbauflügel, Zimmer 214',
@@ -381,7 +385,7 @@ const TEXT = {
     },
     viewer: {
       title: 'Beispielbericht: Mystery-Audit vor Ort',
-      intro: 'Das erhält Ihr Team innerhalb von 48 Stunden nach einem unangekündigten Aufenthalt. Fünf Seiten aus einem 22-seitigen Bericht.',
+      intro: 'Das erhält Ihr Team innerhalb von 48 Stunden nach einem unangekündigten Aufenthalt: einen kompakten fünfseitigen Bericht, gefolgt von einem 30-minütigen Zoom-Gespräch mit Ihrem Inspektor.',
       note: `„${HOTEL}“ ist ein Musterhotel; die Befunde sind repräsentativ. Kundenberichte sind vertraulich und werden nie veröffentlicht.`,
       pages: 'Berichtsseiten',
       previous: 'Zurück',
@@ -510,6 +514,7 @@ const SummarySlide: React.FC = () => {
             <div><dt className="inline text-zinc-500">{s.stay}: </dt><dd className="inline">{t.stay}</dd></div>
             <div><dt className="inline text-zinc-500">{s.inspector}: </dt><dd className="inline">{t.inspector}</dd></div>
             <div><dt className="inline text-zinc-500">{s.delivered}: </dt><dd className="inline">{t.delivered}</dd></div>
+            <div><dt className="inline text-zinc-500">{s.call}: </dt><dd className="inline">{t.call}</dd></div>
           </dl>
         </div>
 
