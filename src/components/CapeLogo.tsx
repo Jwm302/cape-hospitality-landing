@@ -63,6 +63,8 @@ export const CapeLogo: React.FC<CapeLogoProps> = ({
         <img
           src={logoImg}
           alt="Cape Hospitality Advisors"
+          width={68}
+          height={48}
           className="h-full w-auto object-contain select-none mix-blend-multiply"
           loading="eager"
         />

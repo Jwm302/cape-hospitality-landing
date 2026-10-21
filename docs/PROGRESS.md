@@ -1,6 +1,6 @@
 # Progress and next steps
 
-Last updated: 20 October 2026. Read this first when picking the project up again.
+Last updated: 21 October 2026. Read this first when picking the project up again.
 
 ## Where things stand
 
@@ -31,6 +31,12 @@ Five slides for the archetype "The Historic City Hotel": summary, department sco
 - Each component keeps its English and German text side by side (`COPY` / `TEXT` objects).
 - The choice is remembered in the browser; `?lang=de` opens the site in German.
 - Enquiry emails to the team stay in English and include "please reply in German" when sent from the German site.
+
+### Browser support (`vite.config.ts`)
+- Tailwind 4 puts all styles in cascade layers (`@layer`) and uses `oklch` / `color-mix` colours. Safari before 15.4 (older Macs that can no longer update) ignores layered styles and showed the site unstyled (reported on 21 Oct 2026).
+- A build step (`legacyCss`) flattens the layers and adds rgb fallbacks; JavaScript is built for the same browsers (Safari 12+, Chrome/Edge 80+, Firefox 78+). Modern browsers render pixel-identically.
+- Logos and flags carry width/height attributes so the page stays readable even if the stylesheet fails to load.
+- Known cosmetic limits on Safari 12–14.0: spacing between some flex items (no flex `gap`).
 
 ## Open items
 

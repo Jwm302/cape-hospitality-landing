@@ -3,7 +3,7 @@ import { Lang, useLang } from '../i18n';
 
 // Drawn flags: emoji flags show as letters on Windows.
 const FlagZA: React.FC = () => (
-  <svg viewBox="0 0 900 600" className="w-5 h-auto rounded-[2px] shadow-sm" aria-hidden="true">
+  <svg viewBox="0 0 900 600" width="21" height="14" className="w-5 h-auto rounded-[2px] shadow-sm" aria-hidden="true">
     <rect width="900" height="300" fill="#E03C31" />
     <rect y="300" width="900" height="300" fill="#001489" />
     <path d="M0,0 L450,300 L0,600 M450,300 H900" fill="none" stroke="#FFF" strokeWidth="200" />
@@ -14,7 +14,7 @@ const FlagZA: React.FC = () => (
 );
 
 const FlagDE: React.FC = () => (
-  <svg viewBox="0 0 5 3" className="w-5 h-auto rounded-[2px] shadow-sm" aria-hidden="true">
+  <svg viewBox="0 0 5 3" width="20" height="12" className="w-5 h-auto rounded-[2px] shadow-sm" aria-hidden="true">
     <rect width="5" height="1" fill="#000" />
     <rect y="1" width="5" height="1" fill="#DD0000" />
     <rect y="2" width="5" height="1" fill="#FFCE00" />
