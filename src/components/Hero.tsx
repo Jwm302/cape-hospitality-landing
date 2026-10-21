@@ -54,6 +54,8 @@ export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
             <img
               src={logoLightImg}
               alt="Cape Hospitality Advisors"
+              width={320}
+              height={227}
               className="mx-auto w-56 sm:w-80 h-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] select-none"
               loading="eager"
             />
