@@ -70,6 +70,11 @@ Buyers are a small group: product, contracting and quality managers at German an
 - Next step: **"Get the free 24-hour Desk Brief"** (captures their email). The on-site audit (about EUR 1,000) comes after trust is built; don't lead with it.
 - Email list idea: a short monthly German-language note, "Cape Town hotel watch".
 
+### Before / after visuals
+- Animated before/after photos are a strong format: 6–10 s vertical videos (Reels, LinkedIn video) with a wipe between the two shots, looping slider images for posts, and possibly a drag-to-compare slider in the website's sample report.
+- Story examples: shower 38 °C at 07:15 → fixed after the audit; coach-arrival queue → second receptionist added.
+- Caution: client reports are confidential and nothing is shared with audited hotels, so real before/after photos need the client's and the hotel's permission and must be anonymised. Until then, use clearly labelled illustrations (as the sample report does). Only show an "after" where the hotel really improved following an audit.
+
 ### Set up before running ads
 1. UTM tags on every post and ad link, so enquiries can be traced to a channel.
 2. LinkedIn Insight Tag and Meta Pixel for retargeting. These need a cookie consent banner and a privacy-notice update (GDPR, German visitors).
@@ -79,6 +84,7 @@ Buyers are a small group: product, contracting and quality managers at German an
 - Site: UTM-aware enquiry emails ("came from LinkedIn ad"), tracking tags behind a consent banner, social sharing image.
 - Content: four weeks of LinkedIn posts in English and German, plus a few ad versions.
 - Outreach: personal LinkedIn message and follow-up sequence.
+- Visuals: before/after animations for social posts, and a drag-to-compare slider in the sample report.
 - A shareable strategy document of this plan.
 
 ## Earlier roadmap ideas (not started)
