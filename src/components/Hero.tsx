@@ -44,10 +44,9 @@ export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
   return (
     <>
       {/* Photo banner */}
-      <section
-        className="relative flex items-center justify-center min-h-[440px] sm:min-h-[560px] bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroImg})` }}
-      >
+      <section className="relative overflow-hidden flex items-center justify-center min-h-[440px] sm:min-h-[560px] bg-[#10213a]">
+        {/* Slow camera drift; still for visitors who prefer reduced motion. */}
+        <div className="hero-drift absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroImg})` }} aria-hidden="true" />
         <div className="absolute inset-0 bg-black/45" />
         <div className="relative z-10 px-4 py-10 text-center text-white">
           <h1>
