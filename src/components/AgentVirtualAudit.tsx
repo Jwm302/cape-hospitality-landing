@@ -71,15 +71,13 @@ const COPY = {
     unavailableBody: 'Our team can still prepare the free 24-hour Desk Brief for this hotel.',
     unavailableAction: 'Request the 24h Desk Brief',
     sampleLink: 'See a sample on-site report',
-    viewMaps: 'View on Google Maps',
-    fromReviews: (n: string) => `from ${n} reviews`,
-    googleRating: 'Google rating',
-    noRating: 'No Google rating yet',
-    sourceMaps: 'Source: Google Maps',
-    collecting: 'Collecting scores from other booking sites...',
-    noScores: 'No scores from other booking sites are listed for this property on Google Hotels.',
-    scoresTitle: 'Scores across platforms',
-    scoresNote: 'As listed on Google Hotels under “Reviews from the web”, with the number of reviews behind each score.',
+    viewMaps: 'View on map',
+    ourScore: 'Our score',
+    fromReviews: (n: string, sites: number) => `from ${n} reviews on ${sites} platform${sites === 1 ? '' : 's'}`,
+    fromSites: (sites: number) => `across ${sites} platform${sites === 1 ? '' : 's'}`,
+    noRating: 'No rating yet',
+    aggregated: 'Aggregated from several sources',
+    collecting: 'Adding other booking platforms...',
     notRight: 'Not the right place? Other matches:',
     status: { OPERATIONAL: 'Operating', CLOSED_TEMPORARILY: 'Temporarily closed', CLOSED_PERMANENTLY: 'Permanently closed' },
     wheelchairYes: 'Wheelchair-accessible entrance',
@@ -91,9 +89,9 @@ const COPY = {
     pendingBody: 'We combine the reviews, remove duplicates, count every complaint and check each quote. This usually takes about a minute.',
     reviewsError: 'The recent-review breakdown couldn’t be loaded right now.',
     noReviews: 'No recent written reviews were found for this hotel.',
-    above: (r: string) => `above Google's overall ${r}`,
-    below: (r: string) => `below Google's overall ${r}`,
-    inLine: (r: string) => `in line with Google's overall ${r}`,
+    above: (r: string) => `above our score of ${r}`,
+    below: (r: string) => `below our score of ${r}`,
+    inLine: (r: string) => `in line with our score of ${r}`,
     whatGuestsSay: 'What recent guests say',
     basedOn: (sample: string, written: number) => `Based on the latest ${sample} (${written} with written comments)`,
     reviews: 'reviews',
@@ -107,9 +105,7 @@ const COPY = {
     withComments: (n: string) => `${n} with comments`,
     only: (n: number) => `only ${n}`,
     noThemes: 'A theme breakdown isn’t available for this hotel.',
-    footnote: 'Themes are grouped by AI from the review text. Counts show how many written reviews in this sample mention each theme, and quotes are copied word for word. The average includes star-only ratings. Review data:',
-    and: ' and ',
-    listing: (source: string) => `${source} listing:`,
+    footnote: 'Themes are grouped by AI from the review text. Counts show how many written reviews in this sample mention each theme, and quotes are copied word for word. The average includes star-only ratings. Review data from aggregated sources.',
     riskTitle: 'Risk checklist',
     riskIntro: (n: number) => `Complaints in the ${n} written reviews about the issues European guests notice most. Click a line to read them.`,
     noComplaints: 'No complaints',
@@ -117,7 +113,7 @@ const COPY = {
     risk: {} as Record<string, string>,
     briefTitle: 'Want the deeper picture? Get the 24-hour Desk Brief',
     briefBody: (hotel: string) =>
-      `This snapshot is instant and automated. The Desk Brief on ${hotel} goes further: what German-speaking guests say on Booking.com compared with other guests, a risk checklist with verbatim quotes, and what to check on site. Our team reviews it and emails it to you within 24 hours. Free for travel companies.`,
+      `This snapshot is instant and automated. The Desk Brief on ${hotel} goes further: what German-speaking guests say compared with other guests, a risk checklist with verbatim quotes, and what to check on site. Our team reviews it and emails it to you within 24 hours. Free for travel companies.`,
     briefSent: (hotel: string, email: React.ReactNode) => (
       <>Thank you. Our team is preparing the Desk Brief on {hotel} and will email it, with this snapshot, to {email} within 24 hours.</>
     ),
@@ -148,15 +144,13 @@ const COPY = {
     unavailableBody: 'Unser Team kann den kostenlosen 24h-Kurzbericht für dieses Hotel trotzdem erstellen.',
     unavailableAction: '24h-Kurzbericht anfordern',
     sampleLink: 'Beispielbericht eines Audits vor Ort ansehen',
-    viewMaps: 'Auf Google Maps ansehen',
-    fromReviews: (n: string) => `aus ${n} Bewertungen`,
-    googleRating: 'Google-Bewertung',
-    noRating: 'Noch keine Google-Bewertung',
-    sourceMaps: 'Quelle: Google Maps',
-    collecting: 'Bewertungen anderer Buchungsportale werden gesammelt...',
-    noScores: 'Für dieses Hotel sind auf Google Hotels keine Bewertungen anderer Buchungsportale aufgeführt.',
-    scoresTitle: 'Bewertungen auf anderen Portalen',
-    scoresNote: 'Wie auf Google Hotels unter „Bewertungen aus dem Web“ angegeben, mit der Anzahl der Bewertungen hinter jedem Wert.',
+    viewMaps: 'Auf der Karte ansehen',
+    ourScore: 'Unsere Bewertung',
+    fromReviews: (n: string, sites: number) => `aus ${n} Bewertungen auf ${sites} ${sites === 1 ? 'Portal' : 'Portalen'}`,
+    fromSites: (sites: number) => `über ${sites} ${sites === 1 ? 'Portal' : 'Portale'}`,
+    noRating: 'Noch keine Bewertung',
+    aggregated: 'Aus mehreren Quellen zusammengeführt',
+    collecting: 'Weitere Buchungsportale werden einbezogen...',
     notRight: 'Nicht das richtige Hotel? Weitere Treffer:',
     status: { OPERATIONAL: 'Geöffnet', CLOSED_TEMPORARILY: 'Vorübergehend geschlossen', CLOSED_PERMANENTLY: 'Dauerhaft geschlossen' },
     wheelchairYes: 'Rollstuhlgerechter Eingang',
@@ -168,9 +162,9 @@ const COPY = {
     pendingBody: 'Wir führen die Bewertungen zusammen, entfernen Doppelte, zählen jede Beschwerde und prüfen jedes Zitat. Das dauert meist etwa eine Minute.',
     reviewsError: 'Die Auswertung der aktuellen Bewertungen konnte gerade nicht geladen werden.',
     noReviews: 'Für dieses Hotel wurden keine aktuellen schriftlichen Bewertungen gefunden.',
-    above: (r: string) => `über dem Google-Gesamtwert von ${r}`,
-    below: (r: string) => `unter dem Google-Gesamtwert von ${r}`,
-    inLine: (r: string) => `im Einklang mit dem Google-Gesamtwert von ${r}`,
+    above: (r: string) => `über unserer Bewertung von ${r}`,
+    below: (r: string) => `unter unserer Bewertung von ${r}`,
+    inLine: (r: string) => `im Einklang mit unserer Bewertung von ${r}`,
     whatGuestsSay: 'Was Gäste zuletzt sagen',
     basedOn: (sample: string, written: number) => `Basierend auf den neuesten ${sample} (${written} mit schriftlichem Kommentar)`,
     reviews: 'Bewertungen',
@@ -184,9 +178,7 @@ const COPY = {
     withComments: (n: string) => `${n} mit Kommentar`,
     only: (n: number) => `nur ${n}`,
     noThemes: 'Für dieses Hotel ist keine Auswertung nach Themen verfügbar.',
-    footnote: 'Die Themen werden per KI aus dem Bewertungstext gruppiert (Themennamen auf Englisch). Die Zahlen zeigen, wie viele schriftliche Bewertungen dieser Stichprobe ein Thema erwähnen; Zitate sind wörtlich übernommen. Der Durchschnitt enthält auch reine Sterne-Bewertungen. Bewertungsdaten:',
-    and: ' und ',
-    listing: (source: string) => `${source}-Eintrag:`,
+    footnote: 'Die Themen werden per KI aus dem Bewertungstext gruppiert (Themennamen auf Englisch). Die Zahlen zeigen, wie viele schriftliche Bewertungen dieser Stichprobe ein Thema erwähnen; Zitate sind wörtlich übernommen. Der Durchschnitt enthält auch reine Sterne-Bewertungen. Bewertungsdaten aus aggregierten Quellen.',
     riskTitle: 'Risiko-Checkliste',
     riskIntro: (n: number) => `Beschwerden in den ${n} schriftlichen Bewertungen zu den Punkten, die europäischen Gästen am meisten auffallen. Klicken Sie auf eine Zeile, um sie zu lesen.`,
     noComplaints: 'Keine Beschwerden',
@@ -201,7 +193,7 @@ const COPY = {
     } as Record<string, string>,
     briefTitle: 'Mehr Tiefe? Fordern Sie den 24h-Kurzbericht an',
     briefBody: (hotel: string) =>
-      `Diese Momentaufnahme ist sofort verfügbar und automatisch erstellt. Der Kurzbericht zu ${hotel} geht weiter: was deutschsprachige Gäste auf Booking.com im Vergleich zu anderen Gästen sagen, eine Risiko-Checkliste mit wörtlichen Zitaten und was vor Ort zu prüfen ist. Unser Team prüft ihn und sendet ihn Ihnen innerhalb von 24 Stunden. Kostenlos für Reiseveranstalter.`,
+      `Diese Momentaufnahme ist sofort verfügbar und automatisch erstellt. Der Kurzbericht zu ${hotel} geht weiter: was deutschsprachige Gäste im Vergleich zu anderen Gästen sagen, eine Risiko-Checkliste mit wörtlichen Zitaten und was vor Ort zu prüfen ist. Unser Team prüft ihn und sendet ihn Ihnen innerhalb von 24 Stunden. Kostenlos für Reiseveranstalter.`,
     briefSent: (hotel: string, email: React.ReactNode) => (
       <>Vielen Dank. Unser Team erstellt den Kurzbericht zu {hotel} und sendet ihn zusammen mit dieser Momentaufnahme innerhalb von 24 Stunden an {email}.</>
     ),
@@ -414,15 +406,14 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
 
           {!isLoading && result?.status === 'ok' && (
             <div className="rounded-2xl bg-[#0c182a] border border-white/15 shadow-2xl p-6 sm:p-8 text-left space-y-6">
-              <PlaceHeader place={result.place} />
-              <PlatformScoresRow state={scores} />
+              <PlaceHeader place={result.place} scores={scores} />
               {result.alternatives && result.alternatives.length > 0 && (
                 <Alternatives
                   places={result.alternatives}
                   onPick={(p) => runSearch(`${p.name}, ${p.address}`.slice(0, 120))}
                 />
               )}
-              <ReviewsPanel state={reviews} overallRating={result.place.rating} />
+              <ReviewsPanel state={reviews} overallRating={ourScore(result.place, scores)?.average} />
               <BriefCta
                 place={result.place}
                 reviews={reviews}
@@ -471,8 +462,9 @@ const Notice: React.FC<{ title: string; body: string; actionLabel?: string; onAc
   </div>
 );
 
-const PlaceHeader: React.FC<{ place: PlaceSnapshot }> = ({ place }) => {
+const PlaceHeader: React.FC<{ place: PlaceSnapshot; scores: PlatformScores | 'loading' | null }> = ({ place, scores }) => {
   const { lang, c } = useCopy();
+  const score = ourScore(place, scores);
   return (
   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
     <div className="min-w-0">
@@ -500,20 +492,28 @@ const PlaceHeader: React.FC<{ place: PlaceSnapshot }> = ({ place }) => {
     </div>
 
     <div className="shrink-0 rounded-xl bg-white/5 border border-white/10 px-5 py-4 text-center sm:min-w-[170px]">
-      {typeof place.rating === 'number' ? (
+      <div className="text-[10px] font-mono uppercase tracking-wider text-[#d9bd8b]">{c.ourScore}</div>
+      {score ? (
         <>
-          <div className="flex items-center justify-center gap-1.5">
+          <div className="mt-1 flex items-center justify-center gap-1.5">
             <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
-            <span className="text-3xl font-bold text-white">{formatRating(place.rating, lang)}</span>
+            <span className="text-3xl font-bold text-white">{formatRating(score.average, lang)}</span>
+            <span className="text-xs text-zinc-400 self-end mb-1">/ 5</span>
           </div>
           <div className="text-[11px] text-zinc-300 mt-1">
-            {place.ratingCount ? c.fromReviews(formatCount(place.ratingCount, lang)) : c.googleRating}
+            {score.reviews ? c.fromReviews(formatCount(score.reviews, lang), score.sites) : c.fromSites(score.sites)}
           </div>
         </>
       ) : (
-        <div className="text-xs text-zinc-300">{c.noRating}</div>
+        <div className="mt-1 text-xs text-zinc-300">{c.noRating}</div>
       )}
-      <div className="text-[10px] font-mono text-zinc-500 mt-2">{c.sourceMaps}</div>
+      {scores === 'loading' ? (
+        <div className="text-[10px] text-zinc-400 mt-2 flex items-center justify-center gap-1.5">
+          <Loader2 className="w-3 h-3 animate-spin text-[#d9bd8b]" /> {c.collecting}
+        </div>
+      ) : (
+        <div className="text-[10px] font-mono text-zinc-500 mt-2">{c.aggregated}</div>
+      )}
     </div>
   </div>
   );
@@ -527,61 +527,32 @@ const formatScore = (s: { value: number; max?: number }, lang: Lang = 'en') => {
   return `${Number.isInteger(value) ? value : formatRating(value, lang)}${max ? `/${max}` : ''}`;
 };
 
-const PlatformScoresRow: React.FC<{ state: PlatformScores | 'loading' | null }> = ({ state }) => {
-  const { lang, c } = useCopy();
-  if (!state || (typeof state === 'object' && state.status === 'unavailable')) return null;
-  if (state === 'loading') {
-    return (
-      <p className="text-[11px] text-zinc-400 flex items-center gap-2 -mt-2">
-        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#d9bd8b]" /> {c.collecting}
-      </p>
-    );
-  }
-  if (state.status === 'none') {
-    return (
-      <p className="text-[11px] text-zinc-500 -mt-2">
-        {c.noScores}
-      </p>
-    );
-  }
-  return (
-    <div className="-mt-2">
-      <h4 className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">{c.scoresTitle}</h4>
-      <ul className="mt-2 flex flex-wrap gap-2">
-        {state.scores.map((s) => {
-          const body = (
-            <>
-              <span className="text-zinc-300">{s.site}</span>
-              <span className="font-bold text-white">{formatScore(s, lang)}</span>
-              {typeof s.votes === 'number' && <span className="text-zinc-500">({formatCount(s.votes, lang)})</span>}
-            </>
-          );
-          return (
-            <li key={s.site}>
-              {s.url ? (
-                <a
-                  href={s.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.04] border border-white/10 hover:border-[#d9bd8b]/50 px-3 py-1.5 text-xs"
-                >
-                  {body}
-                </a>
-              ) : (
-                <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.04] border border-white/10 px-3 py-1.5 text-xs">
-                  {body}
-                </span>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-      <p className="mt-1.5 text-[10px] text-zinc-500">
-        {c.scoresNote}
-      </p>
-    </div>
-  );
-};
+// Our score: the hotel's ratings on every platform we found, as one score out of 5,
+// weighted by each platform's number of reviews when every platform reports it.
+function ourScore(place: PlaceSnapshot, scores: PlatformScores | 'loading' | null) {
+  const all: { value: number; max?: number; votes?: number }[] = [];
+  if (typeof place.rating === 'number') all.push({ value: place.rating, max: 5, votes: place.ratingCount });
+  if (scores && scores !== 'loading' && scores.status === 'ok') all.push(...scores.scores);
+  return combineScores(all);
+}
+
+function combineScores(scores: { value: number; max?: number; votes?: number }[]) {
+  const out5 = scores
+    .map((s) => {
+      const max = s.max ?? (s.value <= 5 ? 5 : s.value <= 10 ? 10 : s.value <= 100 ? 100 : undefined);
+      return max ? { score: (s.value / max) * 5, votes: s.votes } : null;
+    })
+    .filter((s): s is { score: number; votes: number | undefined } => s !== null);
+  if (!out5.length) return null;
+  const weighted = out5.every((s) => typeof s.votes === 'number' && s.votes > 0);
+  const weight = (s: { votes?: number }) => (weighted ? (s.votes as number) : 1);
+  const total = out5.reduce((sum, s) => sum + weight(s), 0);
+  return {
+    average: out5.reduce((sum, s) => sum + s.score * weight(s), 0) / total,
+    sites: out5.length,
+    reviews: weighted ? total : 0,
+  };
+}
 
 const Alternatives: React.FC<{ places: PlaceSnapshot[]; onPick: (p: PlaceSnapshot) => void }> = ({
   places,
@@ -631,7 +602,7 @@ const PlaceFacts: React.FC<{ place: PlaceSnapshot }> = ({ place }) => {
   if (!hasFacts) return null;
   return (
     <div className="mt-2 flex flex-wrap items-center gap-1.5">
-      {status && <span className={`${chip} ${status.tone}`}>{status.text} (Google)</span>}
+      {status && <span className={`${chip} ${status.tone}`}>{status.text}</span>}
       {place.wheelchairEntrance !== undefined && (
         <span className={plainChip}>
           <Accessibility className="w-3 h-3" />
@@ -713,7 +684,7 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
       <div>
         <h4 className="text-base font-bold text-white font-serif">{c.whatGuestsSay}</h4>
         <p className="text-[11px] font-mono text-zinc-400 mt-0.5">
-          {c.basedOn(sampleText(analysis, c.reviews), written)}
+          {c.basedOn(`${n} ${c.reviews}`, written)}
           {range}
         </p>
       </div>
@@ -739,9 +710,7 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
         <Stat
           label={c.analysed}
           value={String(n)}
-          note={`${analysis.sources && analysis.sources.length > 1 ? `${analysis.sources.map((s) => `${s.count} ${s.source}`).join(' + ')} · ` : ''}${c.withComments(
-            written < 20 ? c.only(written) : String(written),
-          )}`}
+          note={c.withComments(written < 20 ? c.only(written) : String(written))}
         />
       </div>
 
@@ -758,23 +727,7 @@ const AnalysisView: React.FC<{ analysis: ReviewAnalysis; overallRating?: number 
       )}
 
       <p className="text-[10px] text-zinc-500 leading-relaxed">
-        {c.footnote} {sourceNames(analysis, c.and)}.
-        {analysis.sources
-          ?.filter((s) => s.source !== 'Google' && s.name)
-          .map((s) => (
-            <span key={s.source}>
-              {' '}
-              {c.listing(s.source)}{' '}
-              {s.url ? (
-                <a href={s.url} target="_blank" rel="noopener noreferrer" className="underline hover:text-zinc-300">
-                  {s.name}
-                </a>
-              ) : (
-                s.name
-              )}
-              .
-            </span>
-          ))}
+        {c.footnote}
       </p>
     </div>
   );
@@ -824,7 +777,7 @@ const RiskChecklist: React.FC<{ risks: RiskCheck[]; total: number }> = ({ risks,
                       <span className="italic">“{m.text}”</span>
                       <span className="text-zinc-500">
                         {' '}
-                        — {[formatMonth(m.date, lang), typeof m.rating === 'number' ? `${m.rating}★` : '', m.source].filter(Boolean).join(', ')}
+                        — {[formatMonth(m.date, lang), typeof m.rating === 'number' ? `${m.rating}★` : ''].filter(Boolean).join(', ')}
                       </span>
                     </li>
                   ))}
@@ -839,8 +792,8 @@ const RiskChecklist: React.FC<{ risks: RiskCheck[]; total: number }> = ({ risks,
                 {r.quote && (
                   <p className="mt-1 text-[11px] text-zinc-400 leading-relaxed">
                     <span className="italic">“{r.quote.text}”</span>
-                    {(r.quote.date || r.quote.source) && (
-                      <span className="text-zinc-500"> — {[formatMonth(r.quote.date, lang), r.quote.source].filter(Boolean).join(', ')}</span>
+                    {r.quote.date && (
+                      <span className="text-zinc-500"> — {formatMonth(r.quote.date, lang)}</span>
                     )}
                   </p>
                 )}
@@ -892,7 +845,7 @@ const ThemeCard: React.FC<{ theme: Theme; total: number }> = ({ theme, total }) 
               <span className="italic">“{q.text}”</span>
               <span className="text-zinc-500">
                 {' '}
-                — {[formatMonth(q.date, lang), typeof q.rating === 'number' ? `${q.rating}★` : '', q.source].filter(Boolean).join(', ')}
+                — {[formatMonth(q.date, lang), typeof q.rating === 'number' ? `${q.rating}★` : ''].filter(Boolean).join(', ')}
               </span>
             </li>
           ))}
@@ -903,13 +856,10 @@ const ThemeCard: React.FC<{ theme: Theme; total: number }> = ({ theme, total }) 
 };
 
 // "100 Google + 50 Tripadvisor reviews", or "100 Google reviews" for older or Google-only results.
-function sampleText(a: ReviewAnalysis, reviews = 'reviews'): string {
-  if (!a.sources?.length) return reviews === 'reviews' ? `${a.sampleSize} ${a.sourceLabel}` : `${a.sampleSize} ${reviews}`;
-  return `${a.sources.map((s) => `${s.count} ${s.source}`).join(' + ')} ${reviews}`;
-}
-
-function sourceNames(a: ReviewAnalysis, and = ' and '): string {
-  return a.sources?.length ? a.sources.map((s) => s.source).join(and) : 'Google';
+// For the email to our team, which keeps the platform names.
+function sampleText(a: ReviewAnalysis): string {
+  if (!a.sources?.length) return `${a.sampleSize} ${a.sourceLabel}`;
+  return `${a.sources.map((s) => `${s.count} ${s.source}`).join(' + ')} reviews`;
 }
 
 // Plain-text summary of what the visitor saw, sent with their snapshot request.
@@ -938,6 +888,10 @@ function snapshotText(place: PlaceSnapshot, reviews: ReviewsState | null, scores
   }
   if (scores && scores !== 'loading' && scores.status === 'ok') {
     lines.push(`Other platforms (Google Hotels): ${scores.scores.map((s) => `${s.site} ${formatScore(s)}`).join('; ')}`);
+  }
+  const score = ourScore(place, scores && scores !== 'loading' ? scores : null);
+  if (score) {
+    lines.push(`Our score (shown to the visitor): ${score.average.toFixed(1)}/5 across ${score.sites} platform(s)${score.reviews ? `, ${score.reviews} reviews` : ''}`);
   }
   return lines.filter(Boolean).join('\n');
 }
