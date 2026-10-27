@@ -421,6 +421,8 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
                 onBrief={() => requestBrief(result.place.name)}
                 onAudit={() => onSelectPropertyForInquiry(result.place.name)}
               />
+              {/* Attribution required by Google Maps Platform terms for place data. */}
+              <p className="text-[9px] text-zinc-600 text-right">Powered by Google</p>
             </div>
           )}
         </div>
@@ -512,7 +514,7 @@ const PlaceHeader: React.FC<{ place: PlaceSnapshot; scores: PlatformScores | 'lo
           <Loader2 className="w-3 h-3 animate-spin text-[#d9bd8b]" /> {c.collecting}
         </div>
       ) : (
-        <div className="text-[10px] font-mono text-zinc-500 mt-2">{c.aggregated}</div>
+        score && score.sites > 1 && <div className="text-[10px] font-mono text-zinc-500 mt-2">{c.aggregated}</div>
       )}
     </div>
   </div>
