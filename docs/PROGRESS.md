@@ -1,6 +1,6 @@
 # Progress and next steps
 
-Last updated: 27 October 2026. Read this first when picking the project up again.
+Last updated: 28 October 2026. Read this first when picking the project up again.
 
 ## Where things stand
 
@@ -79,6 +79,12 @@ Buyers are a small group: product, contracting and quality managers at German an
 1. UTM tags on every post and ad link, so enquiries can be traced to a channel.
 2. LinkedIn Insight Tag and Meta Pixel for retargeting. These need a cookie consent banner and a privacy-notice update (GDPR, German visitors).
 3. A proper social sharing preview (image, title, description) when the site link is posted.
+
+### Team roles
+- **Main voice on LinkedIn:** the co-founder who is free to post (ideally the one doing or leading inspections). Posts from his personal profile; German versions on the company page. Guide: `docs/LINKEDIN_GUIDE.md`.
+- **Other two founders:** no regular posting needed (both are busy with separate accounting and finance work). They like, comment on or reshare posts in the first hour, list the company under Experience, and link the website in their profiles.
+- **Automation:** Claude drafts posts (with German versions and cropped images) from the co-founder's photos and notes and schedules them through Taplio or Typefully; he reviews each post (1–2 minutes) and answers comments and messages himself. No bots for messages, comments or connection requests.
+- **Access:** all three are company-page admins; one shared workspace in the scheduling tool; roles in Meta Business Suite for Instagram/Facebook.
 
 ### Work that could be built next
 - Site: UTM-aware enquiry emails ("came from LinkedIn ad"), tracking tags behind a consent banner, social sharing image.
