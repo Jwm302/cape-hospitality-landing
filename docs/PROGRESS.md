@@ -93,6 +93,13 @@ Buyers are a small group: product, contracting and quality managers at German an
 - Visuals: before/after animations for social posts, and a drag-to-compare slider in the sample report.
 - A shareable strategy document of this plan.
 
+## Roadmap: next steps (agreed 28 October 2026)
+1. **Cover photo:** moving version (slow drift) built; waiting for the new photo without text or logo. Optional: a short, subtle looping video (MP4, under 5 MB) to replace the drift.
+2. **LinkedIn set-up:** share `docs/LINKEDIN_GUIDE.md` with the posting co-founder; make all three founders company-page admins; connect Taplio or Typefully in claude.ai.
+3. **First content:** Claude drafts the first two weeks of LinkedIn posts (English, plus German for the company page) once the scheduling tool is connected.
+4. **Tracking before ads:** UTM tags, LinkedIn Insight Tag and Meta Pixel behind a cookie consent banner, privacy-notice update, social sharing image.
+5. **Domain:** `capehospitalityadvisors.com` added in Vercel (redirects to www); confirm the certificate finished and the "not private" warning is gone. Optional: update the www CNAME to the value Vercel recommends.
+
 ## Earlier roadmap ideas (not started)
 - Link a Virtual Audit result to a brief request with the hotel pre-filled (partly done via the "Request the 24h Desk Brief" form in the hotel check).
 - Connect the R desk brief (`analysis/german_guest_brief.R`) to the same data or move it into the API.
