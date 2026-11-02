@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { CONTACT_EMAIL } from '../lib/sendInquiry';
 
-const LAST_UPDATED = '12 October 2026';
+const LAST_UPDATED = '2 November 2026';
 
 const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <section className="space-y-2">
@@ -55,6 +55,11 @@ export const PrivacyNotice: React.FC = () => (
           <li>
             <strong>Hotel searches:</strong> the hotel name you type. We do not ask for, or link searches to, your
             identity.
+          </li>
+          <li>
+            <strong>Where you came from:</strong> if you reached us through one of our posts or links, your enquiry
+            or Desk Brief request records which one (for example &quot;linkedin / social&quot;) or the website that
+            linked to us. This is read from the link itself; we do not use cookies for it.
           </li>
           <li>
             <strong>Technical data:</strong> our hosting provider keeps short-lived server logs (such as IP address,
