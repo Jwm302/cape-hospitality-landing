@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ShieldCheck, Clock, MapPin } from 'lucide-react';
-import heroImg from '../assets/images/cape_luxury_hotel_1788963250076.jpg';
 import logoLightImg from '../assets/images/logo_light.webp';
 import { useLang } from '../i18n';
+
+// Silent looping clip for the banner (public/media), in WebM and MP4 so every
+// browser finds a format it plays; the poster is its first frame.
+const HERO_VIDEO_WEBM = '/media/hero-loop.webm';
+const HERO_VIDEO_MP4 = '/media/hero-loop.mp4';
+const HERO_POSTER = '/media/hero-poster.jpg';
+
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 interface HeroProps {
   onRequestFreeDataPackage: () => void;
@@ -41,12 +49,29 @@ const ICONS = [ShieldCheck, Clock, MapPin];
 
 export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
   const c = COPY[useLang().lang];
+  const still = useMemo(prefersReducedMotion, []);
   return (
     <>
       {/* Photo banner */}
-      <section className="relative overflow-hidden flex items-center justify-center min-h-[440px] sm:min-h-[560px] bg-[#10213a]">
-        {/* Slow camera drift; still for visitors who prefer reduced motion. */}
-        <div className="hero-drift absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${heroImg})` }} aria-hidden="true" />
+      <section className="relative overflow-hidden flex items-center justify-center min-h-[440px] sm:min-h-[560px] lg:min-h-[min(720px,calc(100vh-72px))] bg-[#10213a]">
+        {/* Moving banner; a still frame for visitors who prefer reduced motion. */}
+        {still ? (
+          <img src={HERO_POSTER} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover object-[35%_50%]" />
+        ) : (
+          <video
+            className="absolute inset-0 w-full h-full object-cover object-[35%_50%]"
+            poster={HERO_POSTER}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-hidden="true"
+          >
+            <source src={HERO_VIDEO_WEBM} type="video/webm" />
+            <source src={HERO_VIDEO_MP4} type="video/mp4" />
+          </video>
+        )}
         <div className="absolute inset-0 bg-black/45" />
         <div className="relative z-10 px-4 py-10 text-center text-white">
           <h1>
