@@ -4,10 +4,11 @@ import logoLightImg from '../assets/images/logo_light.webp';
 import { useLang } from '../i18n';
 
 // Silent looping clip for the banner (public/media), in WebM and MP4 so every
-// browser finds a format it plays; the poster is its first frame.
-const HERO_VIDEO_WEBM = '/media/hero-loop.webm';
-const HERO_VIDEO_MP4 = '/media/hero-loop.mp4';
-const HERO_POSTER = '/media/hero-poster.jpg';
+// browser finds a format it plays; the poster is its first frame. Give a new
+// version a new file name, or browsers may keep showing the cached old one.
+const HERO_VIDEO_WEBM = '/media/hero-v3.webm';
+const HERO_VIDEO_MP4 = '/media/hero-v3.mp4';
+const HERO_POSTER = '/media/hero-v3-poster.jpg';
 
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
