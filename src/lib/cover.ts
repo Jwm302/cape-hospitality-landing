@@ -1,6 +1,6 @@
-// Banner covers that take turns, one per day (Cape Town date), so we can see
-// which one brings more enquiries: the chosen cover is added to each enquiry
-// email. Preview a cover any day with ?cover=<id>, e.g. /?cover=beach.
+// Banner covers. Visitors see the first one; the others can be previewed with
+// ?cover=<id>, e.g. /?cover=beach. The cover shown is added to each enquiry
+// email.
 // Clips live in public/media; give a new version a new file name, or browsers
 // may keep showing the cached old one.
 
@@ -20,7 +20,6 @@ export interface Cover {
   slogan?: { src: string; show: [number, number] };
 }
 
-// Order sets the rotation: on 3 Nov 2026 the first one shows, then the next each day.
 export const COVERS: Cover[] = [
   {
     // The classic clip blurs into the beach, "DON'T SEND HELP" is written in
@@ -61,8 +60,7 @@ export const COVER: Cover = (() => {
     const preview = COVERS.find((c) => c.id === wanted);
     if (preview) return preview;
   } catch {
-    // fall through to the daily cover
+    // fall through to the default cover
   }
-  const capeTownDay = Math.floor((Date.now() + 2 * 3600_000) / 86400_000); // UTC+2, no daylight saving
-  return COVERS[capeTownDay % COVERS.length];
+  return COVERS[0];
 })();
