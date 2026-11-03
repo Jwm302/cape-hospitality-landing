@@ -45,7 +45,7 @@ export const COVERS: Cover[] = [
     poster: '/media/cover-blend-v2-poster.jpg',
     position: 'object-[22%_50%] sm:object-[35%_50%]',
     shade: 'bg-black/45',
-    quiet: [7.3, 16.5],
+    quiet: [5, 19],
   },
 ];
 
