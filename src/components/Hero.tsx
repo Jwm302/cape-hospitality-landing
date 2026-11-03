@@ -2,13 +2,7 @@ import React, { useMemo } from 'react';
 import { ShieldCheck, Clock, MapPin } from 'lucide-react';
 import logoLightImg from '../assets/images/logo_light.webp';
 import { useLang } from '../i18n';
-
-// Silent looping clip for the banner (public/media), in WebM and MP4 so every
-// browser finds a format it plays; the poster is its first frame. Give a new
-// version a new file name, or browsers may keep showing the cached old one.
-const HERO_VIDEO_WEBM = '/media/hero-v5.webm';
-const HERO_VIDEO_MP4 = '/media/hero-v5.mp4';
-const HERO_POSTER = '/media/hero-v5-poster.jpg';
+import { COVER } from '../lib/cover';
 
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -57,11 +51,11 @@ export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
       <section className="relative overflow-hidden flex items-center justify-center min-h-[440px] sm:min-h-[560px] lg:min-h-[min(720px,calc(100vh-72px))] bg-[#10213a]">
         {/* Moving banner; a still frame for visitors who prefer reduced motion. */}
         {still ? (
-          <img src={HERO_POSTER} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover object-[35%_50%]" />
+          <img src={COVER.poster} alt="" aria-hidden="true" className={`absolute inset-0 w-full h-full object-cover ${COVER.position}`} />
         ) : (
           <video
-            className="absolute inset-0 w-full h-full object-cover object-[35%_50%]"
-            poster={HERO_POSTER}
+            className={`absolute inset-0 w-full h-full object-cover ${COVER.position}`}
+            poster={COVER.poster}
             autoPlay
             muted
             loop
@@ -69,11 +63,11 @@ export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
             preload="auto"
             aria-hidden="true"
           >
-            <source src={HERO_VIDEO_WEBM} type="video/webm" />
-            <source src={HERO_VIDEO_MP4} type="video/mp4" />
+            <source src={COVER.webm} type="video/webm" />
+            <source src={COVER.mp4} type="video/mp4" />
           </video>
         )}
-        <div className="absolute inset-0 bg-black/45" />
+        <div className={`absolute inset-0 ${COVER.shade}`} />
         <div className="relative z-10 px-4 py-10 text-center text-white">
           <h1>
             <img
