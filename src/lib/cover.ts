@@ -20,7 +20,22 @@ export interface Cover {
   slogan?: { src: string; show: [number, number] };
 }
 
+// Order sets the rotation: on 3 Nov 2026 the first one shows, then the next each day.
 export const COVERS: Cover[] = [
+  {
+    // The classic clip blurs into the beach, "DON'T SEND HELP" is written in
+    // the sand, "We Are There For You." comes in, the view tilts down to the
+    // sea, then it blurs back. Anchored further left on phones so the sand
+    // writing stays in view.
+    id: 'blend',
+    webm: '/media/cover-blend-v3.webm',
+    mp4: '/media/cover-blend-v3.mp4',
+    poster: '/media/cover-blend-v3-poster.jpg',
+    position: 'object-[22%_50%] sm:object-[35%_50%]',
+    shade: 'bg-black/45',
+    quiet: [5, 20],
+    slogan: { src: '/media/slogan-we-are-there-v1.png', show: [11.5, 17.5] },
+  },
   {
     id: 'classic',
     webm: '/media/hero-v5.webm',
@@ -36,20 +51,6 @@ export const COVERS: Cover[] = [
     poster: '/media/cover-beach-v1-poster.jpg',
     position: 'object-[50%_55%]',
     shade: 'bg-[#10213a]/35',
-  },
-  {
-    // The classic clip blurs into the beach, "DON'T SEND HELP" is written in
-    // the sand, "We Are There For You." comes in, the view tilts down to the
-    // sea, then it blurs back. Anchored further left on phones so the sand
-    // writing stays in view.
-    id: 'blend',
-    webm: '/media/cover-blend-v3.webm',
-    mp4: '/media/cover-blend-v3.mp4',
-    poster: '/media/cover-blend-v3-poster.jpg',
-    position: 'object-[22%_50%] sm:object-[35%_50%]',
-    shade: 'bg-black/45',
-    quiet: [5, 20],
-    slogan: { src: '/media/slogan-we-are-there-v1.png', show: [11.5, 17.5] },
   },
 ];
 
