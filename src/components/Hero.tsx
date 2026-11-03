@@ -1,14 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ShieldCheck, Clock, MapPin } from 'lucide-react';
 import logoLightImg from '../assets/images/logo_light.webp';
 import { useLang } from '../i18n';
-
-// Silent looping clip for the banner (public/media), in WebM and MP4 so every
-// browser finds a format it plays; the poster is its first frame. Give a new
-// version a new file name, or browsers may keep showing the cached old one.
-const HERO_VIDEO_WEBM = '/media/hero-v5.webm';
-const HERO_VIDEO_MP4 = '/media/hero-v5.mp4';
-const HERO_POSTER = '/media/hero-v5-poster.jpg';
+import { COVER } from '../lib/cover';
 
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -51,29 +45,49 @@ const ICONS = [ShieldCheck, Clock, MapPin];
 export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
   const c = COPY[useLang().lang];
   const still = useMemo(prefersReducedMotion, []);
+  // Where the clip is, for covers whose banner text follows the clip.
+  const [time, setTime] = useState(0);
+  const during = (span?: [number, number]) => !!span && time >= span[0] && time < span[1];
+  const quiet = during(COVER.quiet);
+  const sloganOn = during(COVER.slogan?.show);
+  const onTimeUpdate =
+    COVER.quiet || COVER.slogan
+      ? (e: React.SyntheticEvent<HTMLVideoElement>) => setTime(e.currentTarget.currentTime)
+      : undefined;
   return (
     <>
       {/* Photo banner */}
       <section className="relative overflow-hidden flex items-center justify-center min-h-[440px] sm:min-h-[560px] lg:min-h-[min(720px,calc(100vh-72px))] bg-[#10213a]">
         {/* Moving banner; a still frame for visitors who prefer reduced motion. */}
         {still ? (
-          <img src={HERO_POSTER} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover object-[35%_50%]" />
+          <img src={COVER.poster} alt="" aria-hidden="true" className={`absolute inset-0 w-full h-full object-cover ${COVER.position}`} />
         ) : (
           <video
-            className="absolute inset-0 w-full h-full object-cover object-[35%_50%]"
-            poster={HERO_POSTER}
+            className={`absolute inset-0 w-full h-full object-cover ${COVER.position}`}
+            poster={COVER.poster}
             autoPlay
             muted
             loop
             playsInline
             preload="auto"
             aria-hidden="true"
+            onTimeUpdate={onTimeUpdate}
           >
-            <source src={HERO_VIDEO_WEBM} type="video/webm" />
-            <source src={HERO_VIDEO_MP4} type="video/mp4" />
+            <source src={COVER.webm} type="video/webm" />
+            <source src={COVER.mp4} type="video/mp4" />
           </video>
         )}
-        <div className="absolute inset-0 bg-black/45" />
+        <div className={`absolute inset-0 ${COVER.shade} transition-opacity duration-1000 ${quiet ? 'opacity-30' : ''}`} />
+        {COVER.slogan && !still && (
+          // Top right like the poster on wider screens; over the sea on phones,
+          // where the right half of the clip is cropped away.
+          <img
+            src={COVER.slogan.src}
+            alt=""
+            aria-hidden="true"
+            className={`absolute z-10 w-[58%] left-1/2 -translate-x-1/2 bottom-[3%] sm:w-[30%] sm:max-w-[420px] sm:left-auto sm:translate-x-0 sm:right-[5%] sm:top-[8%] sm:bottom-auto drop-shadow-[0_2px_10px_rgba(16,33,58,0.6)] select-none pointer-events-none transition-[opacity,clip-path] duration-1000 ${sloganOn ? 'opacity-100 [clip-path:inset(0_0_0_0)]' : 'opacity-0 [clip-path:inset(0_100%_0_0)]'}`}
+          />
+        )}
         <div className="relative z-10 px-4 py-10 text-center text-white">
           <h1>
             <img
@@ -85,15 +99,17 @@ export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
               loading="eager"
             />
           </h1>
-          <p className="mt-6 text-2xl sm:text-4xl font-light leading-snug drop-shadow-md max-w-3xl mx-auto">{c.tagline}</p>
-          <figure className="mt-6 max-w-2xl mx-auto drop-shadow-md">
-            <blockquote className="font-[Georgia,serif] italic text-base sm:text-lg text-white/90 leading-relaxed">
-              {c.quote}
-            </blockquote>
-            <figcaption className="mt-1.5 text-xs sm:text-sm text-white/75">
-              — A. Gutman Milne, Library Hotel Collection, New York
-            </figcaption>
-          </figure>
+          <div className={`transition-opacity duration-1000 ${quiet ? 'opacity-0' : ''}`}>
+            <p className="mt-6 text-2xl sm:text-4xl font-light leading-snug drop-shadow-md max-w-3xl mx-auto">{c.tagline}</p>
+            <figure className="mt-6 max-w-2xl mx-auto drop-shadow-md">
+              <blockquote className="font-[Georgia,serif] italic text-base sm:text-lg text-white/90 leading-relaxed">
+                {c.quote}
+              </blockquote>
+              <figcaption className="mt-1.5 text-xs sm:text-sm text-white/75">
+                — A. Gutman Milne, Library Hotel Collection, New York
+              </figcaption>
+            </figure>
+          </div>
         </div>
       </section>
 

@@ -2,6 +2,8 @@
 // The access key is public by design: it can only route mail to the inbox it
 // was created for. Set VITE_WEB3FORMS_KEY in the Vercel project settings.
 
+import { COVER } from './cover';
+
 export const CONTACT_EMAIL = 'contact@capehospitalityadvisors.com';
 
 const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY as string | undefined;
@@ -26,7 +28,8 @@ const CAME_FROM = (() => {
 })();
 
 function withSource(fields: InquiryFields): InquiryFields {
-  return CAME_FROM ? { ...fields, 'Came from': CAME_FROM } : fields;
+  const tagged = { ...fields, 'Cover shown': COVER.id };
+  return CAME_FROM ? { ...tagged, 'Came from': CAME_FROM } : tagged;
 }
 
 export async function sendInquiry(subject: string, fields: InquiryFields, replyTo: string): Promise<void> {
