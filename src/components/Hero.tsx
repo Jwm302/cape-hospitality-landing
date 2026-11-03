@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ShieldCheck, Clock, MapPin } from 'lucide-react';
 import logoLightImg from '../assets/images/logo_light.webp';
 import { useLang } from '../i18n';
@@ -45,6 +45,14 @@ const ICONS = [ShieldCheck, Clock, MapPin];
 export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
   const c = COPY[useLang().lang];
   const still = useMemo(prefersReducedMotion, []);
+  // True while the clip shows a scene that carries its own words (see COVER.quiet).
+  const [quiet, setQuiet] = useState(false);
+  const onTimeUpdate = COVER.quiet
+    ? (e: React.SyntheticEvent<HTMLVideoElement>) => {
+        const t = e.currentTarget.currentTime;
+        setQuiet(t >= COVER.quiet![0] && t < COVER.quiet![1]);
+      }
+    : undefined;
   return (
     <>
       {/* Photo banner */}
@@ -62,13 +70,14 @@ export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
             playsInline
             preload="auto"
             aria-hidden="true"
+            onTimeUpdate={onTimeUpdate}
           >
             <source src={COVER.webm} type="video/webm" />
             <source src={COVER.mp4} type="video/mp4" />
           </video>
         )}
-        <div className={`absolute inset-0 ${COVER.shade}`} />
-        <div className="relative z-10 px-4 py-10 text-center text-white">
+        <div className={`absolute inset-0 ${COVER.shade} transition-opacity duration-1000 ${quiet ? 'opacity-30' : ''}`} />
+        <div className={`relative z-10 px-4 py-10 text-center text-white transition-opacity duration-1000 ${quiet ? 'opacity-0' : ''}`}>
           <h1>
             <img
               src={logoLightImg}
