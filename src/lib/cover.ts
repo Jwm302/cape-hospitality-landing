@@ -13,8 +13,8 @@ export interface Cover {
   // clip is anchored, and the shade over it that keeps the white text readable.
   position: string;
   shade: string;
-  // Seconds into the clip during which the banner text fades out, so a scene
-  // with its own words (the sand writing) can be read.
+  // Seconds into the clip during which the tagline and quote fade out (the
+  // logo stays), so a scene with its own words (the sand writing) can be read.
   quiet?: [number, number];
 }
 
@@ -40,12 +40,12 @@ export const COVERS: Cover[] = [
     // the sand, then it blurs back. Anchored further left on phones so the
     // sand writing stays in view.
     id: 'blend',
-    webm: '/media/cover-blend-v1.webm',
-    mp4: '/media/cover-blend-v1.mp4',
-    poster: '/media/cover-blend-v1-poster.jpg',
+    webm: '/media/cover-blend-v2.webm',
+    mp4: '/media/cover-blend-v2.mp4',
+    poster: '/media/cover-blend-v2-poster.jpg',
     position: 'object-[22%_50%] sm:object-[35%_50%]',
     shade: 'bg-black/45',
-    quiet: [12.2, 21.4],
+    quiet: [7.3, 16.5],
   },
 ];
 

@@ -77,7 +77,7 @@ export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
           </video>
         )}
         <div className={`absolute inset-0 ${COVER.shade} transition-opacity duration-1000 ${quiet ? 'opacity-30' : ''}`} />
-        <div className={`relative z-10 px-4 py-10 text-center text-white transition-opacity duration-1000 ${quiet ? 'opacity-0' : ''}`}>
+        <div className="relative z-10 px-4 py-10 text-center text-white">
           <h1>
             <img
               src={logoLightImg}
@@ -88,15 +88,17 @@ export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
               loading="eager"
             />
           </h1>
-          <p className="mt-6 text-2xl sm:text-4xl font-light leading-snug drop-shadow-md max-w-3xl mx-auto">{c.tagline}</p>
-          <figure className="mt-6 max-w-2xl mx-auto drop-shadow-md">
-            <blockquote className="font-[Georgia,serif] italic text-base sm:text-lg text-white/90 leading-relaxed">
-              {c.quote}
-            </blockquote>
-            <figcaption className="mt-1.5 text-xs sm:text-sm text-white/75">
-              — A. Gutman Milne, Library Hotel Collection, New York
-            </figcaption>
-          </figure>
+          <div className={`transition-opacity duration-1000 ${quiet ? 'opacity-0' : ''}`}>
+            <p className="mt-6 text-2xl sm:text-4xl font-light leading-snug drop-shadow-md max-w-3xl mx-auto">{c.tagline}</p>
+            <figure className="mt-6 max-w-2xl mx-auto drop-shadow-md">
+              <blockquote className="font-[Georgia,serif] italic text-base sm:text-lg text-white/90 leading-relaxed">
+                {c.quote}
+              </blockquote>
+              <figcaption className="mt-1.5 text-xs sm:text-sm text-white/75">
+                — A. Gutman Milne, Library Hotel Collection, New York
+              </figcaption>
+            </figure>
+          </div>
         </div>
       </section>
 
