@@ -45,14 +45,15 @@ const ICONS = [ShieldCheck, Clock, MapPin];
 export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
   const c = COPY[useLang().lang];
   const still = useMemo(prefersReducedMotion, []);
-  // True while the clip shows a scene that carries its own words (see COVER.quiet).
-  const [quiet, setQuiet] = useState(false);
-  const onTimeUpdate = COVER.quiet
-    ? (e: React.SyntheticEvent<HTMLVideoElement>) => {
-        const t = e.currentTarget.currentTime;
-        setQuiet(t >= COVER.quiet![0] && t < COVER.quiet![1]);
-      }
-    : undefined;
+  // Where the clip is, for covers whose banner text follows the clip.
+  const [time, setTime] = useState(0);
+  const during = (span?: [number, number]) => !!span && time >= span[0] && time < span[1];
+  const quiet = during(COVER.quiet);
+  const sloganOn = during(COVER.slogan?.show);
+  const onTimeUpdate =
+    COVER.quiet || COVER.slogan
+      ? (e: React.SyntheticEvent<HTMLVideoElement>) => setTime(e.currentTarget.currentTime)
+      : undefined;
   return (
     <>
       {/* Photo banner */}
@@ -77,6 +78,16 @@ export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
           </video>
         )}
         <div className={`absolute inset-0 ${COVER.shade} transition-opacity duration-1000 ${quiet ? 'opacity-30' : ''}`} />
+        {COVER.slogan && !still && (
+          // Top right like the poster on wider screens; over the sea on phones,
+          // where the right half of the clip is cropped away.
+          <img
+            src={COVER.slogan.src}
+            alt=""
+            aria-hidden="true"
+            className={`absolute z-10 w-[58%] left-1/2 -translate-x-1/2 bottom-[3%] sm:w-[30%] sm:max-w-[420px] sm:left-auto sm:translate-x-0 sm:right-[5%] sm:top-[8%] sm:bottom-auto drop-shadow-[0_2px_10px_rgba(16,33,58,0.6)] select-none pointer-events-none transition-[opacity,clip-path] duration-1000 ${sloganOn ? 'opacity-100 [clip-path:inset(0_0_0_0)]' : 'opacity-0 [clip-path:inset(0_100%_0_0)]'}`}
+          />
+        )}
         <div className="relative z-10 px-4 py-10 text-center text-white">
           <h1>
             <img

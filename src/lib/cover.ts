@@ -16,6 +16,8 @@ export interface Cover {
   // Seconds into the clip during which the tagline and quote fade out (the
   // logo stays), so a scene with its own words (the sand writing) can be read.
   quiet?: [number, number];
+  // A slogan image (transparent PNG) that wipes in over the clip for a while.
+  slogan?: { src: string; show: [number, number] };
 }
 
 export const COVERS: Cover[] = [
@@ -37,15 +39,17 @@ export const COVERS: Cover[] = [
   },
   {
     // The classic clip blurs into the beach, "DON'T SEND HELP" is written in
-    // the sand, then it blurs back. Anchored further left on phones so the
-    // sand writing stays in view.
+    // the sand, "We Are There For You." comes in, the view tilts down to the
+    // sea, then it blurs back. Anchored further left on phones so the sand
+    // writing stays in view.
     id: 'blend',
-    webm: '/media/cover-blend-v2.webm',
-    mp4: '/media/cover-blend-v2.mp4',
-    poster: '/media/cover-blend-v2-poster.jpg',
+    webm: '/media/cover-blend-v3.webm',
+    mp4: '/media/cover-blend-v3.mp4',
+    poster: '/media/cover-blend-v3-poster.jpg',
     position: 'object-[22%_50%] sm:object-[35%_50%]',
     shade: 'bg-black/45',
-    quiet: [5, 19],
+    quiet: [5, 20],
+    slogan: { src: '/media/slogan-we-are-there-v1.png', show: [11.5, 17.5] },
   },
 ];
 
