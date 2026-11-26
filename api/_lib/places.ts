@@ -17,6 +17,7 @@ const FIELD_MASK = [
   'places.internationalPhoneNumber',
   'places.accessibilityOptions',
   'places.parkingOptions',
+  'places.addressComponents',
 ].join(',');
 
 const STATUSES = new Set(['OPERATIONAL', 'CLOSED_TEMPORARILY', 'CLOSED_PERMANENTLY']);
@@ -28,7 +29,9 @@ function parkingSummary(o: any): PlaceSnapshot['parking'] {
   return undefined;
 }
 
-// Bias results towards the Western Cape (Cape Town to the Garden Route).
+// Only the Western Cape (Cape Town to the Garden Route): results outside this
+// box are never returned, and the province in the address is checked as well,
+// because the box also touches the Northern and Eastern Cape.
 const WESTERN_CAPE = {
   rectangle: {
     low: { latitude: -34.9, longitude: 17.7 },
@@ -53,7 +56,8 @@ const tokens = (text: string) =>
 // Google's first result is sometimes a single unit (e.g. one apartment in a
 // complex) with no rating. Prefer the result whose name matches the search
 // best, then accommodation over other place types, then the one with the most
-// reviews, then Google's own order.
+// reviews, then Google's own order. When the best result is accommodation,
+// other place types (restaurants, shops in the same building) are left out.
 export function rankPlaces(query: string, places: (PlaceSnapshot & { lodging?: boolean })[]): PlaceSnapshot[] {
   const wanted = tokens(query);
   const score = (p: PlaceSnapshot) => {
@@ -64,7 +68,14 @@ export function rankPlaces(query: string, places: (PlaceSnapshot & { lodging?: b
   return places
     .map((p, index) => ({ p, index, match: score(p), lodging: p.lodging ? 1 : 0, reviews: p.ratingCount ?? 0 }))
     .sort((a, b) => b.match - a.match || b.lodging - a.lodging || b.reviews - a.reviews || a.index - b.index)
+    .filter((r, _, all) => !all[0].lodging || r.lodging)
     .map(({ p: { lodging, ...place } }) => place);
+}
+
+// The province from Google's address parts; kept when Google gives none.
+export function inWesternCape(p: { addressComponents?: { longText?: string; types?: string[] }[] }): boolean {
+  const province = p.addressComponents?.find((a) => a.types?.includes('administrative_area_level_1'))?.longText;
+  return !province || /western cape|wes-kaap/i.test(province);
 }
 
 export async function findPlaces(query: string): Promise<PlaceSnapshot[]> {
@@ -79,8 +90,8 @@ export async function findPlaces(query: string): Promise<PlaceSnapshot[]> {
       textQuery: query,
       regionCode: 'ZA',
       languageCode: 'en',
-      locationBias: WESTERN_CAPE,
-      pageSize: 5,
+      locationRestriction: WESTERN_CAPE,
+      pageSize: 10,
     }),
   });
 
@@ -90,7 +101,7 @@ export async function findPlaces(query: string): Promise<PlaceSnapshot[]> {
 
   const data = await res.json();
   const places = (data.places ?? [])
-    .filter((p: any) => p?.id)
+    .filter((p: any) => p?.id && inWesternCape(p))
     .map((p: any) => ({
       placeId: p.id,
       name: p.displayName?.text ?? query,

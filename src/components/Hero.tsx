@@ -13,11 +13,12 @@ interface HeroProps {
 
 const COPY = {
   en: {
+    audience: 'For tour operators and travel companies',
     tagline: 'Know what your guests will find, before they arrive.',
     quote: '“A five-star hotel does not automatically guarantee a five-star guest experience.”',
-    introTitle: 'The Independent Choice',
-    intro1: 'We check hotels in Cape Town and the Western Cape for European travel companies, anonymously and unannounced.',
-    intro2: 'You see what your guests will actually experience, not what a star rating said years ago.',
+    introTitle: 'Your Quality Partner on the Ground',
+    intro1: 'We work for European tour operators and travel companies, not for hotels. We check the hotels in your Cape Town and Western Cape programme, anonymously and unannounced.',
+    intro2: 'Before you sell a hotel, you see what your guests will actually experience, not what a star rating said years ago.',
     cta: 'Request a free virtual audit',
     highlights: [
       { title: 'Independent', text: 'Paid only by the travel company, never by the hotel.' },
@@ -26,11 +27,12 @@ const COPY = {
     ],
   },
   de: {
+    audience: 'Für Reiseveranstalter und Reiseunternehmen',
     tagline: 'Wissen, was Ihre Gäste erwartet – bevor sie ankommen.',
     quote: '„Ein Fünf-Sterne-Hotel garantiert nicht automatisch ein Fünf-Sterne-Gästeerlebnis.“',
-    introTitle: 'Die unabhängige Wahl',
-    intro1: 'Wir prüfen Hotels in Kapstadt und am Westkap für europäische Reiseveranstalter – anonym und unangekündigt.',
-    intro2: 'Sie sehen, was Ihre Gäste tatsächlich erleben, nicht was eine Sterne-Klassifizierung vor Jahren aussagte.',
+    introTitle: 'Ihr Qualitätspartner vor Ort',
+    intro1: 'Wir arbeiten für europäische Reiseveranstalter und Reiseunternehmen, nicht für Hotels. Wir prüfen die Hotels in Ihrem Programm in Kapstadt und am Westkap – anonym und unangekündigt.',
+    intro2: 'Bevor Sie ein Hotel verkaufen, sehen Sie, was Ihre Gäste tatsächlich erleben, nicht was eine Sterne-Klassifizierung vor Jahren aussagte.',
     cta: 'Kostenloses Virtuelles Audit anfordern',
     highlights: [
       { title: 'Unabhängig', text: 'Bezahlt ausschließlich vom Reiseveranstalter, nie vom Hotel.' },
@@ -100,7 +102,8 @@ export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
             />
           </h1>
           <div className={`transition-opacity duration-1000 ${quiet ? 'opacity-0' : ''}`}>
-            <p className="mt-6 text-2xl sm:text-4xl font-light leading-snug drop-shadow-md max-w-3xl mx-auto">{c.tagline}</p>
+            <p className="mt-5 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-[#d9bd8b] drop-shadow-md">{c.audience}</p>
+            <p className="mt-3 text-2xl sm:text-4xl font-light leading-snug drop-shadow-md max-w-3xl mx-auto">{c.tagline}</p>
             <figure className="mt-6 max-w-2xl mx-auto drop-shadow-md">
               <blockquote className="font-[Georgia,serif] italic text-base sm:text-lg text-white/90 leading-relaxed">
                 {c.quote}

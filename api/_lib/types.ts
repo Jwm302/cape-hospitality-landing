@@ -31,6 +31,7 @@ export interface SourceListing {
   name?: string; // listing title on that site
   url?: string;
   total?: number; // all reviews on that listing
+  rating?: { value: number; max?: number; votes?: number }; // the listing's overall score on that site
 }
 
 export interface ReviewBatch {

@@ -81,9 +81,18 @@ export const tripadvisor = {
       console.info(`Tripadvisor match rejected: "${googleName}" -> "${title}" ${url ?? ''}`);
       return { reviews: [], listings: [] };
     }
+    const overall = result?.rating;
+    const rating =
+      typeof overall?.value === 'number' && overall.value > 0
+        ? {
+            value: overall.value,
+            max: typeof overall.rating_max === 'number' ? overall.rating_max : 5,
+            votes: typeof overall.votes_count === 'number' ? overall.votes_count : result?.reviews_count,
+          }
+        : undefined;
     return {
       reviews: normalizeItems(result?.items ?? []),
-      listings: [{ source: 'Tripadvisor', name: title, url, total: result?.reviews_count }],
+      listings: [{ source: 'Tripadvisor', name: title, url, total: result?.reviews_count, rating }],
     };
   },
 };

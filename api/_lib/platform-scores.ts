@@ -34,8 +34,7 @@ export function toScore(entry: any): PlatformScore | null {
   };
 }
 
-export async function fetchPlatformScores(place: PlaceSnapshot): Promise<PlatformScores> {
-  const keyword = [place.name, townFromAddress(place.address)].filter(Boolean).join(', ');
+async function findListing(place: PlaceSnapshot, keyword: string): Promise<any | null> {
   const search = await live(`${PATH}/hotel_searches/live`, {
     keyword,
     location_code: SOUTH_AFRICA,
@@ -46,10 +45,18 @@ export async function fetchPlatformScores(place: PlaceSnapshot): Promise<Platfor
   const match =
     items.find((i) => !i.is_paid && i.hotel_identifier && sameBusiness(place.name, String(i.title ?? ''))) ??
     items.find((i) => i.hotel_identifier && sameBusiness(place.name, String(i.title ?? '')));
-  if (!match) {
-    console.info(`Google Hotels: no listing for "${place.name}" among ${items.map((i) => i.title).join(' | ')}`);
-    return { status: 'none' };
-  }
+  if (!match) console.info(`Google Hotels: no listing for "${keyword}" among ${items.map((i) => i.title).join(' | ')}`);
+  return match ?? null;
+}
+
+export async function fetchPlatformScores(place: PlaceSnapshot): Promise<PlatformScores> {
+  // Name and town first; the name alone when Google Hotels files the hotel
+  // under a different area (e.g. "V&A Waterfront" rather than "Cape Town").
+  const town = townFromAddress(place.address);
+  const match =
+    (await findListing(place, [place.name, town].filter(Boolean).join(', '))) ??
+    (town ? await findListing(place, place.name) : null);
+  if (!match) return { status: 'none' };
 
   const info = await live(`${PATH}/hotel_info/live/advanced`, {
     hotel_identifier: match.hotel_identifier,

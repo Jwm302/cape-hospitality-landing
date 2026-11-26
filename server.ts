@@ -18,7 +18,7 @@ app.use(express.json());
 
 // Same handlers as the Vercel functions in /api.
 app.post('/api/hotel-snapshot', async (req: Request, res: Response) => {
-  const result = await handleSnapshot(req.body?.query);
+  const result = await handleSnapshot(req.body?.query, req.body?.placeId);
   res.status(result.status).json(result.body);
 });
 
