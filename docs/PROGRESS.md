@@ -20,7 +20,7 @@ Design model: evershine.co.za (simple, short text, one call to action). Keep new
 
 ### Services (`src/data/landingData.ts`, English and German)
 - Free Virtual Audit: 24-hour desk brief.
-- On-Site Mystery Audit (core, about EUR 1,000, price not shown on the site): 24–48 h anonymous stay, full report within 48 hours (about five pages), plus a 30-minute Zoom call with the inspector.
+- On-Site Mystery Audit (core): shown on the site as "From €199" (since 26 Nov 2026, as is the Partnership; final price tailored per request, and any overnight stay is booked on the travel company's account): 24–48 h anonymous stay, full report within 48 hours (about five pages), plus a 30-minute Zoom call with the inspector.
 - Portfolio Quality Partnership: dedicated inspectors who know the client's hotels, a quarterly review call, and month-by-month guest-sentiment tracking.
 
 ### Sample report (`/sample-report`, `src/components/SampleAuditReport.tsx`)
@@ -67,7 +67,7 @@ Buyers are a small group: product, contracting and quality managers at German an
 
 ### Call to action
 - One main call to action everywhere: **"Check any hotel in your Cape Town programme — free"** linking to the hotel check (`/#virtual-audit`, or `/?lang=de#virtual-audit` for German audiences).
-- Next step: **"Get the free 24-hour Desk Brief"** (captures their email). The on-site audit (about EUR 1,000) comes after trust is built; don't lead with it.
+- Next step: **"Get the free 24-hour Desk Brief"** (captures their email). The on-site audit (from €199) comes after trust is built; don't lead with it.
 - Email list idea: a short monthly German-language note, "Cape Town hotel watch".
 
 ### Before / after visuals
