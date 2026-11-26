@@ -39,6 +39,20 @@ interface AgentVirtualAuditProps {
 }
 
 const POLL_INTERVAL_MS = 5000;
+const SUGGEST_DELAY_MS = 250;
+
+interface Suggestion {
+  placeId: string;
+  name: string;
+  area: string;
+}
+
+// Groups one visitor's keystrokes and the hotel they pick into one Google
+// session. crypto.randomUUID is missing on older Safari.
+const newSessionToken = () =>
+  typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    ? crypto.randomUUID()
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
 const MAX_POLLS = 60; // ~5 minutes, longer than the server's analysis lock
 
 const formatMonth = (iso?: string, lang: Lang = 'en') =>
@@ -60,6 +74,7 @@ const COPY = {
     intro: 'Type the name of any hotel in Cape Town or the Western Cape to see its consolidated rating across booking platforms and what recent guests say, counted, dated and sourced.',
     placeholder: 'Hotel name and town in the Western Cape (e.g. Tintswalo Hout Bay)...',
     hotelName: 'Hotel name',
+    suggestions: 'Hotel suggestions',
     enterName: 'Please enter a hotel name.',
     lookingUp: 'Looking up...',
     auditHotel: 'Audit Hotel',
@@ -135,6 +150,7 @@ const COPY = {
     intro: 'Geben Sie den Namen eines Hotels in Kapstadt oder am Westkap ein und sehen Sie die konsolidierte Bewertung über alle Buchungsportale sowie was Gäste zuletzt sagen – gezählt, datiert und mit Quelle.',
     placeholder: 'Hotelname und Ort am Westkap (z. B. Tintswalo Hout Bay)...',
     hotelName: 'Hotelname',
+    suggestions: 'Hotelvorschläge',
     enterName: 'Bitte geben Sie einen Hotelnamen ein.',
     lookingUp: 'Suche läuft...',
     auditHotel: 'Hotel prüfen',
@@ -233,6 +249,11 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
   const [reviews, setReviews] = useState<ReviewsState | null>(null);
   const [scores, setScores] = useState<PlatformScores | 'loading' | null>(null);
   const [inputError, setInputError] = useState('');
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [activeSuggestion, setActiveSuggestion] = useState(-1);
+  const suggestTimer = useRef<ReturnType<typeof setTimeout>>();
+  const suggestAbort = useRef<AbortController | null>(null);
+  const sessionToken = useRef(newSessionToken());
   const { c } = useCopy();
   // Incremented on every search so stale polls stop updating the page.
   const searchId = useRef(0);
@@ -278,8 +299,71 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
     if (searchId.current === id) setReviews({ status: 'error' });
   };
 
+  const closeSuggestions = () => {
+    clearTimeout(suggestTimer.current);
+    suggestAbort.current?.abort();
+    setSuggestions([]);
+    setActiveSuggestion(-1);
+  };
+
+  const onType = (value: string) => {
+    setSearchInput(value);
+    clearTimeout(suggestTimer.current);
+    suggestAbort.current?.abort();
+    if (value.trim().length < 3) {
+      setSuggestions([]);
+      return;
+    }
+    suggestTimer.current = setTimeout(async () => {
+      const ctrl = new AbortController();
+      suggestAbort.current = ctrl;
+      try {
+        const res = await fetch(
+          `/api/hotel-suggest?q=${encodeURIComponent(value.trim())}&s=${encodeURIComponent(sessionToken.current)}`,
+          { signal: ctrl.signal },
+        );
+        const data = res.ok ? await res.json() : { suggestions: [] };
+        if (!ctrl.signal.aborted) {
+          setSuggestions(Array.isArray(data.suggestions) ? data.suggestions : []);
+          setActiveSuggestion(-1);
+        }
+      } catch {
+        // aborted or offline: keep typing as a plain search
+      }
+    }, SUGGEST_DELAY_MS);
+  };
+
+  const pickSuggestion = (sug: Suggestion) => {
+    closeSuggestions();
+    const token = sessionToken.current;
+    sessionToken.current = newSessionToken(); // the pick ends this session
+    setSearchInput(sug.name);
+    setInputError('');
+    setSubmittedQuery(sug.name);
+    setCandidates([]);
+    loadSnapshot({ placeId: sug.placeId, query: [sug.name, sug.area].filter(Boolean).join(', ').slice(0, 120), sessionToken: token }, true);
+  };
+
+  const onSearchKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!suggestions.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      // -1 is the typed text itself; the arrows cycle through it and the list.
+      const n = suggestions.length;
+      setActiveSuggestion((i) =>
+        e.key === 'ArrowDown' ? (i + 1 >= n ? -1 : i + 1) : i - 1 < -1 ? n - 1 : i - 1,
+      );
+    } else if (e.key === 'Enter' && activeSuggestion >= 0 && activeSuggestion < suggestions.length) {
+      e.preventDefault();
+      pickSuggestion(suggestions[activeSuggestion]);
+    } else if (e.key === 'Escape') {
+      closeSuggestions();
+    }
+  };
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    closeSuggestions();
     runSearch(searchInput.trim());
   };
 
@@ -301,7 +385,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
     loadSnapshot({ placeId: place.placeId, query: `${place.name}, ${place.address}`.slice(0, 120) }, false);
   };
 
-  const loadSnapshot = async (body: { query: string; placeId?: string }, isNewSearch: boolean) => {
+  const loadSnapshot = async (body: { query: string; placeId?: string; sessionToken?: string }, isNewSearch: boolean) => {
     const id = ++searchId.current;
     setIsLoading(true);
     setResult(null);
@@ -358,6 +442,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
 
         {/* Search */}
         <div className="max-w-3xl mx-auto mb-6">
+          <div className="relative">
           <form
             onSubmit={handleSearch}
             className="flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md shadow-xl"
@@ -367,10 +452,18 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
               <input
                 type="text"
                 value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
+                onChange={(e) => onType(e.target.value)}
+                onKeyDown={onSearchKey}
+                onBlur={() => setTimeout(closeSuggestions, 150)}
                 placeholder={c.placeholder}
                 maxLength={120}
                 aria-label={c.hotelName}
+                role="combobox"
+                aria-autocomplete="list"
+                aria-expanded={suggestions.length > 0}
+                aria-controls="hotel-suggestions"
+                aria-activedescendant={activeSuggestion >= 0 ? `hotel-suggestion-${activeSuggestion}` : undefined}
+                autoComplete="off"
                 className="w-full bg-transparent text-white placeholder-zinc-400 text-sm focus:outline-hidden py-2.5 font-sans"
               />
             </div>
@@ -392,6 +485,39 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
               )}
             </button>
           </form>
+          {suggestions.length > 0 && (
+            <ul
+              id="hotel-suggestions"
+              role="listbox"
+              aria-label={c.suggestions}
+              className="absolute z-20 left-0 right-0 mt-2 rounded-xl bg-[#0c182a] border border-[#d9bd8b]/40 shadow-2xl overflow-hidden text-left"
+            >
+              {suggestions.map((sug, i) => (
+                <li
+                  key={sug.placeId}
+                  id={`hotel-suggestion-${i}`}
+                  role="option"
+                  aria-selected={i === activeSuggestion}
+                  // mousedown, so the pick lands before the input loses focus
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    pickSuggestion(sug);
+                  }}
+                  onMouseEnter={() => setActiveSuggestion(i)}
+                  className={`px-4 py-2.5 cursor-pointer flex items-start gap-2.5 border-b border-white/5 last:border-0 ${
+                    i === activeSuggestion ? 'bg-white/10' : ''
+                  }`}
+                >
+                  <MapPin className="w-4 h-4 text-[#d9bd8b] shrink-0 mt-0.5" />
+                  <span className="min-w-0">
+                    <span className="block text-sm font-semibold text-white truncate">{sug.name}</span>
+                    {sug.area && <span className="block text-[11px] text-zinc-400 truncate">{sug.area}</span>}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+          </div>
           {inputError && <p className="mt-2 text-center text-xs text-rose-300">{inputError}</p>}
           <p className="mt-3 text-center text-[11px] text-zinc-400 flex items-center justify-center gap-1.5">
             <Compass className="w-3.5 h-3.5 text-[#d9bd8b]" />

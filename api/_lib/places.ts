@@ -2,23 +2,24 @@ import { PlaceSnapshot } from './types.js';
 
 // Google Places API (New) Text Search. Requesting rating fields bills at the
 // Enterprise tier, which includes a free monthly allowance.
-const ENDPOINT = 'https://places.googleapis.com/v1/places:searchText';
-const FIELD_MASK = [
-  'places.id',
-  'places.displayName',
-  'places.formattedAddress',
-  'places.rating',
-  'places.userRatingCount',
-  'places.googleMapsUri',
-  'places.primaryTypeDisplayName',
-  'places.types',
-  'places.businessStatus',
-  'places.websiteUri',
-  'places.internationalPhoneNumber',
-  'places.accessibilityOptions',
-  'places.parkingOptions',
-  'places.addressComponents',
-].join(',');
+const API = 'https://places.googleapis.com/v1';
+const FIELDS = [
+  'id',
+  'displayName',
+  'formattedAddress',
+  'rating',
+  'userRatingCount',
+  'googleMapsUri',
+  'primaryTypeDisplayName',
+  'types',
+  'businessStatus',
+  'websiteUri',
+  'internationalPhoneNumber',
+  'accessibilityOptions',
+  'parkingOptions',
+  'addressComponents',
+];
+const FIELD_MASK = FIELDS.map((f) => `places.${f}`).join(',');
 
 const STATUSES = new Set(['OPERATIONAL', 'CLOSED_TEMPORARILY', 'CLOSED_PERMANENTLY']);
 
@@ -78,14 +79,85 @@ export function inWesternCape(p: { addressComponents?: { longText?: string; type
   return !province || /western cape|wes-kaap/i.test(province);
 }
 
-export async function findPlaces(query: string): Promise<PlaceSnapshot[]> {
-  const res = await fetch(ENDPOINT, {
+const headers = (fieldMask: string) => ({
+  'Content-Type': 'application/json',
+  'X-Goog-Api-Key': process.env.GOOGLE_PLACES_API_KEY as string,
+  'X-Goog-FieldMask': fieldMask,
+});
+
+function toSnapshot(p: any, fallbackName: string): PlaceSnapshot & { lodging: boolean } {
+  return {
+    placeId: p.id,
+    name: p.displayName?.text ?? fallbackName,
+    address: p.formattedAddress ?? '',
+    type: p.primaryTypeDisplayName?.text,
+    rating: typeof p.rating === 'number' ? p.rating : undefined,
+    ratingCount: typeof p.userRatingCount === 'number' ? p.userRatingCount : undefined,
+    mapsUrl: p.googleMapsUri,
+    status: STATUSES.has(p.businessStatus) ? p.businessStatus : undefined,
+    website: typeof p.websiteUri === 'string' ? p.websiteUri : undefined,
+    phone: typeof p.internationalPhoneNumber === 'string' ? p.internationalPhoneNumber : undefined,
+    wheelchairEntrance:
+      typeof p.accessibilityOptions?.wheelchairAccessibleEntrance === 'boolean'
+        ? p.accessibilityOptions.wheelchairAccessibleEntrance
+        : undefined,
+    parking: parkingSummary(p.parkingOptions),
+    lodging: Array.isArray(p.types) && p.types.includes('lodging'),
+  };
+}
+
+export interface Suggestion {
+  placeId: string;
+  name: string;
+  area: string;
+}
+
+// Hotel names as the visitor types (Places Autocomplete), Western Cape
+// accommodation only. The session token groups the keystrokes with the
+// details lookup of the hotel picked, which Google bills as one session.
+export async function suggestPlaces(input: string, sessionToken?: string): Promise<Suggestion[]> {
+  const res = await fetch(`${API}/places:autocomplete`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Goog-Api-Key': process.env.GOOGLE_PLACES_API_KEY as string,
-      'X-Goog-FieldMask': FIELD_MASK,
-    },
+    headers: headers('suggestions.placePrediction.placeId,suggestions.placePrediction.structuredFormat'),
+    body: JSON.stringify({
+      input,
+      sessionToken,
+      includedRegionCodes: ['za'],
+      includedPrimaryTypes: ['lodging'],
+      languageCode: 'en',
+      locationRestriction: WESTERN_CAPE,
+    }),
+  });
+  if (!res.ok) throw new Error(`Places autocomplete ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  const data = await res.json();
+  return ((data.suggestions ?? []) as any[])
+    .map((s) => s.placePrediction)
+    .filter((p) => p?.placeId && p.structuredFormat?.mainText?.text)
+    .map((p) => ({
+      placeId: p.placeId,
+      name: p.structuredFormat.mainText.text,
+      area: String(p.structuredFormat.secondaryText?.text ?? '').replace(/,?\s*South Africa$/i, ''),
+    }));
+}
+
+// One place by its id (a picked suggestion); null outside the Western Cape.
+export async function getPlace(placeId: string, sessionToken?: string): Promise<PlaceSnapshot | null> {
+  const params = new URLSearchParams({ languageCode: 'en', regionCode: 'ZA' });
+  if (sessionToken) params.set('sessionToken', sessionToken);
+  const res = await fetch(`${API}/places/${encodeURIComponent(placeId)}?${params}`, {
+    headers: headers(FIELDS.join(',')),
+  });
+  if (!res.ok) throw new Error(`Place details ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  const p = await res.json();
+  if (!p?.id || !inWesternCape(p)) return null;
+  const { lodging, ...place } = toSnapshot(p, placeId);
+  return place;
+}
+
+export async function findPlaces(query: string): Promise<PlaceSnapshot[]> {
+  const res = await fetch(`${API}/places:searchText`, {
+    method: 'POST',
+    headers: headers(FIELD_MASK),
     body: JSON.stringify({
       textQuery: query,
       regionCode: 'ZA',
@@ -102,24 +174,7 @@ export async function findPlaces(query: string): Promise<PlaceSnapshot[]> {
   const data = await res.json();
   const places = (data.places ?? [])
     .filter((p: any) => p?.id && inWesternCape(p))
-    .map((p: any) => ({
-      placeId: p.id,
-      name: p.displayName?.text ?? query,
-      address: p.formattedAddress ?? '',
-      type: p.primaryTypeDisplayName?.text,
-      rating: typeof p.rating === 'number' ? p.rating : undefined,
-      ratingCount: typeof p.userRatingCount === 'number' ? p.userRatingCount : undefined,
-      mapsUrl: p.googleMapsUri,
-      status: STATUSES.has(p.businessStatus) ? p.businessStatus : undefined,
-      website: typeof p.websiteUri === 'string' ? p.websiteUri : undefined,
-      phone: typeof p.internationalPhoneNumber === 'string' ? p.internationalPhoneNumber : undefined,
-      wheelchairEntrance:
-        typeof p.accessibilityOptions?.wheelchairAccessibleEntrance === 'boolean'
-          ? p.accessibilityOptions.wheelchairAccessibleEntrance
-          : undefined,
-      parking: parkingSummary(p.parkingOptions),
-      lodging: Array.isArray(p.types) && p.types.includes('lodging'),
-    }));
+    .map((p: any) => toSnapshot(p, query));
   const ranked = rankPlaces(query, places);
   console.info(
     `Place lookup "${query}": ${ranked.length} result(s): ` +

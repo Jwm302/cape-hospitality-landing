@@ -1,7 +1,7 @@
 import { analyzeReviews } from './analysis.js';
 import { cacheClaim, cacheConfigured, cacheDelete, cacheGet, cacheSet, countToday } from './cache.js';
 import { fetchPlatformScores } from './platform-scores.js';
-import { findPlaces, placesConfigured } from './places.js';
+import { findPlaces, getPlace, placesConfigured, suggestPlaces } from './places.js';
 import { dataForSeoConfigured } from './reviews/dataforseo-client.js';
 import { getReviewSource } from './reviews/index.js';
 import { PlaceSnapshot, PlatformScores, ReviewAnalysis, ReviewsState, SnapshotResponse } from './types.js';
@@ -18,6 +18,8 @@ const MAX_REVIEW_LOOKUPS_PER_DAY = Number(process.env.MAX_REVIEW_LOOKUPS_PER_DAY
 const MAX_SCORE_LOOKUPS_PER_DAY = Number(process.env.MAX_SCORE_LOOKUPS_PER_DAY) || 200;
 const PLACE_TTL = 24 * 3600;
 const MAX_ALTERNATIVES = 6;
+const MAX_SUGGESTIONS_PER_DAY = Number(process.env.MAX_SUGGESTIONS_PER_DAY) || 5000;
+const SAFE_TOKEN = /^[A-Za-z0-9_-]{8,36}$/;
 
 const SAFE_ID = /^[A-Za-z0-9_-]{6,300}$/;
 
@@ -28,13 +30,22 @@ export interface HandlerResult {
 
 const ok = (body: unknown): HandlerResult => ({ status: 200, body });
 
-// POST { query } searches; POST { placeId } opens one of the matches a search
-// listed, so picking from the list always opens exactly that hotel.
-export async function handleSnapshot(query: unknown, placeId?: unknown): Promise<HandlerResult> {
+// POST { query } searches; POST { placeId } opens one hotel exactly: a match
+// a search listed, or a suggestion picked while typing.
+export async function handleSnapshot(query: unknown, placeId?: unknown, sessionToken?: unknown): Promise<HandlerResult> {
   if (typeof placeId === 'string' && SAFE_ID.test(placeId)) {
-    const picked = await cacheGet<PlaceSnapshot>(`place:${placeId}`);
+    let picked = await cacheGet<PlaceSnapshot>(`place:${placeId}`);
+    if (!picked && placesConfigured()) {
+      const token = typeof sessionToken === 'string' && SAFE_TOKEN.test(sessionToken) ? sessionToken : undefined;
+      try {
+        picked = await getPlace(placeId, token);
+        if (picked) await cacheSet(`place:${placeId}`, picked, PLACE_TTL);
+      } catch (err: any) {
+        console.warn('Place details failed:', err?.message);
+      }
+    }
     if (picked) return ok({ status: 'ok', place: picked, reviews: await startReviews(picked) } satisfies SnapshotResponse);
-    // Not cached (no cache configured, or expired): fall back to searching by name.
+    // Not found by id: fall back to searching by name.
   }
   if (typeof query !== 'string' || query.trim().length < 2 || query.length > 120) {
     return { status: 400, body: { error: 'Please enter a hotel name.' } };
@@ -66,6 +77,20 @@ export async function handleSnapshot(query: unknown, placeId?: unknown): Promise
     alternatives: others.slice(0, MAX_ALTERNATIVES),
     reviews: await startReviews(place),
   } satisfies SnapshotResponse);
+}
+
+// GET ?q=&s= -> hotel suggestions while the visitor types; [] when unavailable.
+export async function handleSuggest(input: unknown, sessionToken: unknown): Promise<HandlerResult> {
+  if (typeof input !== 'string' || input.trim().length < 3 || input.length > 80) return ok({ suggestions: [] });
+  if (!placesConfigured()) return ok({ suggestions: [] });
+  if (cacheConfigured && (await countToday('suggestions')) > MAX_SUGGESTIONS_PER_DAY) return ok({ suggestions: [] });
+  const token = typeof sessionToken === 'string' && SAFE_TOKEN.test(sessionToken) ? sessionToken : undefined;
+  try {
+    return ok({ suggestions: await suggestPlaces(input.trim(), token) });
+  } catch (err: any) {
+    console.warn('Suggestions failed:', err?.message);
+    return ok({ suggestions: [] });
+  }
 }
 
 async function startReviews(place: PlaceSnapshot): Promise<ReviewsState> {

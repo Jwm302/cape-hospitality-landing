@@ -4,7 +4,7 @@ import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { handlePlatformScores, handleReviewPoll, handleSnapshot } from './api/_lib/handlers.ts';
+import { handlePlatformScores, handleReviewPoll, handleSnapshot, handleSuggest } from './api/_lib/handlers.ts';
 
 dotenv.config();
 
@@ -18,12 +18,17 @@ app.use(express.json());
 
 // Same handlers as the Vercel functions in /api.
 app.post('/api/hotel-snapshot', async (req: Request, res: Response) => {
-  const result = await handleSnapshot(req.body?.query, req.body?.placeId);
+  const result = await handleSnapshot(req.body?.query, req.body?.placeId, req.body?.sessionToken);
   res.status(result.status).json(result.body);
 });
 
 app.get('/api/hotel-reviews', async (req: Request, res: Response) => {
   const result = await handleReviewPoll(req.query.jobId, req.query.placeId);
+  res.status(result.status).json(result.body);
+});
+
+app.get('/api/hotel-suggest', async (req: Request, res: Response) => {
+  const result = await handleSuggest(req.query.q, req.query.s);
   res.status(result.status).json(result.body);
 });
 
