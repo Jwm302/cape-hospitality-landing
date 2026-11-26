@@ -10,6 +10,6 @@ export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
-  const result = await handleSnapshot(req.body?.query, req.body?.placeId);
+  const result = await handleSnapshot(req.body?.query, req.body?.placeId, req.body?.sessionToken);
   return res.status(result.status).json(result.body);
 }
