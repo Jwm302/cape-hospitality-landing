@@ -11,8 +11,8 @@ const COPY = {
     popular: 'Most Popular',
     includes: 'Includes:',
     question: 'The Question We Answer:',
-    open: 'Check now',
-    close: 'Show less',
+    showAll: 'Compare all details',
+    hideAll: 'Hide details',
   },
   de: {
     title: 'Unsere Leistungen',
@@ -21,8 +21,8 @@ const COPY = {
     popular: 'Am beliebtesten',
     includes: 'Enthalten:',
     question: 'Die Frage, die wir beantworten:',
-    open: 'Jetzt ansehen',
-    close: 'Weniger anzeigen',
+    showAll: 'Alle Details vergleichen',
+    hideAll: 'Details ausblenden',
   },
 };
 
@@ -30,14 +30,13 @@ interface ServicesSectionProps {
   onSelectTier: (tier: string) => void;
 }
 
-// Each card shows a short summary; "Check now" opens the full details of that
-// tier only, and closes any other open card.
+// Each card shows a short summary. One button opens or hides the full details
+// of all three tiers together, so they can be compared side by side; each
+// card's button sits at the bottom, level with the others.
 export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectTier }) => {
-  const [openTier, setOpenTier] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
   const { lang } = useLang();
   const c = COPY[lang];
-
-  const toggle = (key: string) => setOpenTier((prev) => (prev === key ? null : key));
 
   return (
     <section id="services" className="scroll-mt-20 bg-[#f5f5f3] py-14 sm:py-16 border-t border-zinc-200">
@@ -47,10 +46,19 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectTier }
           {c.intro}
         </p>
 
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 items-start text-left">
-          {tiersFor(lang).map((tier) => {
-            const isOpen = openTier === tier.key;
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-controls="tier-details"
+          className="mt-6 inline-flex items-center gap-1.5 px-5 py-2 rounded-full border border-[#b38a54] text-sm font-semibold text-[#9c753e] hover:bg-[#b38a54] hover:text-white transition-colors"
+        >
+          {open ? c.hideAll : c.showAll}
+          <ChevronDown className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`} />
+        </button>
 
+        <div id="tier-details" className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 items-stretch text-left">
+          {tiersFor(lang).map((tier) => {
             return (
               <div
                 key={tier.key}
@@ -74,10 +82,11 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectTier }
 
                 <h3 className="mt-3 text-lg font-semibold text-zinc-800">{tier.title}</h3>
                 <p className="mt-2 text-sm text-zinc-600 leading-relaxed">{tier.tagline}</p>
-                <p className="mt-4 text-sm font-semibold text-[#9c753e]">{tier.priceDisplay}</p>
+                <p className="mt-4 text-base font-bold text-[#9c753e]">{tier.priceDisplay}</p>
 
-                {isOpen && (
-                  <div id={`tier-details-${tier.key.toLowerCase()}`} className="mt-5 pt-5 border-t border-zinc-100">
+                <div className="mt-5 pt-5 border-t border-zinc-100 flex flex-col flex-1">
+                  {open && (
+                    <>
                     <p className="text-sm text-zinc-600 leading-relaxed">{tier.description}</p>
 
                     <span className="mt-5 text-[11px] font-bold uppercase tracking-wider text-zinc-700 block mb-2.5 font-mono">
@@ -103,31 +112,20 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectTier }
                         {tier.questionAnswered}
                       </p>
                     </div>
+                    </>
+                  )}
 
+                    <div className="mt-auto pt-5">
                     <button
                       onClick={() => onSelectTier(tier.key)}
                       id={`pricing-btn-${tier.key.toLowerCase()}`}
-                      className="mt-5 w-full py-3 px-4 rounded-full bg-[#b38a54] hover:bg-[#9c753e] text-white font-bold text-xs transition-colors flex items-center justify-center gap-2"
+                      className="w-full py-3 px-4 rounded-full bg-[#b38a54] hover:bg-[#9c753e] text-white font-bold text-xs transition-colors flex items-center justify-center gap-2"
                     >
                       <span>{tier.ctaText}</span>
                       <ChevronRight className="w-3.5 h-3.5" />
                     </button>
-                  </div>
-                )}
-
-                <button
-                  onClick={() => toggle(tier.key)}
-                  aria-expanded={isOpen}
-                  aria-controls={`tier-details-${tier.key.toLowerCase()}`}
-                  className={`mt-4 self-start inline-flex items-center gap-1.5 text-sm font-semibold transition-colors ${
-                    isOpen
-                      ? 'text-zinc-500 hover:text-zinc-800'
-                      : 'px-5 py-2 rounded-full border border-[#b38a54] text-[#9c753e] hover:bg-[#b38a54] hover:text-white'
-                  }`}
-                >
-                  {isOpen ? c.close : c.open}
-                  <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                </button>
+                    </div>
+                </div>
               </div>
             );
           })}

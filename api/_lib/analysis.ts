@@ -6,6 +6,10 @@ const MIN_REVIEWS_PER_THEME = 3;
 const MAX_THEMES = 6;
 const MAX_QUOTE_CHARS = 220;
 const MAX_REVIEW_CHARS = 800; // long reviews are trimmed before grouping, to keep it quick
+// Time allowed for the AI step, well inside the 300-second function limit. If it
+// runs out, the counts and averages are still shown, without themes.
+const AI_BUDGET_MS = 150_000;
+const AI_ATTEMPT_MS = 75_000;
 
 // Checked on every hotel, so operators can compare like with like.
 export const RISK_CHECKS = [
@@ -94,8 +98,11 @@ async function askJson(ai: GoogleGenAI, prompt: string, schema: object, label: s
   const started = Date.now();
   let lastError: any;
   for (const { mode, config } of attempts) {
+    const remaining = AI_BUDGET_MS - (Date.now() - started);
+    if (remaining < 10_000) break;
     try {
-      const res = await ai.models.generateContent({ model: MODEL, contents: prompt, config });
+      const abortSignal = AbortSignal.timeout(Math.min(AI_ATTEMPT_MS, remaining));
+      const res = await ai.models.generateContent({ model: MODEL, contents: prompt, config: { ...config, abortSignal } });
       const parsed = JSON.parse(res.text || '{}');
       console.info(`Gemini ${label} (${mode}): ${Date.now() - started} ms, thoughts ${res.usageMetadata?.thoughtsTokenCount ?? 0} tokens`);
       return parsed;
@@ -104,7 +111,7 @@ async function askJson(ai: GoogleGenAI, prompt: string, schema: object, label: s
       console.warn(`Gemini ${label} (${mode}) failed: ${err?.message}`);
     }
   }
-  throw lastError;
+  throw lastError ?? new Error(`Gemini ${label}: out of time`);
 }
 
 const QUOTE_SCHEMA = {

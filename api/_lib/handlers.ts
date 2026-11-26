@@ -11,12 +11,13 @@ import { PlaceSnapshot, PlatformScores, ReviewAnalysis, ReviewsState, SnapshotRe
 
 const REVIEW_LIMIT = 100;
 const ANALYSIS_TTL = 30 * 24 * 3600; // reuse a hotel's analysis for 30 days
-const ANALYSIS_VERSION = 'v4'; // bump when the analysis format changes, so old results are rebuilt
+const ANALYSIS_VERSION = 'v5'; // bump when the analysis format changes, so old results are rebuilt
 const JOB_TTL = 15 * 60;
 const ANALYSIS_LOCK_TTL = 240; // longer than one analysis, shorter than the browser's polling
 const MAX_REVIEW_LOOKUPS_PER_DAY = Number(process.env.MAX_REVIEW_LOOKUPS_PER_DAY) || 200;
 const MAX_SCORE_LOOKUPS_PER_DAY = Number(process.env.MAX_SCORE_LOOKUPS_PER_DAY) || 200;
 const PLACE_TTL = 24 * 3600;
+const MAX_ALTERNATIVES = 6;
 
 const SAFE_ID = /^[A-Za-z0-9_-]{6,300}$/;
 
@@ -27,7 +28,14 @@ export interface HandlerResult {
 
 const ok = (body: unknown): HandlerResult => ({ status: 200, body });
 
-export async function handleSnapshot(query: unknown): Promise<HandlerResult> {
+// POST { query } searches; POST { placeId } opens one of the matches a search
+// listed, so picking from the list always opens exactly that hotel.
+export async function handleSnapshot(query: unknown, placeId?: unknown): Promise<HandlerResult> {
+  if (typeof placeId === 'string' && SAFE_ID.test(placeId)) {
+    const picked = await cacheGet<PlaceSnapshot>(`place:${placeId}`);
+    if (picked) return ok({ status: 'ok', place: picked, reviews: await startReviews(picked) } satisfies SnapshotResponse);
+    // Not cached (no cache configured, or expired): fall back to searching by name.
+  }
   if (typeof query !== 'string' || query.trim().length < 2 || query.length > 120) {
     return { status: 400, body: { error: 'Please enter a hotel name.' } };
   }
@@ -55,7 +63,7 @@ export async function handleSnapshot(query: unknown): Promise<HandlerResult> {
   return ok({
     status: 'ok',
     place,
-    alternatives: others.slice(0, 4),
+    alternatives: others.slice(0, MAX_ALTERNATIVES),
     reviews: await startReviews(place),
   } satisfies SnapshotResponse);
 }
@@ -116,6 +124,8 @@ export async function handleReviewPoll(jobId: unknown, placeId: unknown): Promis
     return ok({ status: 'ready', analysis } satisfies ReviewsState);
   } catch (err: any) {
     console.warn('Review poll failed:', err?.message);
+    // Forget the failed job, so "Try again" starts a fresh lookup.
+    await cacheDelete(`job:${source.id}:${placeId}`);
     return ok({ status: 'error' } satisfies ReviewsState);
   } finally {
     if (locked) await cacheDelete(lockKey);

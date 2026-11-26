@@ -39,7 +39,7 @@ interface AgentVirtualAuditProps {
 }
 
 const POLL_INTERVAL_MS = 5000;
-const MAX_POLLS = 36; // ~3 minutes
+const MAX_POLLS = 60; // ~5 minutes, longer than the server's analysis lock
 
 const formatMonth = (iso?: string, lang: Lang = 'en') =>
   iso ? new Date(iso).toLocaleDateString(dateLocale(lang), { month: 'short', year: 'numeric' }) : '';
@@ -57,8 +57,8 @@ const formatRating = (n: number, lang: Lang = 'en') => {
 const COPY = {
   en: {
     title: 'Try It: Check Any Hotel',
-    intro: 'Type a hotel name to see its consolidated rating across booking platforms and what recent guests say, counted, dated and sourced.',
-    placeholder: 'Type a hotel name and town (e.g. Tintswalo Hout Bay)...',
+    intro: 'Type the name of any hotel in Cape Town or the Western Cape to see its consolidated rating across booking platforms and what recent guests say, counted, dated and sourced.',
+    placeholder: 'Hotel name and town in the Western Cape (e.g. Tintswalo Hout Bay)...',
     hotelName: 'Hotel name',
     enterName: 'Please enter a hotel name.',
     lookingUp: 'Looking up...',
@@ -66,7 +66,7 @@ const COPY = {
     liveData: 'Live data combined from several review platforms. Adding the town gives the most precise match.',
     finding: (q: string) => `Finding “${q}”...`,
     notFoundTitle: (q: string) => `We couldn’t find “${q}”.`,
-    notFoundBody: 'Try the full hotel name plus the town, e.g. “Tintswalo Atlantic Hout Bay”.',
+    notFoundBody: 'We cover hotels in Cape Town and the Western Cape only. Try the full hotel name plus the town, e.g. “Tintswalo Atlantic Hout Bay”.',
     unavailableTitle: 'Live hotel data is temporarily unavailable.',
     unavailableBody: 'Our team can still prepare the free 24-hour Desk Brief for this hotel.',
     unavailableAction: 'Request the 24h Desk Brief',
@@ -78,7 +78,8 @@ const COPY = {
     noRating: 'No rating yet',
     aggregated: 'Aggregated from several sources',
     collecting: 'Adding other booking platforms...',
-    notRight: 'Not the right place? Other matches:',
+    matchLabel: (n: number) => `Is this the right hotel? ${n} Western Cape matches`,
+    matchHint: 'Choose another match to check it instead.',
     status: { OPERATIONAL: 'Operating', CLOSED_TEMPORARILY: 'Temporarily closed', CLOSED_PERMANENTLY: 'Permanently closed' },
     wheelchairYes: 'Wheelchair-accessible entrance',
     wheelchairNo: 'No wheelchair-accessible entrance',
@@ -88,6 +89,7 @@ const COPY = {
     pendingTitle: 'Aggregating and analysing recent guest reviews from several platforms...',
     pendingBody: 'We combine the reviews, remove duplicates, count every complaint and check each quote. This usually takes about a minute.',
     reviewsError: 'The recent-review breakdown couldn’t be loaded right now.',
+    tryAgain: 'Try again',
     noReviews: 'No recent written reviews were found for this hotel.',
     above: (r: string) => `above our score of ${r}`,
     below: (r: string) => `below our score of ${r}`,
@@ -130,8 +132,8 @@ const COPY = {
   },
   de: {
     title: 'Testen Sie es: Prüfen Sie ein Hotel',
-    intro: 'Geben Sie einen Hotelnamen ein und sehen Sie die konsolidierte Bewertung über alle Buchungsportale sowie was Gäste zuletzt sagen – gezählt, datiert und mit Quelle.',
-    placeholder: 'Hotelname und Ort eingeben (z. B. Tintswalo Hout Bay)...',
+    intro: 'Geben Sie den Namen eines Hotels in Kapstadt oder am Westkap ein und sehen Sie die konsolidierte Bewertung über alle Buchungsportale sowie was Gäste zuletzt sagen – gezählt, datiert und mit Quelle.',
+    placeholder: 'Hotelname und Ort am Westkap (z. B. Tintswalo Hout Bay)...',
     hotelName: 'Hotelname',
     enterName: 'Bitte geben Sie einen Hotelnamen ein.',
     lookingUp: 'Suche läuft...',
@@ -139,7 +141,7 @@ const COPY = {
     liveData: 'Live-Daten, zusammengeführt aus mehreren Bewertungsportalen. Mit Ortsangabe wird das Ergebnis am genauesten.',
     finding: (q: string) => `Suche nach „${q}“...`,
     notFoundTitle: (q: string) => `„${q}“ wurde nicht gefunden.`,
-    notFoundBody: 'Versuchen Sie den vollständigen Hotelnamen mit Ort, z. B. „Tintswalo Atlantic Hout Bay“.',
+    notFoundBody: 'Wir decken nur Hotels in Kapstadt und am Westkap ab. Versuchen Sie den vollständigen Hotelnamen mit Ort, z. B. „Tintswalo Atlantic Hout Bay“.',
     unavailableTitle: 'Live-Hoteldaten sind vorübergehend nicht verfügbar.',
     unavailableBody: 'Unser Team kann den kostenlosen 24h-Kurzbericht für dieses Hotel trotzdem erstellen.',
     unavailableAction: '24h-Kurzbericht anfordern',
@@ -151,7 +153,8 @@ const COPY = {
     noRating: 'Noch keine Bewertung',
     aggregated: 'Aus mehreren Quellen zusammengeführt',
     collecting: 'Weitere Buchungsportale werden einbezogen...',
-    notRight: 'Nicht das richtige Hotel? Weitere Treffer:',
+    matchLabel: (n: number) => `Ist das das richtige Hotel? ${n} Treffer am Westkap`,
+    matchHint: 'Wählen Sie einen anderen Treffer, um diesen zu prüfen.',
     status: { OPERATIONAL: 'Geöffnet', CLOSED_TEMPORARILY: 'Vorübergehend geschlossen', CLOSED_PERMANENTLY: 'Dauerhaft geschlossen' },
     wheelchairYes: 'Rollstuhlgerechter Eingang',
     wheelchairNo: 'Kein rollstuhlgerechter Eingang',
@@ -161,6 +164,7 @@ const COPY = {
     pendingTitle: 'Aktuelle Gästebewertungen mehrerer Portale werden zusammengeführt und ausgewertet...',
     pendingBody: 'Wir führen die Bewertungen zusammen, entfernen Doppelte, zählen jede Beschwerde und prüfen jedes Zitat. Das dauert meist etwa eine Minute.',
     reviewsError: 'Die Auswertung der aktuellen Bewertungen konnte gerade nicht geladen werden.',
+    tryAgain: 'Erneut versuchen',
     noReviews: 'Für dieses Hotel wurden keine aktuellen schriftlichen Bewertungen gefunden.',
     above: (r: string) => `über unserer Bewertung von ${r}`,
     below: (r: string) => `unter unserer Bewertung von ${r}`,
@@ -224,6 +228,8 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
   const [submittedQuery, setSubmittedQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<SnapshotResponse | null>(null);
+  // Every match from the last search, kept while the visitor switches between them.
+  const [candidates, setCandidates] = useState<PlaceSnapshot[]>([]);
   const [reviews, setReviews] = useState<ReviewsState | null>(null);
   const [scores, setScores] = useState<PlatformScores | 'loading' | null>(null);
   const [inputError, setInputError] = useState('');
@@ -282,10 +288,21 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
       setInputError(c.enterName);
       return;
     }
-    const id = ++searchId.current;
     setSearchInput(query);
     setInputError('');
     setSubmittedQuery(query);
+    setCandidates([]);
+    await loadSnapshot({ query }, true);
+  };
+
+  // Opens one match from the list (or the same hotel again, to retry its reviews).
+  const openPlace = (place: PlaceSnapshot) => {
+    setSubmittedQuery(place.name);
+    loadSnapshot({ placeId: place.placeId, query: `${place.name}, ${place.address}`.slice(0, 120) }, false);
+  };
+
+  const loadSnapshot = async (body: { query: string; placeId?: string }, isNewSearch: boolean) => {
+    const id = ++searchId.current;
     setIsLoading(true);
     setResult(null);
     setReviews(null);
@@ -295,7 +312,7 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
       const res = await fetch('/api/hotel-snapshot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify(body),
       });
       const data = await res.json();
       if (searchId.current !== id) return;
@@ -305,6 +322,9 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
       }
       const snapshot: SnapshotResponse = res.ok ? data : { status: 'unavailable' };
       setResult(snapshot);
+      if (snapshot.status === 'ok' && isNewSearch) {
+        setCandidates([snapshot.place, ...(snapshot.alternatives ?? [])]);
+      }
       if (snapshot.status === 'ok') {
         setReviews(snapshot.reviews);
         loadScores(snapshot.place.placeId, id);
@@ -406,14 +426,15 @@ export const AgentVirtualAudit: React.FC<AgentVirtualAuditProps> = ({
 
           {!isLoading && result?.status === 'ok' && (
             <div className="rounded-2xl bg-[#0c182a] border border-white/15 shadow-2xl p-6 sm:p-8 text-left space-y-6">
-              <PlaceHeader place={result.place} scores={scores} />
-              {result.alternatives && result.alternatives.length > 0 && (
-                <Alternatives
-                  places={result.alternatives}
-                  onPick={(p) => runSearch(`${p.name}, ${p.address}`.slice(0, 120))}
-                />
+              {candidates.length > 1 && (
+                <MatchPicker places={candidates} selected={result.place.placeId} onPick={openPlace} />
               )}
-              <ReviewsPanel state={reviews} overallRating={ourScore(result.place, scores)?.average} />
+              <PlaceHeader place={result.place} scores={scores} reviews={reviews} />
+              <ReviewsPanel
+                state={reviews}
+                overallRating={ourScore(result.place, scores, reviews)?.average}
+                onRetry={() => openPlace(result.place)}
+              />
               <BriefCta
                 place={result.place}
                 reviews={reviews}
@@ -464,9 +485,13 @@ const Notice: React.FC<{ title: string; body: string; actionLabel?: string; onAc
   </div>
 );
 
-const PlaceHeader: React.FC<{ place: PlaceSnapshot; scores: PlatformScores | 'loading' | null }> = ({ place, scores }) => {
+const PlaceHeader: React.FC<{
+  place: PlaceSnapshot;
+  scores: PlatformScores | 'loading' | null;
+  reviews: ReviewsState | null;
+}> = ({ place, scores, reviews }) => {
   const { lang, c } = useCopy();
-  const score = ourScore(place, scores);
+  const score = ourScore(place, scores, reviews);
   return (
   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
     <div className="min-w-0">
@@ -531,10 +556,19 @@ const formatScore = (s: { value: number; max?: number }, lang: Lang = 'en') => {
 
 // Our score: the hotel's ratings on every platform we found, as one score out of 5,
 // weighted by each platform's number of reviews when every platform reports it.
-function ourScore(place: PlaceSnapshot, scores: PlatformScores | 'loading' | null) {
+// Sources: Google, the sites Google Hotels lists, and the overall score of any
+// listing the review analysis matched (Tripadvisor) that Google Hotels did not list.
+function ourScore(place: PlaceSnapshot, scores: PlatformScores | 'loading' | null, reviews?: ReviewsState | null) {
   const all: { value: number; max?: number; votes?: number }[] = [];
   if (typeof place.rating === 'number') all.push({ value: place.rating, max: 5, votes: place.ratingCount });
-  if (scores && scores !== 'loading' && scores.status === 'ok') all.push(...scores.scores);
+  const sites = scores && scores !== 'loading' && scores.status === 'ok' ? scores.scores : [];
+  all.push(...sites);
+  if (reviews?.status === 'ready') {
+    for (const s of reviews.analysis.sources ?? []) {
+      const listed = sites.some((x) => x.site.toLowerCase().includes(s.source.toLowerCase()));
+      if (s.source !== 'Google' && s.rating && !listed) all.push(s.rating);
+    }
+  }
   return combineScores(all);
 }
 
@@ -556,33 +590,58 @@ function combineScores(scores: { value: number; max?: number; votes?: number }[]
   };
 }
 
-const Alternatives: React.FC<{ places: PlaceSnapshot[]; onPick: (p: PlaceSnapshot) => void }> = ({
+// Short place for the match list: "Silo Square, V&A Waterfront, Cape Town".
+const shortAddress = (address: string) =>
+  address
+    .split(',')
+    .map((p) => p.trim())
+    .filter((p) => p && !/south africa/i.test(p) && !/^\d{4}$/.test(p))
+    .join(', ')
+    .replace(/,? \d{4}$/, '');
+
+// Every Western Cape match from the search, as a drop-down at the top of the
+// result, so a wrong first match is noticed and replaced in one step.
+const MatchPicker: React.FC<{ places: PlaceSnapshot[]; selected: string; onPick: (p: PlaceSnapshot) => void }> = ({
   places,
+  selected,
   onPick,
 }) => {
   const { lang, c } = useCopy();
+  const label = (p: PlaceSnapshot) =>
+    [
+      p.name,
+      shortAddress(p.address),
+      typeof p.rating === 'number'
+        ? `${formatRating(p.rating, lang)}★${p.ratingCount ? ` (${formatCount(p.ratingCount, lang)})` : ''}`
+        : '',
+    ]
+      .filter(Boolean)
+      .join(' · ');
   return (
-  <div className="-mt-2">
-    <p className="text-[11px] text-zinc-400 mb-2">{c.notRight}</p>
-    <div className="flex flex-wrap gap-2">
-      {places.map((p) => (
-        <button
-          key={p.placeId}
-          type="button"
-          onClick={() => onPick(p)}
-          className="text-left text-[11px] px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-zinc-200 hover:bg-white/10 hover:text-white cursor-pointer max-w-full"
+    <div className="rounded-xl border border-[#d9bd8b]/40 bg-[#d9bd8b]/10 p-3 sm:p-4">
+      <label htmlFor="match-picker" className="block text-xs font-semibold text-[#d9bd8b]">
+        {c.matchLabel(places.length)}
+      </label>
+      <div className="relative mt-2">
+        <select
+          id="match-picker"
+          value={selected}
+          onChange={(e) => {
+            const p = places.find((x) => x.placeId === e.target.value);
+            if (p) onPick(p);
+          }}
+          className="w-full appearance-none rounded-lg bg-[#0c182a] border border-white/20 text-white text-sm py-2.5 pl-3 pr-9 cursor-pointer focus:outline-hidden focus:border-[#d9bd8b]"
         >
-          <span className="font-semibold">{p.name}</span>
-          {typeof p.rating === 'number' && (
-            <span className="text-zinc-400">
-              {' '}
-              · {formatRating(p.rating, lang)}★{p.ratingCount ? ` (${formatCount(p.ratingCount, lang)})` : ''}
-            </span>
-          )}
-        </button>
-      ))}
+          {places.map((p) => (
+            <option key={p.placeId} value={p.placeId}>
+              {label(p)}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="w-4 h-4 text-[#d9bd8b] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+      </div>
+      <p className="mt-1.5 text-[11px] text-zinc-400">{c.matchHint}</p>
     </div>
-  </div>
   );
 };
 
@@ -633,7 +692,11 @@ const PlaceFacts: React.FC<{ place: PlaceSnapshot }> = ({ place }) => {
   );
 };
 
-const ReviewsPanel: React.FC<{ state: ReviewsState | null; overallRating?: number }> = ({ state, overallRating }) => {
+const ReviewsPanel: React.FC<{ state: ReviewsState | null; overallRating?: number; onRetry: () => void }> = ({
+  state,
+  overallRating,
+  onRetry,
+}) => {
   const { c } = useCopy();
   if (!state || state.status === 'disabled') {
     return (
@@ -654,7 +717,18 @@ const ReviewsPanel: React.FC<{ state: ReviewsState | null; overallRating?: numbe
     );
   }
   if (state.status === 'error') {
-    return <p className="text-xs text-zinc-400">{c.reviewsError}</p>;
+    return (
+      <div className="flex flex-wrap items-center gap-3">
+        <p className="text-xs text-zinc-400">{c.reviewsError}</p>
+        <button
+          type="button"
+          onClick={onRetry}
+          className="px-4 py-1.5 rounded-full border border-[#d9bd8b]/50 text-xs font-semibold text-[#d9bd8b] hover:bg-[#d9bd8b]/10 cursor-pointer"
+        >
+          {c.tryAgain}
+        </button>
+      </div>
+    );
   }
   return <AnalysisView analysis={state.analysis} overallRating={overallRating} />;
 };
@@ -891,7 +965,7 @@ function snapshotText(place: PlaceSnapshot, reviews: ReviewsState | null, scores
   if (scores && scores !== 'loading' && scores.status === 'ok') {
     lines.push(`Other platforms (Google Hotels): ${scores.scores.map((s) => `${s.site} ${formatScore(s)}`).join('; ')}`);
   }
-  const score = ourScore(place, scores && scores !== 'loading' ? scores : null);
+  const score = ourScore(place, scores && scores !== 'loading' ? scores : null, reviews);
   if (score) {
     lines.push(`Our score (shown to the visitor): ${score.average.toFixed(1)}/5 across ${score.sites} platform(s)${score.reviews ? `, ${score.reviews} reviews` : ''}`);
   }
