@@ -18,7 +18,7 @@ const COPY = {
     quote: '“A five-star hotel does not automatically guarantee a five-star guest experience.”',
     introTitle: 'Your Quality Partner on the Ground',
     intro1: 'We work for European travel companies, not for hotels. We check the hotels in your Cape Town and Western Cape programme, anonymously and unannounced.',
-    intro2: 'Before you sell a hotel, you see what your guests will actually experience, not what a star rating said years ago.',
+    intro2: 'Before a hotel goes into your programme, you see what your guests will actually experience, not what a star rating said years ago.',
     cta: 'Request a free virtual audit',
     highlights: [
       { title: 'Independent', text: 'Paid only by the travel company, never by the hotel.' },
@@ -32,7 +32,7 @@ const COPY = {
     quote: '„Ein Fünf-Sterne-Hotel garantiert nicht automatisch ein Fünf-Sterne-Gästeerlebnis.“',
     introTitle: 'Ihr Qualitätspartner vor Ort',
     intro1: 'Wir arbeiten für europäische Reiseveranstalter, nicht für Hotels. Wir prüfen die Hotels in Ihrem Programm in Kapstadt und am Westkap – anonym und unangekündigt.',
-    intro2: 'Bevor Sie ein Hotel verkaufen, sehen Sie, was Ihre Gäste tatsächlich erleben, nicht was eine Sterne-Klassifizierung vor Jahren aussagte.',
+    intro2: 'Bevor ein Hotel in Ihr Programm kommt, sehen Sie, was Ihre Gäste tatsächlich erleben, nicht was eine Sterne-Klassifizierung vor Jahren aussagte.',
     cta: 'Kostenloses Virtuelles Audit anfordern',
     highlights: [
       { title: 'Unabhängig', text: 'Bezahlt ausschließlich vom Reiseveranstalter, nie vom Hotel.' },
