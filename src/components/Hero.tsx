@@ -101,8 +101,9 @@ export const Hero: React.FC<HeroProps> = ({ onRequestFreeDataPackage }) => {
               loading="eager"
             />
           </h1>
+          {/* Stays on screen with the logo, so who we work for is always clear. */}
+          <p className="mt-5 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-[#d9bd8b] drop-shadow-md">{c.audience}</p>
           <div className={`transition-opacity duration-1000 ${quiet ? 'opacity-0' : ''}`}>
-            <p className="mt-5 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-[#d9bd8b] drop-shadow-md">{c.audience}</p>
             <p className="mt-3 text-2xl sm:text-4xl font-light leading-snug drop-shadow-md max-w-3xl mx-auto">{c.tagline}</p>
             <figure className="mt-6 max-w-2xl mx-auto drop-shadow-md">
               <blockquote className="font-[Georgia,serif] italic text-base sm:text-lg text-white/90 leading-relaxed">
