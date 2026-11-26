@@ -35,7 +35,7 @@ export const SERVICE_TIERS: ServiceTier[] = [
     shortLabel: 'On-Site Mystery Audit',
     tagline: 'An anonymous, unannounced stay by our inspectors.',
     description: 'A 24–48 hour mystery stay anywhere from Cape Town to the Garden Route, carried out by European-trained hospitality professionals.',
-    priceDisplay: 'Quoted per property',
+    priceDisplay: 'From €199',
     ctaText: 'Commission On-Site Audit',
     features: [
       '24–48 hour anonymous mystery stay',
@@ -57,7 +57,7 @@ export const SERVICE_TIERS: ServiceTier[] = [
     shortLabel: 'Portfolio Quality Partnership',
     tagline: 'Your own inspectors and year-round guest-sentiment tracking for your Western Cape hotels.',
     description: 'Managers move on, chefs leave, maintenance slips. The same inspectors get to know your hotels and your team, and we track what guests say month by month, so you see a decline before your guests feel it.',
-    priceDisplay: 'Seasonal retainer',
+    priceDisplay: 'From €199',
     ctaText: 'Discuss a Partnership',
     features: [
       'Dedicated inspectors who know your hotels and your team',
@@ -98,7 +98,7 @@ const DE_TEXT: Record<ServiceTier['key'], Partial<ServiceTier>> = {
     shortLabel: 'Mystery-Audit vor Ort',
     tagline: 'Ein anonymer, unangekündigter Aufenthalt unserer Inspektoren.',
     description: 'Ein 24- bis 48-stündiger Mystery-Aufenthalt zwischen Kapstadt und der Garden Route, durchgeführt von in Europa ausgebildeten Hotelfachleuten.',
-    priceDisplay: 'Angebot je Hotel',
+    priceDisplay: 'Ab 199 €',
     ctaText: 'Audit vor Ort beauftragen',
     features: [
       '24–48 Stunden anonymer Mystery-Aufenthalt',
@@ -117,7 +117,7 @@ const DE_TEXT: Record<ServiceTier['key'], Partial<ServiceTier>> = {
     shortLabel: 'Portfolio-Qualitätspartnerschaft',
     tagline: 'Feste Inspektoren und ganzjährige Auswertung der Gästestimmung für Ihre Hotels am Westkap.',
     description: 'Manager wechseln, Köche gehen, die Instandhaltung lässt nach. Dieselben Inspektoren lernen Ihre Hotels und Ihr Team kennen, und wir verfolgen Monat für Monat, was Gäste sagen – so erkennen Sie einen Rückgang, bevor Ihre Gäste ihn spüren.',
-    priceDisplay: 'Saisonale Pauschale',
+    priceDisplay: 'Ab 199 €',
     ctaText: 'Partnerschaft besprechen',
     features: [
       'Feste Inspektoren, die Ihre Hotels und Ihr Team kennen',

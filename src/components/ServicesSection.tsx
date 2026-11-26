@@ -13,6 +13,7 @@ const COPY = {
     question: 'The Question We Answer:',
     showAll: 'Compare all details',
     hideAll: 'Hide details',
+    priceNote: 'Paid services start from €199. The final price is tailored to your request. If an overnight stay is needed, the room is booked on your company’s account.',
   },
   de: {
     title: 'Unsere Leistungen',
@@ -23,6 +24,7 @@ const COPY = {
     question: 'Die Frage, die wir beantworten:',
     showAll: 'Alle Details vergleichen',
     hideAll: 'Details ausblenden',
+    priceNote: 'Kostenpflichtige Leistungen ab 199 €. Der endgültige Preis richtet sich nach Ihrer Anfrage. Ist eine Übernachtung nötig, wird das Zimmer über Ihr Unternehmen gebucht.',
   },
 };
 
@@ -130,6 +132,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectTier }
             );
           })}
         </div>
+
+        <p className="mt-8 text-xs sm:text-sm text-zinc-600 max-w-2xl mx-auto">{c.priceNote}</p>
       </div>
     </section>
   );
