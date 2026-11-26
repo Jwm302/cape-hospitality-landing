@@ -11,7 +11,7 @@ const COPY = {
     popular: 'Most Popular',
     includes: 'Includes:',
     question: 'The Question We Answer:',
-    showAll: 'Compare all details',
+    showAll: 'What’s included',
     hideAll: 'Hide details',
     priceNote: 'Paid services start from €199. The final price is tailored to your request. If an overnight stay is needed, the room is booked on your company’s account.',
   },
@@ -22,7 +22,7 @@ const COPY = {
     popular: 'Am beliebtesten',
     includes: 'Enthalten:',
     question: 'Die Frage, die wir beantworten:',
-    showAll: 'Alle Details vergleichen',
+    showAll: 'Was ist enthalten',
     hideAll: 'Details ausblenden',
     priceNote: 'Kostenpflichtige Leistungen ab 199 €. Der endgültige Preis richtet sich nach Ihrer Anfrage. Ist eine Übernachtung nötig, wird das Zimmer über Ihr Unternehmen gebucht.',
   },
@@ -32,9 +32,9 @@ interface ServicesSectionProps {
   onSelectTier: (tier: string) => void;
 }
 
-// Each card shows a short summary. One button opens or hides the full details
-// of all three tiers together, so they can be compared side by side; each
-// card's button sits at the bottom, level with the others.
+// Each card shows a short summary. "What's included" on any card opens the full
+// details of all three tiers together, so they stay side by side for comparing;
+// each card's button sits at the bottom, level with the others.
 export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectTier }) => {
   const [open, setOpen] = useState(false);
   const { lang } = useLang();
@@ -47,17 +47,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectTier }
         <p className="mt-3 text-sm sm:text-base text-zinc-700">
           {c.intro}
         </p>
-
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-controls="tier-details"
-          className="mt-6 inline-flex items-center gap-1.5 px-5 py-2 rounded-full border border-[#b38a54] text-sm font-semibold text-[#9c753e] hover:bg-[#b38a54] hover:text-white transition-colors"
-        >
-          {open ? c.hideAll : c.showAll}
-          <ChevronDown className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`} />
-        </button>
 
         <div id="tier-details" className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 items-stretch text-left">
           {tiersFor(lang).map((tier) => {
@@ -86,9 +75,19 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectTier }
                 <p className="mt-2 text-sm text-zinc-600 leading-relaxed">{tier.tagline}</p>
                 <p className="mt-4 text-base font-bold text-[#9c753e]">{tier.priceDisplay}</p>
 
-                <div className="mt-5 pt-5 border-t border-zinc-100 flex flex-col flex-1">
+                <div className="mt-5 pt-4 border-t border-zinc-100 flex flex-col flex-1">
+                  <button
+                    type="button"
+                    onClick={() => setOpen((v) => !v)}
+                    aria-expanded={open}
+                    aria-controls="tier-details"
+                    className="self-start inline-flex items-center gap-1.5 text-sm font-semibold text-[#9c753e] hover:text-[#10213a] transition-colors"
+                  >
+                    {open ? c.hideAll : c.showAll}
+                    <ChevronDown className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`} />
+                  </button>
                   {open && (
-                    <>
+                    <div className="mt-4">
                     <p className="text-sm text-zinc-600 leading-relaxed">{tier.description}</p>
 
                     <span className="mt-5 text-[11px] font-bold uppercase tracking-wider text-zinc-700 block mb-2.5 font-mono">
@@ -114,7 +113,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectTier }
                         {tier.questionAnswered}
                       </p>
                     </div>
-                    </>
+                    </div>
                   )}
 
                     <div className="mt-auto pt-5">
